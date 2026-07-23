@@ -1,52 +1,103 @@
-# Clipart Profile Architecture Baseline (Phase 1)
+# Clipart Profile Architecture — Current State
 
 ## Scope
-This document records the **current** profile architecture and behavior as of Phase 1 (Profile inventory + contract docs + smoke tests). It is intentionally descriptive and does not introduce runtime behavior changes.
 
-## Current profile systems in repository
+This document is the source-of-truth architecture snapshot for the current STS Clipart Pro 8.3 runtime. It replaces older Phase 1-only assumptions and reflects the repository as implemented now.
 
-There are currently two profile systems in runtime:
+## Current phase status
 
-1. Legacy scanner list routing:
-- File: `content_modules/site-profiles.js`
-- Namespace: `window.STSSiteProfiles`
-- Core concept: host -> `{ key, scanners[] }`.
+The repository is past the original Phase 1 baseline. The current implementation is best described as **Phase 2 partial: unified scanner-profile routing is integrated, but legacy compatibility layers still remain**.
 
-2. V2 registry-based profile objects:
-- Files: `content_modules/site_profiles/index.js` and `content_modules/site_profiles/*.js`
-- Namespace: `window.STSSiteProfilesV2`
-- Core concept: registry with `register(profile)` + `resolve(host, url)`.
+Completed or mostly completed:
 
-Current clipart site router (`content_modules/clipart/scanner-site-router.js`) resolves V2 first, then falls back to legacy system.
+- Scanner-profile registry and effective-profile fallback are implemented.
+- Auto Scan routes through the effective scanner profile via `scanPage(ctx)`.
+- Append Visible State routes through the effective scanner profile via `scanVisibleState(ctx)`.
+- Screenshot Pick option collection and nearest-title detection route through the effective scanner profile before falling back to generic collectors.
+- Legacy V2 site profiles can be adapted into scanner profiles.
 
-## Current profile inventory
+Still transitional:
 
-| Profile ID | Name | Match rule | Source file | Current API/methods | Auto uses it | Append uses it | Manual uses it | Screenshot uses it | Generic fallback reliance | Current output shape | Known limitations |
-|---|---|---|---|---|---|---|---|---|---|---|---|
-| `generic` | Generic | `match()` and `matchHost()` always true | `content_modules/site_profiles/generic.js` | metadata + `useLegacyGeneric:true` | Yes (legacy scan pipeline) | Yes (via `scanDOM` + merge) | Yes (legacy/manual generic flow) | Yes (generic collectors) | Yes (is fallback) | legacy groups: `{ label, options[] }` normalized later | No site-specific overrides; broad generic heuristics |
-| `pawesomehouse` | Pawesomehouse | host equals/endsWith `pawesomehouse.com` | `content_modules/site_profiles/pawesomehouse.js` | `getRoot/getGroups/getTitleElement/getItems/extractValue/cleanupTitle/cleanupValue/isValidGroup/autoScan/getManualTitleElements/scanManualGroupFromTitle` + metadata | Yes (if resolved and `!useLegacyGeneric`) | Partial (append calls `scanDOM`; same route as auto) | Partial-to-yes (manual uses profile path when active profile is non-legacy) | Partial (screenshot collection still uses generic collector pipeline, not profile-specific collector methods) | No (`useLegacyGeneric:false`) | profile output: `{ title, items[] }`, then mapped to `{ label, options[] }` | Screenshot flow not profile-specialized; output adapter currently required |
-| `suzitee` | Suzitee | host equals `suzitee.com` / `www.suzitee.com` / endsWith `.suzitee.com` | `content_modules/site_profiles/suzitee.js` | same pattern as pawesomehouse (`autoScan`, `scanManualGroupFromTitle`, etc.) | Yes (if resolved and non-legacy) | Partial | Partial-to-yes | Partial | No (`useLegacyGeneric:false`) | profile output: `{ title, items[] }`, mapped to legacy group shape | Same limitation pattern as pawesomehouse |
-| `macorner` | Macorner | host equals/endsWith `macorner.co` | `content_modules/site_profiles/macorner.js` | metadata + `useLegacyGeneric:true` | Yes (legacy) | Yes | Yes | Yes | Yes | legacy groups `{ label, options[] }` | No site-specific profile methods |
-| `etsy` | Etsy | host equals/endsWith `etsy.com` | `content_modules/site_profiles/etsy.js` | metadata + `useLegacyGeneric:true` | Yes (legacy) | Yes | Yes | Yes | Yes | legacy groups `{ label, options[] }` | No site-specific profile methods |
-| `wanderprints` | Wanderprints | host equals/endsWith `wanderprints.com` | `content_modules/site_profiles/wanderprints.js` | metadata + `useLegacyGeneric:true` | Yes (legacy) | Yes | Yes | Yes | Yes | legacy groups `{ label, options[] }` | No site-specific profile methods |
-| `gossby` | Gossby | host equals/endsWith `gossby.com` | `content_modules/site_profiles/gossby.js` | metadata + `useLegacyGeneric:true` | Yes (legacy) | Yes | Yes | Yes | Yes | legacy groups `{ label, options[] }` | No site-specific profile methods |
+- Manual Pick is profile-aware through resolver/collector paths, but the top-level `scanner-manual.js` module is still a legacy wrapper.
+- Legacy scanner-list routing and V2 site profiles remain for compatibility.
+- Some docs/tests still need maintenance when fixture files are moved or added.
 
-## Other profile-related files discovered
+## Runtime profile layers
 
-- `content_modules/manual_profiles/*.js`: manual profile assets that are **not** wired as the primary profile resolver path for current clipart runtime.
-- `content_modules/site_profiles/shared/*.js`: shared helper modules used by richer V2 profiles.
+### 1. Target layer: scanner profiles
 
-## Current feature usage reality (important baseline)
+Scanner profiles live under `content_modules/clipart/scanner-profile-*.js` and register with `window.STSClipartScanner.profiles`.
 
-- Auto: can use V2 profile `autoScan` for non-legacy profiles, otherwise uses legacy scanner list from `STSSiteProfiles`.
-- Append: reuses current scan pipeline and merge behavior; no dedicated per-profile append method yet.
-- Manual: supports profile-assisted group extraction in non-legacy profiles (`scanManualGroupFromTitle`) but still depends on legacy/manual runtime flow.
-- Screenshot: currently uses generic collector functions and nearest-title detection; profile-specific screenshot methods are not yet first-class runtime contract.
+The effective scanner profile is resolved by `content_modules/clipart/scanner-profile-registry.js` and is composed from:
 
-## Current architecture limitations
+1. the default scanner profile, and
+2. the best matched site-specific scanner profile.
 
-1. Two overlapping profile systems (legacy + V2).
-2. Mixed output shapes (`{ title, items }` vs `{ label, options }`) requiring adapters.
-3. Full four-feature parity via a unified profile contract is not yet implemented.
-4. Screenshot flow currently relies mostly on generic collectors.
+Missing methods on a site-specific profile fall back to the default scanner profile. This is the primary target architecture.
 
+Current dedicated scanner profiles include:
+
+- `default`
+- `pawesomehouse-customily-manual`
+- `macorner-customily`
+- `geckocustom`
+- `pawfecthouse-teeinblue`
+
+### 2. Transitional layer: V2 site profiles
+
+V2 site profiles live under `content_modules/site_profiles/` and register with `window.STSSiteProfilesV2`.
+
+They are transitional because they predate the scanner-profile contract. When a V2 profile exposes `autoScan()` or `scanManualGroupFromTitle()`, `content_modules/clipart/scanner-profile-adapters.js` adapts it into a scanner profile.
+
+Current V2 site-profile files include:
+
+- `generic`
+- `macorner`
+- `pawesomehouse`
+- `suzitee`
+- `pawfecthouse`
+- `trendingcustom`
+- `interestpod`
+- `personalfury`
+- `etsy`
+- `wanderprints`
+- `gossby`
+- `geckocustom`
+
+### 3. Legacy layer: scanner-list routing
+
+`content_modules/site-profiles.js` exposes the legacy scanner-list routing layer (`window.STSSiteProfiles`). It remains as fallback compatibility only.
+
+Do not add new feature behavior here unless it is required to preserve existing legacy behavior.
+
+### 4. Legacy/manual compatibility layer
+
+`content_modules/manual_profiles/` still contains manual-profile assets. These are compatibility assets, not the target ownership layer.
+
+New Manual Pick behavior should prefer scanner-profile methods or adapter-backed scanner profiles.
+
+## Feature routing reality
+
+| Feature | Current primary route | Fallback / transitional behavior | Status |
+|---|---|---|---|
+| Auto Scan | Effective scanner profile `scanPage(ctx)` | Legacy scan pipeline when resolver is unavailable or returns no usable groups | Implemented, still fallback-compatible |
+| Append Visible State | Effective scanner profile `scanVisibleState(ctx)` | Legacy `scanDOM()` append path when resolver returns no groups | Implemented, still fallback-compatible |
+| Manual Pick | Legacy UI flow with profile-aware group/container collection | Manual profile/V2 helpers and generic collectors remain | Partially migrated |
+| Screenshot Pick | Effective scanner profile `collectOptionsInRegion()` and `detectNearestGroupTitleFromOption()` | Generic collectors when profile method is unavailable | Implemented at collector/title layer |
+| Normalize/output | Profile/default `normalizeGroup()` and `normalizeOption()` where resolver path is used | Legacy normalization remains in core for old routes | Partially unified |
+
+## Compatibility rules
+
+- Keep `window.__stsClipartPro` and other legacy globals stable until a dedicated removal phase is approved.
+- Keep `<all_urls>` host permission unchanged unless explicitly requested.
+- Keep content script load order stable unless tests and docs are updated in the same change.
+- Prefer scanner-profile additions over V2 or legacy scanner-list additions.
+- Prefer adapters over rewrites when migrating existing V2 behavior.
+
+## Known gaps
+
+1. Manual Pick still has a legacy top-level module wrapper.
+2. Legacy core still owns significant orchestration and UI/picker behavior.
+3. V2 site profiles and scanner profiles coexist, so there are still overlapping profile systems.
+4. Some test fixture references require repository cleanup when fixture files are moved or duplicated.
+5. The docs must be kept aligned with actual runtime routes after each phase.
