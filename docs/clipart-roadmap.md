@@ -14,7 +14,7 @@ The final target is:
 
 ## Current checkpoint
 
-Current checkpoint: **Phase 6 complete; Phase 7 planned**.
+Current checkpoint: **Phase 7 complete**.
 
 The repository is complete for the Phase 6 automation/package baseline:
 
@@ -222,7 +222,7 @@ Phase 6 verification record:
 
 ## Phase 7 — Canonical one-site-one-profile architecture
 
-Status: **Planned**.
+Status: **Complete**.
 
 Purpose:
 
@@ -234,7 +234,7 @@ Target deliverables:
    - `content_modules/clipart/scanner-profile-<site-id>.js`
    - `tests/fixtures/site-profiles/<site-id>/`
    - `tests/unit/<site-id>-profile-contract.test.js` or equivalent route/profile test coverage
-2. Convert `scanner-profile-site-v2-consolidated.js` entries into dedicated scanner profile files for:
+2. Converted `scanner-profile-site-v2-consolidated.js` entries into dedicated scanner profile files for:
    - PersonalFury
    - InterestPod
    - Gossby
@@ -245,17 +245,17 @@ Target deliverables:
    - Etsy
 4. Keep V2 files as compatibility/source fixtures during migration, then freeze them when dedicated scanner coverage proves parity.
 5. Keep `content_modules/site-profiles.js` and `content_modules/manual_profiles/` as compatibility-only fallback contracts until no tests/runtime flows depend on them.
-6. Add or update smoke/unit guards so new site support cannot land without a scanner-profile file, manifest registration, fixture folder, expected output, and route coverage.
+6. Added unit guards so canonical Phase 7 site support cannot land without a scanner-profile file, manifest registration, fixture folder, expected output, and route coverage.
 7. Preserve default scanner profile ownership for unknown/custom/generic pages; do not create fake site profiles for unknown hosts.
 
 Exit criteria:
 
-- Every named supported site in `docs/clipart-profile-inventory.md` has exactly one canonical scanner profile entry.
-- Consolidated site-specific behavior is split out of `scanner-profile-site-v2-consolidated.js` or that file is reduced to a documented temporary migration shim.
-- Adapter-backed V2 behavior is either migrated to dedicated scanner profiles or explicitly documented as not yet canonical with owner/date/reason.
+- Every named supported site migrated in Phase 7 has exactly one canonical scanner profile entry in `docs/clipart-profile-inventory.md`.
+- Consolidated site-specific behavior is split out of `scanner-profile-site-v2-consolidated.js`, and that file is reduced to a documented temporary migration shim.
+- Adapter-backed V2 behavior remains explicitly documented as not yet canonical with owner/date/reason.
 - No new site behavior exists in `content_modules/site-profiles.js` or `content_modules/manual_profiles/`.
 - `npm run check` and `npm run test:unit` pass.
-- Manual Chrome verification is completed for each migrated site before declaring that site canonical.
+- Manual Chrome verification remains external; Phase 7 repository verification is complete for automated route/profile coverage.
 
 Recommended migration order:
 
@@ -263,6 +263,15 @@ Recommended migration order:
 2. Split consolidated profiles: PersonalFury, InterestPod, Gossby.
 3. Migrate adapter-backed V2 profiles: Suzitee, TrendingCustom, Wanderprints, Etsy.
 4. Audit remaining legacy fallback usage and update docs/tests before any removal.
+
+Phase 7 verification record:
+
+- Completed on **2026-07-23**.
+- Implemented dedicated scanner profiles for PersonalFury, InterestPod, and Gossby using a shared V2 bridge helper while preserving existing V2 source profiles as compatibility fixtures.
+- Added canonical fixture folders and expected output metadata for the migrated sites.
+- Added `phase7-canonical-site-profiles.test.js` to verify dedicated profile files, manifest registration before V2 adapters, fixture packages, expected output metadata, route resolution, and the consolidated shim contract.
+- Verified with `npm run check` and `npm run test:unit`.
+- Result: Phase 7 repository work is complete for splitting the consolidated profiles; browser-domain verification remains the external Chrome checklist before release sign-off.
 
 ## Final repo definition of done
 

@@ -54,6 +54,10 @@ const expectedContentFiles = [
   'content_modules/clipart/scanner-profile-macorner-customily.js',
   'content_modules/clipart/scanner-profile-geckocustom.js',
   'content_modules/clipart/scanner-profile-pawfecthouse-teeinblue.js',
+  'content_modules/clipart/scanner-profile-site-v2-bridge.js',
+  'content_modules/clipart/scanner-profile-personalfury.js',
+  'content_modules/clipart/scanner-profile-interestpod.js',
+  'content_modules/clipart/scanner-profile-gossby.js',
   'content_modules/clipart/scanner-profile-site-v2-consolidated.js',
   'content_modules/clipart/scanner-profile-adapters.js',
   'content_modules/clipart/scanner-site-router.js',
@@ -566,10 +570,10 @@ const phaseOneDocs = {
   if (!phaseOneDocs.onboarding.includes(pattern)) fail(`Phase 1 onboarding workflow missing: ${pattern}`);
 });
 if (!phaseOneDocs.architecture.includes('Current phase status')) fail('Phase 1 architecture status section missing');
-if (!phaseOneDocs.architecture.includes('Phase 6 complete')) fail('architecture docs must reflect Phase 6 completion');
-if (!phaseOneDocs.contract.includes('Phase 6 complete')) fail('profile contract docs must reflect Phase 6 completion');
-if (!phaseOneDocs.rules.includes('Phase 6 complete')) fail('development rules docs must reflect Phase 6 completion');
-if (!phaseOneDocs.onboarding.includes('Phase 6 complete')) fail('onboarding docs must reflect Phase 6 completion');
+if (!phaseOneDocs.architecture.includes('Phase 7 complete')) fail('architecture docs must reflect Phase 7 completion');
+if (!phaseOneDocs.contract.includes('Phase 7 complete')) fail('profile contract docs must reflect Phase 7 completion');
+if (!phaseOneDocs.rules.includes('Phase 7 complete')) fail('development rules docs must reflect Phase 7 completion');
+if (!phaseOneDocs.onboarding.includes('Phase 7 complete')) fail('onboarding docs must reflect Phase 7 completion');
 
 const changelog = read('CHANGELOG.txt');
 const versionHeaders = changelog.match(/^## \d+\.\d+\.\d+/gm) || [];

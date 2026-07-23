@@ -7,10 +7,10 @@
 
 ## Current repository context
 
-The repository is **Phase 6 complete; Phase 7 planned**.
+The repository is **Phase 7 complete**.
 
 - Phase 6 hardened the scanner-profile-first automated route and regression tests.
-- Phase 7 will move the remaining supported named sites toward one dedicated scanner profile package per site.
+- Phase 7 moved the consolidated supported sites to one dedicated scanner profile package per site; adapter-backed sites remain documented transitional profiles.
 - The image-field preservation invariant in this document applies to every scanner profile, adapter-backed V2 profile, and future site migration.
 
 ## Key difference that caused the bug

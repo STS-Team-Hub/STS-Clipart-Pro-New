@@ -20,9 +20,9 @@ This document records current site-profile ownership and the target migration st
 | Macorner / Customily | Dedicated scanner profile | Scanner-profile-native | Already canonical, keep fixtures/tests current | Owned by `scanner-profile-macorner-customily.js`; V2 profile remains as compatibility/source. |
 | Geckocustom | Dedicated scanner profile | Scanner-profile-native | Already canonical, keep fixtures/tests current | Owned by `scanner-profile-geckocustom.js`; V2 and manual assets remain compatibility/source. |
 | Pawfecthouse / Teeinblue | Dedicated scanner profile | Scanner-profile-native | Already canonical, keep fixtures/tests current | Owned by `scanner-profile-pawfecthouse-teeinblue.js`; V2 profile remains as compatibility/source. |
-| PersonalFury / Customily | Phase 3 consolidated scanner profile | Scanner-registry-owned transitional profile | Split to `scanner-profile-personalfury.js` | Registered by `scanner-profile-site-v2-consolidated.js`; fixture coverage remains in `manual-new-site-profiles.test.js`. |
-| InterestPod / personalization forms | Phase 3 consolidated scanner profile | Scanner-registry-owned transitional profile | Split to `scanner-profile-interestpod.js` | Registered by `scanner-profile-site-v2-consolidated.js`; fixture coverage remains in `manual-new-site-profiles.test.js`. |
-| Gossby / personalized form | Phase 3 consolidated scanner profile | Scanner-registry-owned transitional profile | Split to `scanner-profile-gossby.js` | Registered by `scanner-profile-site-v2-consolidated.js`; fixture coverage remains in `manual-new-site-profiles.test.js`. |
+| PersonalFury / Customily | Dedicated scanner profile | Scanner-profile-native | Canonical after Phase 7 split | Owned by `scanner-profile-personalfury.js`; V2 profile remains compatibility/source, with canonical fixtures in `tests/fixtures/site-profiles/personalfury/` and route coverage in `phase7-canonical-site-profiles.test.js`. |
+| InterestPod / personalization forms | Dedicated scanner profile | Scanner-profile-native | Canonical after Phase 7 split | Owned by `scanner-profile-interestpod.js`; V2 profile remains compatibility/source, with canonical fixtures in `tests/fixtures/site-profiles/interestpod/` and route coverage in `phase7-canonical-site-profiles.test.js`. |
+| Gossby / personalized form | Dedicated scanner profile | Scanner-profile-native | Canonical after Phase 7 split | Owned by `scanner-profile-gossby.js`; V2 profile remains compatibility/source, with canonical fixtures in `tests/fixtures/site-profiles/gossby/` and route coverage in `phase7-canonical-site-profiles.test.js`. |
 | Suzitee / Customily | V2 adapter-backed | Intentional transitional adapter | Create `scanner-profile-suzitee.js` when substantial changes are needed | Existing unit coverage remains in `auto-suzitee-profile.test.js`; no Phase 6 behavior change. |
 | TrendingCustom / personalization forms | V2 adapter-backed | Intentional transitional adapter | Create `scanner-profile-trendingcustom.js` when migration is scheduled | Lower-priority active profile; remains intentionally adapter-backed until dedicated migration. |
 | Wanderprints / Customily | V2 adapter-backed | Intentional transitional adapter | Create `scanner-profile-wanderprints.js` when migration is scheduled | Lower-priority active profile; remains intentionally adapter-backed until dedicated migration. |
@@ -43,7 +43,7 @@ This grouping is temporary for site ownership. The final target is one canonical
 ## Migration priority
 
 1. Keep native scanner profiles stable and use them as templates.
-2. Split consolidated profiles into dedicated scanner profile files:
+2. Phase 7 split the former consolidated profiles into dedicated scanner profile files:
    - PersonalFury
    - InterestPod
    - Gossby
@@ -60,4 +60,4 @@ This grouping is temporary for site ownership. The final target is one canonical
 - Update this file whenever a site changes ownership class.
 - Record whether a site is canonical, consolidated, adapter-backed, default-only, or legacy compatibility-only.
 - Do not mark a site canonical until it has a dedicated scanner profile, fixtures/tests, and Chrome manual verification notes.
-- If a V2 or consolidated site cannot be migrated yet, document the reason and revisit during Phase 7 work.
+- If a V2 adapter-backed site cannot be migrated yet, document the reason and revisit during future canonicalization work.

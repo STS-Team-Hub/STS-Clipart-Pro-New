@@ -4,7 +4,7 @@
 
 This document defines the scanner-profile contract used as the target runtime architecture.
 
-The repository is currently **Phase 6 complete; Phase 7 planned**:
+The repository is currently **Phase 7 complete**:
 
 - The contract is implemented for registry/default fallback.
 - Auto Scan, Append Visible State, Screenshot collector/title routes, and profile-aware Manual Pick paths use effective scanner profiles.
@@ -110,4 +110,4 @@ Visual fields must not be dropped while mapping profile output into panel catego
 - The default scanner profile supplies fallback implementations for scan, manual/container collection, screenshot region collection, nearest-title detection, and normalization.
 - Screenshot collection/title detection route through the effective scanner profile before falling back to generic collectors.
 - Manual Pick uses profile-aware resolver/collector paths; legacy UI entrypoints remain only as compatibility bridges where tests still prove runtime dependency.
-- Phase 7 should reduce V2/consolidated ownership by moving supported named sites into dedicated scanner profiles.
+- Phase 7 reduced consolidated ownership by moving PersonalFury, InterestPod, and Gossby into dedicated scanner profiles. Future work should reduce remaining V2 adapter-backed ownership site by site.
