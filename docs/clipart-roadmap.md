@@ -36,16 +36,34 @@ Exit criteria:
 
 Status: **Complete**.
 
+Completion recorded: **2026-07-23**.
+
 Deliverables:
 
-- Define target scanner-profile contract.
-- Define development rules for scanner-profile-first work.
-- Document profile systems and onboarding workflow.
+- Define target scanner-profile contract in `docs/clipart-profile-contract.md`.
+- Define development rules for scanner-profile-first work in `docs/clipart-development-rules.md`.
+- Document profile systems and onboarding workflow in `docs/clipart-profile-architecture.md` and `docs/clipart-new-site-onboarding.md`.
+- Add smoke-check guards for the Phase 1 documentation baseline in `tests/smoke-check.js`.
 
 Exit criteria:
 
 - New scanner work has a documented target ownership layer.
 - Legacy, V2, manual, and scanner-profile layers are clearly separated.
+- Onboarding guidance points new site work at scanner profiles first.
+- `npm run check` passes for the Phase 1 documentation and namespace guards.
+
+Phase 1 progress notes:
+
+- Contract scope is complete: the target scanner-profile shape and effective-profile fallback rules are documented.
+- Development rules are complete: target, transitional, legacy, and manual-compatibility layers are separated with ownership boundaries.
+- Onboarding guidance is complete: future site work has fixture, manifest, test, and manual-verification steps.
+- Current runtime progress has moved beyond Phase 1 into Phase 2 partial; remaining work is tracked under Phase 2 and later phases below.
+
+Phase 1 verification record:
+
+- Verified on **2026-07-23** that Phase 1 documentation guards pass through `npm run check`.
+- Verified on **2026-07-23** that the full unit route/profile suite passes through `npm run test:unit`.
+- Result: Phase 1 is considered successfully completed; no Phase 1 blockers remain in the documented baseline.
 
 ## Phase 2 — Unified routing integration
 
