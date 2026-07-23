@@ -2,21 +2,23 @@
 
 ## Purpose
 
-This document defines current development rules for STS Clipart Pro runtime changes. The target architecture is scanner-profile-first, with legacy and V2 layers kept only for compatibility or controlled migration.
+This document defines current development rules for STS Clipart Pro runtime changes. The current architecture is scanner-profile-first. The final target is one canonical scanner profile package per supported named site.
 
 ## Current phase
 
-Current state: **Phase 6 complete**.
+Current state: **Phase 6 complete; Phase 7 planned**.
 
-The scanner-profile contract is wired into Auto Scan, Append Visible State, Screenshot collector/title routing, and profile-aware Manual Pick paths. Safe ownership extraction has moved scan-mode UI into `scanner-ui.js` and Manual Scan empty-state mutation into `scanner-state.js`; legacy wrappers are deprecated compatibility bridges and now warn when selected where applicable.
+The scanner-profile contract is wired into Auto Scan, Append Visible State, Screenshot collector/title routing, and profile-aware Manual Pick paths. Safe ownership extraction has moved scan-mode UI into `scanner-ui.js` and Manual Scan empty-state mutation into `scanner-state.js`; legacy wrappers are deprecated compatibility bridges and warn when selected where applicable.
 
-See `docs/clipart-roadmap.md` for the completed phase plan and remaining external manual Chrome verification checklist.
+Phase 7 will standardize site ownership so every supported named site has one dedicated scanner profile file, fixtures, and tests. See `docs/clipart-roadmap.md` for the phase plan and `TEST_CASES.md` for the external Chrome checklist.
 
 ## Runtime layers and ownership
 
 ### Target layer: scanner profiles
 
-New site-specific scanner behavior should prefer the `window.STSClipartScanner.profiles` contract in `content_modules/clipart/scanner-profile-*.js`.
+Phase 7 naming note: this target layer now means **dedicated scanner profiles** for supported named sites.
+
+New site-specific scanner behavior must prefer the `window.STSClipartScanner.profiles` contract in `content_modules/clipart/scanner-profile-*.js`.
 
 A scanner profile should align with `docs/clipart-profile-contract.md`:
 
@@ -31,19 +33,38 @@ A scanner profile should align with `docs/clipart-profile-contract.md`:
 
 If a site-specific profile does not need to override a method, it should rely on effective-profile fallback to the default scanner profile.
 
+### Canonical site package rule
+
+Every new supported named site must include a canonical profile package:
+
+1. `content_modules/clipart/scanner-profile-<site-id>.js`
+2. `tests/fixtures/site-profiles/<site-id>/`
+3. expected output JSON for relevant DOM patterns
+4. unit coverage for resolver/routing/schema behavior
+5. manifest load-order registration before `scanner-profile-adapters.js` when the profile registers directly
+6. manual Chrome verification notes for Auto Scan, Append Visible State, Manual Pick, and Screenshot Pick
+
+Existing supported sites should migrate to this package shape when they receive substantial updates.
+
+### Transitional consolidated scanner profiles
+
+`content_modules/clipart/scanner-profile-site-v2-consolidated.js` is a transitional bridge for sites that were moved into scanner registry ownership together.
+
+Do not add unrelated new sites to this file. If a consolidated site receives substantial work, split it into `scanner-profile-<site-id>.js` with fixtures and tests.
+
 ### Transitional layer: V2 site profiles
 
 Files in `content_modules/site_profiles/` are transitional V2 site profiles. They may still be used when a site already has V2 selectors/helpers or when adapting existing behavior is lower risk than rewriting it directly as a scanner profile.
 
 V2 profiles should be adapted into scanner profiles through `content_modules/clipart/scanner-profile-adapters.js` when possible.
 
-Do not add a new V2 profile if the same feature can be implemented cleanly as a scanner profile.
+Do not add a new V2 profile if the same feature can be implemented cleanly as a dedicated scanner profile.
 
 ### Legacy layer: scanner-list routing
 
 `content_modules/site-profiles.js` is the legacy scanner-list routing layer. It is a deprecated permanent fallback compatibility contract and warns when selected.
 
-Do not add new feature behavior to this layer. Only update it when required to preserve legacy routing compatibility for an existing site.
+Do not add new feature behavior to this layer. Only update it when required to preserve legacy routing compatibility for an existing site during migration.
 
 ### Legacy/manual compatibility layer
 
@@ -96,11 +117,22 @@ Profiles may collect raw site-specific objects, but adapters or normalizers shou
 When adding support for a new site:
 
 1. Identify the site engine or DOM pattern, such as Customily, Teeinblue, Shopify options, generic personalization forms, or a custom DOM.
-2. Prefer a scanner profile in `content_modules/clipart/scanner-profile-<site>.js`.
+2. Create `content_modules/clipart/scanner-profile-<site-id>.js`.
 3. Add the new script to the ordered `manifest.json` content-script list before `scanner-profile-adapters.js` if it registers a scanner profile directly.
-4. Add fixtures under `tests/fixtures/site-profiles/<site>/` when practical. If legacy tests still require `HTML/*.txt`, keep those fixture paths in sync until the tests are migrated.
+4. Add fixtures under `tests/fixtures/site-profiles/<site-id>/` when practical. If legacy tests still require `HTML/*.txt`, keep those fixture paths in sync until the tests are migrated.
 5. Add or update unit tests for routing, profile contract behavior, and normalized output shape.
-6. Run `npm run check` and relevant unit tests before shipping.
+6. Update `docs/clipart-profile-inventory.md`, `docs/clipart-new-site-onboarding.md` if the workflow changed, and `docs/clipart-roadmap.md` if phase status changed.
+7. Run `npm run check` and relevant unit tests before shipping.
+8. Run Chrome manual verification before marking the site production-verified.
+
+## Updating an existing site
+
+When modifying an existing site:
+
+- If it already has a dedicated scanner profile, update that profile and its fixtures/tests.
+- If it is consolidated, split it into a dedicated scanner profile when the change is substantial.
+- If it is V2 adapter-backed, keep small compatibility fixes in V2 only when lower risk; otherwise create a dedicated scanner profile and leave V2 as a compatibility/source fixture.
+- If the behavior currently lives in `content_modules/site-profiles.js` or `content_modules/manual_profiles/`, migrate it into a scanner profile instead of expanding legacy code.
 
 ## Refactor rules
 
