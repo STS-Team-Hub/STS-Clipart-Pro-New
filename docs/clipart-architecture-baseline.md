@@ -2,13 +2,23 @@
 
 ## Purpose
 
-This document records the stable runtime boundaries that must be preserved while the clipart runtime continues migrating toward scanner-profile-first ownership.
+This document records the stable runtime boundaries that must be preserved while the clipart runtime continues migrating toward the final one-site-one-scanner-profile architecture.
 
-For current profile routing and phase status, use:
+For current profile routing, phase status, and final target, use:
 
 - `docs/clipart-profile-architecture.md`
 - `docs/clipart-profile-contract.md`
+- `docs/clipart-profile-inventory.md`
 - `docs/clipart-roadmap.md`
+
+## Current state versus final target
+
+Current state: **Phase 6 complete; Phase 7 planned**.
+
+- Scanner-profile-first routing is integrated into the main scanner flows.
+- Dedicated scanner profiles, consolidated scanner profiles, V2 adapter-backed profiles, and legacy compatibility layers still coexist.
+- The final target is one canonical scanner profile package per supported named site.
+- Unknown/custom/generic pages should continue to resolve through the default scanner profile.
 
 ## Stable runtime package facts
 
@@ -16,7 +26,8 @@ For current profile routing and phase status, use:
 - `<all_urls>` host permission is intentionally retained.
 - Runtime content scripts are loaded in an explicit order in `manifest.json`.
 - Sanitization/debug/shared helpers load before scanner modules.
-- Legacy compatibility globals remain available until a dedicated deprecation phase removes them.
+- Dedicated scanner profiles load before V2-to-scanner adapters.
+- Legacy compatibility globals remain available until tests and replacement bridges prove they can be removed safely.
 
 ## Content-script load order groups
 
@@ -28,10 +39,10 @@ The exact script list lives in `manifest.json`. Preserve these order groups unle
 4. Product crawler and FAB manager.
 5. Clipart scanner shared modules: utils, schema, state, collectors, profile context, profile registry, default profile.
 6. Dedicated scanner profiles.
-7. V2-to-scanner profile adapters.
-8. Site router, UI, export, sync, render.
-9. Auto, manual, screenshot, panel, core, and legacy marker.
-
+7. Transitional consolidated scanner profiles.
+8. V2-to-scanner profile adapters.
+9. Site router, UI, export, sync, render.
+10. Auto, manual, screenshot, panel, core, and legacy marker.
 
 ## Frozen content-script load order
 
@@ -187,7 +198,7 @@ At minimum, run:
 npm run check
 ```
 
-When fixture health allows, also run:
+For profile migrations, also run:
 
 ```bash
 npm run test:unit

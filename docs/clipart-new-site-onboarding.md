@@ -1,37 +1,112 @@
 # Clipart New Site Onboarding Workflow
 
 ## Goal
-Define a repeatable, low-risk onboarding process for adding a new website profile in future phases.
+
+Define a repeatable, low-risk onboarding process for adding a new website profile and for migrating existing sites toward the final one-site-one-scanner-profile architecture.
+
+## Current repository context
+
+The project is currently **Phase 6 complete; Phase 7 planned**.
+
+- Phase 6 means scanner-profile-first routing and automated QA/release checks are in place.
+- Phase 7 will make the profile layout canonical: every supported named site should have one dedicated scanner profile file, fixture folder, and test package.
+- V2 adapters and legacy profile layers may still exist, but they are compatibility bridges, not the target place for new site behavior.
 
 ## Required input from user
 
 Provide copied HTML snippets for:
+
 - option group area
 - group title area
 - option/swatch elements
 - selected/active state
 - disabled/unavailable state (if any)
 - image/color/text examples (if any)
+- dynamic/accordion/click-to-reveal state (if options appear only after interaction)
 
-## Standard onboarding steps
+A URL alone is not enough for stable implementation. The scanner profile should be built from representative DOM snippets and verified in Chrome.
 
-1. Create fixture folder
+## Canonical site package
+
+Each supported named site should have:
+
+1. A scanner profile file:
+   - `content_modules/clipart/scanner-profile-<site-id>.js`
+2. A fixture folder:
    - `tests/fixtures/site-profiles/<site-id>/`
-2. Save snippet fixtures (minimum examples)
+3. Expected output JSON for supported DOM patterns.
+4. Unit tests for profile resolution, route behavior, and normalized schema.
+5. Manifest registration before `content_modules/clipart/scanner-profile-adapters.js` when the file registers a scanner profile directly.
+6. Manual Chrome verification notes for Auto Scan, Append Visible State, Manual Pick, and Screenshot Pick.
+
+## Standard onboarding steps for a new site
+
+Compatibility note: older docs described this step as: Implement a scanner profile under `content_modules/clipart/scanner-profile-<site>.js`. The current canonical file name is `content_modules/clipart/scanner-profile-<site-id>.js`.
+
+1. Pick a stable `<site-id>`.
+2. Identify the site engine or DOM pattern:
+   - Customily
+   - Teeinblue
+   - Shopify options
+   - generic personalization form
+   - marketplace/custom DOM
+3. Create fixture folder:
+   - `tests/fixtures/site-profiles/<site-id>/`
+4. Save snippet fixtures, as applicable:
    - `group-basic.html`
-   - `group-with-images.html` (if applicable)
-   - `group-selected-state.html` (if applicable)
-   - `group-disabled-state.html` (if applicable)
+   - `group-with-images.html`
+   - `group-selected-state.html`
+   - `group-disabled-state.html`
+   - `group-dynamic-expanded.html`
    - `expected.json`
-3. Implement a scanner profile under `content_modules/clipart/scanner-profile-<site>.js` when possible. Use `content_modules/site_profiles/` only for transitional V2 compatibility when a direct scanner profile is not the safest path.
-4. Add expected parsed output JSON in fixture folder.
-5. Run fixture/profile tests.
-6. Run smoke checks.
-7. Manual Chrome verification for:
-   - Auto Scan
-   - Append Visible State
-   - Manual Pick
-   - Screenshot Pick
+5. Implement scanner profile:
+   - `content_modules/clipart/scanner-profile-<site-id>.js`
+6. Add the profile script to `manifest.json` before `scanner-profile-adapters.js` if it registers directly.
+7. Add expected parsed output JSON in the fixture folder.
+8. Add or update unit tests.
+9. Run fixture/profile tests.
+10. Run smoke checks.
+11. Run Chrome manual verification for:
+    - Auto Scan
+    - Append Visible State
+    - Manual Pick
+    - Screenshot Pick
+
+## Updating or migrating an existing site
+
+Use the current ownership class to choose the safest path:
+
+### Dedicated scanner-profile-native site
+
+Examples include Pawesomehouse, Macorner, GeckoCustom, and Pawfecthouse.
+
+- Update the existing `content_modules/clipart/scanner-profile-*.js` file.
+- Add or update fixtures for the changed DOM pattern.
+- Add or update unit tests for the changed route/schema behavior.
+- Run Chrome manual verification for the changed site.
+
+### Consolidated scanner profile site
+
+Examples include PersonalFury, InterestPod, and Gossby.
+
+- For small, low-risk fixes, update the consolidated scanner profile only if splitting is not practical.
+- For substantial changes, split the site into `content_modules/clipart/scanner-profile-<site-id>.js`.
+- Move or copy relevant fixtures into `tests/fixtures/site-profiles/<site-id>/`.
+- Add dedicated tests and update `docs/clipart-profile-inventory.md`.
+
+### V2 adapter-backed site
+
+Examples include Suzitee, TrendingCustom, Wanderprints, and Etsy.
+
+- For small compatibility fixes, V2 edits are allowed when lower risk.
+- For new feature behavior or substantial DOM changes, create a dedicated scanner profile and keep the V2 file as compatibility/source material.
+- Verify parity against existing fixtures before changing runtime priority.
+
+### Legacy scanner-list or manual-profile behavior
+
+- Do not expand `content_modules/site-profiles.js` for new feature behavior.
+- Do not expand `content_modules/manual_profiles/` for new Manual Pick behavior.
+- Port required logic into a scanner profile and leave legacy code only as a compatibility fallback.
 
 ## Data schema compatibility (must preserve)
 
@@ -60,19 +135,39 @@ Option schema:
 }
 ```
 
+Profiles may add metadata, but they must not drop these compatibility fields before data enters state, panel, export, render, or sync flows.
+
+## Required tests/checks before shipping
+
+Run at minimum:
+
+```bash
+npm run check
+npm run test:unit
+```
+
+For a site-specific migration, also run or add the relevant unit test file for that site.
+
+Chrome manual verification remains required before marking a site production-verified.
+
 ## Suggested Codex prompt template for future onboarding
 
 Use the following prompt template:
 
-> You are adding one new `site_profiles/<site-id>.js` profile for STS Clipart Pro.
-> Inputs include HTML snippets for group/title/options/selected/disabled states.
-> Implement profile methods following `docs/clipart-profile-contract.md`.
+> You are adding or migrating one site profile for STS Clipart Pro using the final one-site-one-scanner-profile architecture.
+> Site id: `<site-id>`.
+> Inputs include HTML snippets for group/title/options/selected/disabled/dynamic states.
+> Implement `content_modules/clipart/scanner-profile-<site-id>.js` following `docs/clipart-profile-contract.md`.
 > Preserve output schema compatibility.
 > Add fixtures under `tests/fixtures/site-profiles/<site-id>/` and expected output JSON.
-> Do not change unrelated runtime behavior.
+> Add or update unit tests for resolver, Auto Scan, Append Visible State, Manual Pick, Screenshot Pick where applicable, and schema normalization.
+> Register the script in `manifest.json` before `scanner-profile-adapters.js` if it registers directly.
+> Do not add new feature behavior to V2 or legacy profile layers unless explicitly documented as compatibility-only.
 > Provide test commands and manual verification steps for Auto/Append/Manual/Screenshot.
 
-## Current implementation note
+## Documentation updates required with profile work
 
-The project is currently Phase 6 complete. New onboarding should remain scanner-profile-first, with V2 adapters used only as a migration bridge. Keep fixtures, manifest load order, routing tests, and docs in the same change.
-
+- Update `docs/clipart-profile-inventory.md` whenever a site changes ownership class.
+- Update `docs/clipart-roadmap.md` when a migration phase starts or completes.
+- Update `docs/clipart-development-rules.md` if ownership rules change.
+- Update this document if the onboarding workflow changes.
