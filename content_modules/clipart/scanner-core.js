@@ -11460,17 +11460,27 @@ if (renumberBtn) renumberBtn.onclick = () => {
 
   // ---- v8.3.0: Manual Scan — open empty panel immediately, user adds clipart via Pick ----
   function startManualScan() {
-    // Create empty result data
-    var emptyData = {
-      url: window.location.href,
-      title: document.title,
-      platform: (window.Shopify || document.querySelector('[data-shopify]')) ? 'shopify' : window.location.hostname.includes('etsy') ? 'etsy' : 'custom',
-      scannedAt: new Date().toISOString(),
-      categories: [],
-    };
-    CLIPART.categories = [];
-    CLIPART.capturedData = emptyData;
-    CLIPART.isScanning = false;
+    var stateApi = window.STSClipartScanner && window.STSClipartScanner.state;
+    var emptyData;
+    if (stateApi && typeof stateApi.startManualScanState === 'function') {
+      emptyData = stateApi.startManualScanState(CLIPART, {
+        url: window.location.href,
+        title: document.title,
+        platform: (window.Shopify || document.querySelector('[data-shopify]')) ? 'shopify' : window.location.hostname.includes('etsy') ? 'etsy' : 'custom',
+        scannedAt: new Date().toISOString()
+      });
+    } else {
+      emptyData = {
+        url: window.location.href,
+        title: document.title,
+        platform: (window.Shopify || document.querySelector('[data-shopify]')) ? 'shopify' : window.location.hostname.includes('etsy') ? 'etsy' : 'custom',
+        scannedAt: new Date().toISOString(),
+        categories: [],
+      };
+      CLIPART.categories = [];
+      CLIPART.capturedData = emptyData;
+      CLIPART.isScanning = false;
+    }
 
     // Show panel immediately (empty, with Pick buttons ready)
     showClipartPanel(emptyData);
@@ -11485,59 +11495,14 @@ if (renumberBtn) renumberBtn.onclick = () => {
 
   // ---- v8.3.0: Scan mode selector popup ----
   function showScanModePopup() {
-    // Remove existing popup
-    var old = document.getElementById('sts-scan-mode-popup');
-    if (old) { old.remove(); return; }
-
-    var popup = document.createElement('div');
-    popup.id = 'sts-scan-mode-popup';
-    popup.style.cssText = 'position:fixed;bottom:98px;left:16px;z-index:999999;background:#fff;border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,0.18);padding:8px;--sts-font:Inter,"Segoe UI",sans-serif;font-family:var(--sts-font);min-width:200px;animation:stsPopUp .2s ease;';
-
-    // Add animation
-    if (!document.getElementById('sts-popup-anim')) {
-      var animStyle = document.createElement('style');
-      animStyle.id = 'sts-popup-anim';
-      animStyle.textContent = '@keyframes stsPopUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}';
-      document.head.appendChild(animStyle);
+    var uiApi = window.STSClipartScanner && window.STSClipartScanner.ui;
+    if (uiApi && typeof uiApi.showScanModePopup === 'function') {
+      return uiApi.showScanModePopup({
+        ensureClipartLoggedIn: ensureClipartLoggedIn,
+        scanCliparts: function() { return scanClipartsOrchestrated('fab'); },
+        startManualScan: startManualScanOrchestrated
+      });
     }
-
-    var btnStyle = 'display:flex;align-items:center;gap:10px;width:100%;padding:10px 14px;border:none;background:none;border-radius:8px;cursor:pointer;font-family:var(--sts-font);font-size:13px;text-align:left;color:#333;transition:background .15s;';
-
-    // Auto Scan button
-    var autoBtn = document.createElement('button');
-    autoBtn.style.cssText = btnStyle;
-    autoBtn.innerHTML = '<span style="font-size:20px;">🔍</span><div><div style="font-weight:700;">Auto Scan</div><div style="font-size:11px;color:#64748B;margin-top:1px;">Tự quét toàn bộ clipart</div></div>';
-    autoBtn.onmouseover = function() { autoBtn.style.background = '#F0FDF4'; };
-    autoBtn.onmouseout = function() { autoBtn.style.background = 'none'; };
-    autoBtn.onclick = function() { popup.remove(); scanClipartsOrchestrated('fab'); };
-
-    // Manual Scan button
-    var manualBtn = document.createElement('button');
-    manualBtn.style.cssText = btnStyle;
-    manualBtn.innerHTML = '<span style="font-size:20px;">✋</span><div><div style="font-weight:700;">Manual Scan</div><div style="font-size:11px;color:#64748B;margin-top:1px;">Mở panel trống, tự pick clipart</div></div>';
-    manualBtn.onmouseover = function() { manualBtn.style.background = '#FFFBEB'; };
-    manualBtn.onmouseout = function() { manualBtn.style.background = 'none'; };
-    manualBtn.onclick = function() { popup.remove(); startManualScanOrchestrated(); };
-
-    // Divider
-    var divider = document.createElement('div');
-    divider.style.cssText = 'height:1px;background:#E5E7EB;margin:4px 0;';
-
-    popup.appendChild(autoBtn);
-    popup.appendChild(divider);
-    popup.appendChild(manualBtn);
-    document.body.appendChild(popup);
-
-    // Close popup when clicking outside
-    setTimeout(function() {
-      function closePopup(e) {
-        if (!popup.contains(e.target) && e.target.id !== 'sts-clip-fab') {
-          popup.remove();
-          document.removeEventListener('click', closePopup, true);
-        }
-      }
-      document.addEventListener('click', closePopup, true);
-    }, 100);
   }
 
   // Hotkey Alt+C for auto scan, Alt+Shift+C for manual scan

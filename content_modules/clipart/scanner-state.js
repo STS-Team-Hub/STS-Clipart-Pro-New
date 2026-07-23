@@ -41,8 +41,26 @@
     return out;
   }
 
+  function startManualScanState(state, metadata) {
+    if (!state || typeof state !== 'object') return null;
+    var meta = metadata || {};
+    var data = {
+      url: meta.url || (window.location && window.location.href) || '',
+      title: meta.title || document.title || '',
+      platform: meta.platform || 'custom',
+      scannedAt: meta.scannedAt || new Date().toISOString(),
+      categories: []
+    };
+    state.categories = [];
+    state.capturedData = data;
+    state.isScanning = false;
+    if (schema.normalizeClipartData) schema.normalizeClipartData(data);
+    return data;
+  }
+
   ns.state = Object.assign({}, ns.state || {}, {
     addCategory: addCategory,
-    mergeCategories: mergeCategories
+    mergeCategories: mergeCategories,
+    startManualScanState: startManualScanState
   });
 })();
