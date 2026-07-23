@@ -3,10 +3,10 @@ const fs = require('fs');
 
 const core = fs.readFileSync('content_modules/clipart/scanner-core.js','utf8');
 const m1 = core.match(/function mapResolvedProfileOption\(rawOption\) {[\s\S]*?\n  }\n\s*function mapResolvedProfileGroup/);
-const m2 = core.match(/function mapResolvedProfileGroup\(rawGroup, ctx, profile\) {[\s\S]*?\n  }\n\s*(?:async\s+)?function collectAutoScanGroupsViaResolver/);
+const m2 = core.match(/function mapResolvedProfileGroup\(rawGroup, ctx, profile\) {[\s\S]*?\n  }\n\s*(?:async\s+)?function collectVisibleStateGroupsViaResolver/);
 if (!m1 || !m2) throw new Error('Failed to extract mapping fns');
 const mapResolvedProfileOption = eval('(' + m1[0].replace(/\n\s*function mapResolvedProfileGroup[\s\S]*/, '') + ')');
-const mapResolvedProfileGroup = eval('(' + m2[0].replace(/\n\s*(?:async\s+)?function collectAutoScanGroupsViaResolver[\s\S]*/, '') + ')');
+const mapResolvedProfileGroup = eval('(' + m2[0].replace(/\n\s*(?:async\s+)?function collectVisibleStateGroupsViaResolver[\s\S]*/, '') + ')');
 
 const a = mapResolvedProfileOption({ imageUrl:'https://a', textContent:'' });
 assert.equal(a.imageUrl, 'https://a');

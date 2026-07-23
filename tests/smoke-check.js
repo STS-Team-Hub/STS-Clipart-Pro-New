@@ -362,11 +362,28 @@ if (clipartFiles.core.includes('panelFacade.registerRenderer(showClipartPanel)')
 });
 
 [
-  'if (appendBtn) appendBtn.onclick = async function() { await appendCurrentVisibleState(data, refreshPanel, appendBtn); };',
+  'function collectVisibleStateGroupsViaResolver()',
+  'Append Visible State fallback: profileContext.create unavailable',
+  'Append Visible State fallback: profiles.resolve unavailable',
+  'profile.scanVisibleState(ctx)',
+  'collectVisibleStateGroupsViaResolver()',
+  'if (!scanned || !scanned.length) scanned = await scanDOM() || [];'
+].forEach((pattern) => {
+  if (!clipartFiles.core.includes(pattern)) fail(`scanner-core append resolver route missing: ${pattern}`);
+});
+
+[
+  'adapter.scanVisibleState = function(ctx)',
+  'legacyProfile.autoScan(doc)'
+].forEach((pattern) => {
+  if (!read('content_modules/clipart/scanner-profile-adapters.js').includes(pattern)) fail(`scanner profile adapter visible-state route missing: ${pattern}`);
+});
+
+[
   'function activateScreenshotPickOrchestrated(data, onRefresh)',
   'if (screenshotModeBtn) screenshotModeBtn.onclick = function() {'
 ].forEach((pattern) => {
-  if (!clipartFiles.core.includes(pattern)) fail(`manual resolver phase must not reroute append/screenshot: ${pattern}`);
+  if (!clipartFiles.core.includes(pattern)) fail(`screenshot orchestration contract missing: ${pattern}`);
 });
 
 if (!clipartFiles.legacy.includes('Legacy compatibility entrypoint for STS Clipart Pro scanner runtime.')) {
