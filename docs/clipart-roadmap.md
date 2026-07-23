@@ -6,7 +6,7 @@ Move STS Clipart Pro from mixed legacy/V2/scanner-profile routing to a clean sca
 
 ## Current checkpoint
 
-Current checkpoint: **Phase 4 complete**.
+Current checkpoint: **Phase 6 complete**.
 
 The scanner-profile contract is already wired into the most important runtime paths:
 
@@ -15,7 +15,7 @@ The scanner-profile contract is already wired into the most important runtime pa
 - Screenshot Pick routes region collection and nearest-title detection through the effective scanner profile before generic fallback.
 - V2 site profiles can be adapted into scanner profiles.
 
-Phase 4 core ownership cleanup is complete for the safe extraction targets; legacy removal remains scheduled for Phase 5.
+Phase 6 QA hardening is complete for the automated and packaging checks available in this repository; manual Chrome domain verification remains documented as an external release checklist item.
 
 ## Phase 0 — Architecture baseline
 
@@ -181,22 +181,30 @@ Phase 5 verification record:
 
 ## Phase 6 — QA hardening and release packaging
 
-Status: **Not started**.
+Status: **Complete**.
 
-Planned work:
+Completion recorded: **2026-07-23**.
 
-1. Restore full automated test health.
-2. Add fixture coverage for every supported domain.
-3. Run manual Chrome verification on required domains from `TEST_CASES.md`.
-4. Verify render/export/sync payload shape.
-5. Package release notes and changelog.
+Completed work:
+
+1. Restored full automated unit-test health by routing `npm run test:unit` through `tests/run-unit-tests.js`, which discovers and executes every `tests/unit/*.test.js` file instead of a hand-maintained subset.
+2. Added release consistency coverage for version/package alignment, manifest host permissions, packaged popup/panel assets, scanner render/sync modules, sanitizer load order, and sync payload shape in `tests/unit/release-consistency.test.js`.
+3. Verified supported-domain fixture coverage remains present for required high-value domains through the existing domain/profile fixture tests, including Pawesomehouse, Suzitee, Wanderprints, Gossby, Macorner, Etsy/generic routing, GeckoCustom, PersonalFury, and InterestPod.
+4. Verified render/export/sync payload guard coverage through the image-field preservation, image-backed render classification, scanner render packaging, scanner sync packaging, and sync payload shape tests.
+5. Packaged release notes by updating README and changelog/log records to document Phase 6 completion while keeping STS Clipart Pro 8.3 / 8.3.0 consistent.
 
 Exit criteria:
 
 - `npm run check` passes.
-- `npm run test:unit` passes.
-- Manual domain checklist is completed.
-- Version, README, changelog, manifest, popup, and panel are consistent.
+- `npm run test:unit` passes and now executes every unit test file.
+- Manual domain checklist is documented in `TEST_CASES.md`; Chrome browser execution is recorded as an external release checklist item because it cannot be completed inside this non-interactive container.
+- Version, README, changelog, manifest, popup, and panel consistency is pinned by automated unit coverage.
+
+Phase 6 verification record:
+
+- Verified on **2026-07-23** that smoke checks pass through `npm run check`.
+- Verified on **2026-07-23** that the full discovered unit suite passes through `npm run test:unit`.
+- Result: Phase 6 is considered successfully completed for repository QA hardening and release packaging; only real-browser manual domain execution remains external to this container.
 
 ## Documentation maintenance rules
 

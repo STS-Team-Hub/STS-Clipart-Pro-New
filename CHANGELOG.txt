@@ -7,6 +7,7 @@
 STS Clipart Pro — Recent Version Logs
 
 ## 8.3.0 - 2026-05-09
+- Phase 6 completed on 2026-07-23: hardened automated unit discovery, added release consistency checks, and recorded release QA results in docs.
 - Synchronized extension version to STS Clipart Pro 8.3 / 8.3.0.
 - Kept `<all_urls>` access unchanged by user request.
 - Removed Supabase RLS work from this release scope by user request.

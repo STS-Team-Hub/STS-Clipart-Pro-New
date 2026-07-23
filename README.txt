@@ -21,6 +21,11 @@ Architecture docs:
 - docs/clipart-development-rules.md
 - docs/clipart-roadmap.md
 
+Phase 6 QA/release status:
+- Automated checks are hardened: `npm run test:unit` discovers every `tests/unit/*.test.js` file.
+- Release consistency coverage pins version, manifest permissions, popup/panel branding, scanner render/sync packaging, and sync payload shape.
+- Manual Chrome domain verification remains in TEST_CASES.md as the external browser checklist.
+
 Phase 5 legacy status:
 - Scanner-profile-first routing is the target runtime model.
 - `content_modules/site-profiles.js` remains a deprecated scanner-list compatibility fallback and warns when selected.
