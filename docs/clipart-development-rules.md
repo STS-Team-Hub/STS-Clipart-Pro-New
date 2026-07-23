@@ -6,9 +6,9 @@ This document defines current development rules for STS Clipart Pro runtime chan
 
 ## Current phase
 
-Current state: **Phase 4 complete**.
+Current state: **Phase 5 complete**.
 
-The scanner-profile contract is wired into Auto Scan, Append Visible State, Screenshot collector/title routing, and profile-aware Manual Pick paths. Safe ownership extraction has moved scan-mode UI into `scanner-ui.js` and Manual Scan empty-state mutation into `scanner-state.js`; legacy wrappers remain only as compatibility bridges pending Phase 5 removal.
+The scanner-profile contract is wired into Auto Scan, Append Visible State, Screenshot collector/title routing, and profile-aware Manual Pick paths. Safe ownership extraction has moved scan-mode UI into `scanner-ui.js` and Manual Scan empty-state mutation into `scanner-state.js`; legacy wrappers are deprecated compatibility bridges and now warn when selected where applicable.
 
 See `docs/clipart-roadmap.md` for the remaining phase plan.
 
@@ -41,13 +41,13 @@ Do not add a new V2 profile if the same feature can be implemented cleanly as a 
 
 ### Legacy layer: scanner-list routing
 
-`content_modules/site-profiles.js` is the legacy scanner-list routing layer. It should be treated as fallback compatibility only.
+`content_modules/site-profiles.js` is the legacy scanner-list routing layer. It is a deprecated permanent fallback compatibility contract and warns when selected.
 
 Do not add new feature behavior to this layer. Only update it when required to preserve legacy routing compatibility for an existing site.
 
 ### Legacy/manual compatibility layer
 
-Files in `content_modules/manual_profiles/` are legacy manual-profile assets. They may be kept for compatibility, but new Manual Pick behavior should prefer scanner profile methods.
+Files in `content_modules/manual_profiles/` are legacy manual-profile assets. They are deprecated compatibility fixtures and warn when resolved; new Manual Pick behavior should prefer scanner profile methods.
 
 If manual-profile logic is still needed, prefer adapting or migrating it into a scanner profile instead of expanding the legacy manual layer.
 
@@ -107,7 +107,7 @@ When adding support for a new site:
 Refactors should be incremental and behavior-preserving.
 
 - Move one responsibility at a time.
-- Keep legacy globals and namespace contracts stable until tests prove they can be removed.
+- Keep legacy globals and namespace contracts stable until tests and replacement bridges prove they can be removed.
 - Preserve manifest load order unless related tests and docs are updated in the same change.
 - Prefer adapters over rewrites when migrating existing site logic.
 - Avoid changing multiple site profiles in the same refactor unless the change is schema-only and covered by tests.

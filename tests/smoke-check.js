@@ -102,7 +102,7 @@ if (!v2Index.includes('g.STSSiteProfilesV2')) fail('STSSiteProfilesV2 registry n
 if (!v2Index.includes('register: register') || !v2Index.includes('resolve: resolve')) fail('STSSiteProfilesV2 register/resolve API missing');
 
 const legacyProfiles = read('content_modules/site-profiles.js');
-['DEFAULT_PROFILE', 'SITE_PROFILES', 'pickSiteProfile'].forEach((pattern) => {
+['DEFAULT_PROFILE', 'SITE_PROFILES', 'pickSiteProfile', 'warnLegacyRouter', 'deprecated and kept as compatibility fallback only'].forEach((pattern) => {
   if (!legacyProfiles.includes(pattern)) fail(`legacy site profile contract missing: ${pattern}`);
 });
 
@@ -232,6 +232,7 @@ if (typeof macornerResolved.scanVisibleState !== 'function') fail('matched profi
 
 if (!ctx.window.STSSiteProfiles || typeof ctx.window.STSSiteProfiles.pickSiteProfile !== 'function') fail('legacy STSSiteProfiles global contract missing');
 if (!ctx.window.STSSiteProfilesV2 || typeof ctx.window.STSSiteProfilesV2.resolve !== 'function') fail('legacy STSSiteProfilesV2 global contract missing');
+if (!read('content_modules/manual_profiles/index.js').includes('warnDeprecated: warnManualProfiles')) fail('legacy manual profiles deprecation warning contract missing');
 
 
 const clipartFiles = {

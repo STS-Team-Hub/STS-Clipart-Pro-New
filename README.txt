@@ -20,3 +20,8 @@ Architecture docs:
 - docs/clipart-profile-contract.md
 - docs/clipart-development-rules.md
 - docs/clipart-roadmap.md
+
+Phase 5 legacy status:
+- Scanner-profile-first routing is the target runtime model.
+- `content_modules/site-profiles.js` remains a deprecated scanner-list compatibility fallback and warns when selected.
+- `content_modules/manual_profiles/` remains deprecated compatibility fixtures for older manual fallback coverage and warns when resolved.

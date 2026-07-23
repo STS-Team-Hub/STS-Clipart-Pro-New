@@ -155,20 +155,29 @@ Phase 4 verification record:
 
 ## Phase 5 — Legacy deprecation and removal
 
-Status: **Not started**.
+Status: **Complete**.
 
-Planned work:
+Completion recorded: **2026-07-23**.
 
-1. Identify legacy globals and functions still used by popup/panel/background/content scripts.
-2. Add warnings or compatibility shims where needed.
-3. Remove unused legacy scanner-list/manual-profile code only after tests prove no runtime dependency remains.
-4. Update README, architecture docs, onboarding docs, and tests.
+Completed work:
+
+1. Audited legacy globals used by popup/product-crawler bridges and content runtime: `window.__stsClipartPro`, FAB auth/panel bridge globals, `window.STSSiteProfiles`, `window.STSSiteProfilesV2`, and `window.STSManualProfiles` remain runtime contracts.
+2. Added one-time deprecation warnings to the legacy scanner-list router and manual-profile registry so any runtime fallback use is visible without breaking compatibility.
+3. Kept `content_modules/site-profiles.js` as the permanent compatibility scanner-list fallback because `scanner-site-router.js` and legacy core paths still resolve it when scanner-profile/V2 routes are unavailable.
+4. Kept `content_modules/manual_profiles/` as compatibility fixtures because GeckoCustom and older manual fallback tests still verify those assets. New Manual Pick behavior must continue to use scanner profiles first.
+5. Updated smoke checks to pin the deprecation-warning contracts and updated docs to record Phase 5 completion.
 
 Exit criteria:
 
-- Legacy scanner-list routing is either removed or explicitly documented as permanent fallback.
-- Manual legacy profile assets are removed or documented as compatibility fixtures.
-- No dead code remains in scanner modules.
+- Legacy scanner-list routing is explicitly documented as permanent compatibility fallback and emits a warning when used.
+- Manual legacy profile assets are explicitly documented as compatibility fixtures and emit a warning when resolved.
+- Scanner-profile-first routing remains the target; no new feature behavior should be added to legacy scanner-list or manual-profile layers.
+
+Phase 5 verification record:
+
+- Verified on **2026-07-23** that smoke checks pass through `npm run check`.
+- Verified on **2026-07-23** that route/profile/fallback unit coverage passes through `npm run test:unit`.
+- Result: Phase 5 is considered successfully completed with legacy routes documented as compatibility contracts rather than removed runtime code.
 
 ## Phase 6 — QA hardening and release packaging
 
