@@ -68,6 +68,10 @@
         var doc = (ctx && ctx.document) || window.document;
         return (legacyProfile.autoScan(doc) || []).map(legacyGroupToScannerGroup).filter(Boolean);
       };
+      adapter.scanVisibleState = function(ctx) {
+        var doc = (ctx && ctx.document) || window.document;
+        return (legacyProfile.autoScan(doc) || []).map(legacyGroupToScannerGroup).filter(Boolean);
+      };
     }
 
     if (typeof legacyProfile.scanManualGroupFromTitle === 'function') {

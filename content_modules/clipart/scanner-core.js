@@ -3649,7 +3649,8 @@ function scanQuoteLikeFieldsSync() {
 
       await sleep(120);
 
-      var scanned = await scanDOM() || [];
+      var scanned = await collectVisibleStateGroupsViaResolver();
+      if (!scanned || !scanned.length) scanned = await scanDOM() || [];
       if (!scanned.length) {
         clipNotify('Không thấy nhóm clipart nào trong state hiện tại', 'warning');
         return;
@@ -4698,6 +4699,35 @@ function scanQuoteLikeFieldsSync() {
     return { label: title, options: mapped, rect: group.rect || null };
   }
 
+
+
+  async function collectVisibleStateGroupsViaResolver() {
+    var ns = window.STSClipartScanner;
+    var profileContextApi = ns && ns.profileContext;
+    var profilesApi = ns && ns.profiles;
+    if (!profileContextApi || typeof profileContextApi.create !== 'function') {
+      console.warn('[STS Clipart Pro 8.3 Clipart] Append Visible State fallback: profileContext.create unavailable');
+      return null;
+    }
+    if (!profilesApi || typeof profilesApi.resolve !== 'function') {
+      console.warn('[STS Clipart Pro 8.3 Clipart] Append Visible State fallback: profiles.resolve unavailable');
+      return null;
+    }
+
+    var ctx = profileContextApi.create({ document: document, location: location, window: window });
+    var profile = profilesApi.resolve(ctx);
+    if (!profile || typeof profile.scanVisibleState !== 'function') {
+      console.warn('[STS Clipart Pro 8.3 Clipart] Append Visible State fallback: invalid effective profile');
+      return null;
+    }
+
+    var rawGroups = profile.scanVisibleState(ctx);
+    if (rawGroups && typeof rawGroups.then === 'function') rawGroups = await rawGroups;
+    if (!Array.isArray(rawGroups) || !rawGroups.length) return null;
+    return rawGroups.map(function(rawGroup) {
+      return mapResolvedProfileGroup(rawGroup, ctx, profile);
+    }).filter(Boolean);
+  }
 
   async function collectAutoScanGroupsViaResolver() {
     var ns = window.STSClipartScanner;
