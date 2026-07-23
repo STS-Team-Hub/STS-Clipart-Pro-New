@@ -88,24 +88,28 @@ Phase 0 freezes this exact `manifest.json` content-script list. Any runtime phas
 38. `content_modules/clipart/scanner-profile-macorner-customily.js`
 39. `content_modules/clipart/scanner-profile-geckocustom.js`
 40. `content_modules/clipart/scanner-profile-pawfecthouse-teeinblue.js`
-41. `content_modules/clipart/scanner-profile-site-v2-bridge.js`
-42. `content_modules/clipart/scanner-profile-personalfury.js`
-43. `content_modules/clipart/scanner-profile-interestpod.js`
-44. `content_modules/clipart/scanner-profile-gossby.js`
-45. `content_modules/clipart/scanner-profile-site-v2-consolidated.js`
-46. `content_modules/clipart/scanner-profile-adapters.js`
-47. `content_modules/clipart/scanner-site-router.js`
-48. `content_modules/clipart/scanner-ui.js`
-49. `content_modules/clipart/scanner-export.js`
-50. `content_modules/clipart/scanner-sync.js`
-51. `content_modules/clipart/scanner-render.js`
-52. `content_modules/clipart/scanner-auto-default-v2.js`
-53. `content_modules/clipart/scanner-auto.js`
-54. `content_modules/clipart/scanner-manual.js`
-55. `content_modules/clipart/scanner-screenshot.js`
-56. `content_modules/clipart/scanner-panel.js`
-57. `content_modules/clipart/scanner-core.js`
-58. `content_modules/clipart-scanner.js`
+41. `content_modules/clipart/scanner-profile-suzitee.js`
+42. `content_modules/clipart/scanner-profile-trendingcustom.js`
+43. `content_modules/clipart/scanner-profile-wanderprints.js`
+44. `content_modules/clipart/scanner-profile-etsy.js`
+45. `content_modules/clipart/scanner-profile-site-v2-bridge.js`
+46. `content_modules/clipart/scanner-profile-personalfury.js`
+47. `content_modules/clipart/scanner-profile-interestpod.js`
+48. `content_modules/clipart/scanner-profile-gossby.js`
+49. `content_modules/clipart/scanner-profile-site-v2-consolidated.js`
+50. `content_modules/clipart/scanner-profile-adapters.js`
+51. `content_modules/clipart/scanner-site-router.js`
+52. `content_modules/clipart/scanner-ui.js`
+53. `content_modules/clipart/scanner-export.js`
+54. `content_modules/clipart/scanner-sync.js`
+55. `content_modules/clipart/scanner-render.js`
+56. `content_modules/clipart/scanner-auto-default-v2.js`
+57. `content_modules/clipart/scanner-auto.js`
+58. `content_modules/clipart/scanner-manual.js`
+59. `content_modules/clipart/scanner-screenshot.js`
+60. `content_modules/clipart/scanner-panel.js`
+61. `content_modules/clipart/scanner-core.js`
+62. `content_modules/clipart-scanner.js`
 
 ## Runtime namespace baseline
 

@@ -275,20 +275,26 @@ Phase 7 verification record:
 
 ## Phase 8 — V2 and legacy removal / one operational scanner flow
 
-Status: **Planned**.
+Status: **In progress — Phase B implemented in repository automation**.
 
 Phase 8 converts the Phase 7 compatibility architecture into one operational scanner flow. The detailed execution plan lives in `docs/clipart-v2-legacy-removal-plan.md`.
 
 Target deliverables:
 
 1. Freeze V2, legacy scanner-list, and manual profile layers as removal targets.
-2. Create dedicated scanner profiles for Suzitee, TrendingCustom, Wanderprints, and Etsy.
+2. Create dedicated scanner profiles for Suzitee, TrendingCustom, Wanderprints, and Etsy. **Done for Phase B on 2026-07-23**: these sites now register through dedicated `scanner-profile-<site-id>.js` files and manifest load order before the generic V2 adapter.
 3. De-bridge PersonalFury, InterestPod, and Gossby so their dedicated profiles no longer depend on `window.STSSiteProfilesV2`.
 4. Remove runtime fallback references to `window.STSSiteProfiles`, `window.STSSiteProfilesV2`, and `window.STSManualProfiles`.
 5. Remove compatibility scripts from `manifest.json` after route/tests prove scanner-profile parity.
 6. Rename reusable modules that still carry historical V2 naming only after their APIs are profile-system-neutral.
 
 Working rule: each supported site travels through the same scanner-profile route; site-specific selectors and extraction behavior live as that site's dedicated profile "color" on the shared road. If a site breaks after compatibility removal, capture refreshed HTML and fix the dedicated scanner profile rather than restoring V2/legacy routing.
+
+Phase 8 repository verification record:
+
+- Verified on **2026-07-23** that Phase B dedicated scanner profiles load for Suzitee, TrendingCustom, Wanderprints, and Etsy.
+- Added `tests/unit/phase8-native-site-profiles.test.js` to prove each Phase B site registers a scanner-native profile, exposes scanner scan methods, records `phase8Native`, and resolves through the scanner registry without relying on generic V2 adapter registration.
+- Remaining work: Phase C de-bridge PersonalFury, InterestPod, and Gossby; Phase D remove runtime fallback references and compatibility manifest entries; Phase E rename historical V2-neutral helpers after runtime removal.
 
 Exit criteria:
 
