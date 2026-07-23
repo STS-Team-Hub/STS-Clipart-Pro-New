@@ -1,0 +1,16 @@
+{
+  "siteId": "geckocustom",
+  "domains": ["geckocustom.com"],
+  "groups": [
+    {
+      "title": "Choose Design",
+      "optionCount": 2,
+      "hasImages": true
+    },
+    {
+      "title": "Enter Family Name",
+      "optionCount": 1,
+      "hasTextInput": true
+    }
+  ]
+}

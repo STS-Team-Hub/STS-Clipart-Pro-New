@@ -1,0 +1,258 @@
+/* Matrixty Mockup v6.2.0 — Click-to-Select + Mockup Panel */
+
+/* ========== FAB Button ========== */
+#mtx-mockup-fab {
+  position: fixed !important;
+  bottom: 56px !important;
+  right: 60px !important;
+  z-index: 999997 !important;
+  width: 36px !important;
+  height: 36px !important;
+  background: linear-gradient(135deg, #7B1FA2 0%, #9C27B0 100%) !important;
+  border-radius: 8px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+  box-shadow: 0 2px 10px rgba(123,31,162,0.4) !important;
+  transition: all 0.2s !important;
+  font-size: 18px !important;
+  opacity: 0.85 !important;
+  user-select: none !important;
+}
+#mtx-mockup-fab:hover {
+  opacity: 1 !important;
+  transform: scale(1.1) !important;
+}
+
+/* ========== Click-to-Select: Toolbar ========== */
+#mtx-mockup-toolbar {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  z-index: 999999 !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  padding: 8px 16px !important;
+  background: linear-gradient(135deg, #7B1FA2 0%, #9C27B0 100%) !important;
+  color: white !important;
+  font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif !important;
+  font-size: 13px !important;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.25) !important;
+}
+.mtx-mt-icon { font-size: 18px !important; }
+.mtx-mt-status { flex: 1 !important; font-weight: 600 !important; }
+.mtx-mt-count {
+  background: rgba(255,255,255,0.2) !important;
+  padding: 3px 10px !important;
+  border-radius: 10px !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+}
+.mtx-mt-btn {
+  padding: 6px 14px !important;
+  border: none !important;
+  border-radius: 6px !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  cursor: pointer !important;
+  font-family: inherit !important;
+  transition: all 0.15s !important;
+}
+.mtx-mt-save {
+  background: #4A7C59 !important;
+  color: white !important;
+}
+.mtx-mt-save:disabled { opacity: 0.5 !important; cursor: not-allowed !important; }
+.mtx-mt-save:not(:disabled):hover { background: #3D6B4A !important; }
+.mtx-mt-cancel {
+  background: rgba(255,255,255,0.15) !important;
+  color: white !important;
+}
+.mtx-mt-cancel:hover { background: rgba(255,255,255,0.25) !important; }
+
+/* ========== Click-to-Select: Image Overlays ========== */
+.mtx-img-overlay {
+  position: absolute !important;
+  z-index: 999990 !important;
+  cursor: pointer !important;
+  border: 3px solid transparent !important;
+  border-radius: 4px !important;
+  transition: all 0.15s !important;
+  box-sizing: border-box !important;
+  pointer-events: auto !important;
+}
+.mtx-img-overlay:hover {
+  border-color: #7B1FA2 !important;
+  background: rgba(123, 31, 162, 0.1) !important;
+}
+.mtx-img-overlay.selected {
+  border-color: #4A7C59 !important;
+  background: rgba(74, 124, 89, 0.15) !important;
+}
+.mtx-img-overlay.saved {
+  border-color: #2E7D32 !important;
+  background: rgba(46, 125, 50, 0.2) !important;
+}
+.mtx-img-overlay.error {
+  border-color: #E8453C !important;
+  background: rgba(232, 69, 60, 0.15) !important;
+}
+.mtx-img-check {
+  position: absolute !important;
+  top: 6px !important;
+  right: 6px !important;
+  width: 24px !important;
+  height: 24px !important;
+  border-radius: 50% !important;
+  background: #4A7C59 !important;
+  color: white !important;
+  display: none !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 14px !important;
+  font-weight: bold !important;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3) !important;
+}
+.mtx-img-overlay.selected .mtx-img-check,
+.mtx-img-overlay.saved .mtx-img-check {
+  display: flex !important;
+}
+.mtx-img-overlay.saved .mtx-img-check { background: #2E7D32 !important; }
+
+/* ========== Mockup Panel (Listing Pages) ========== */
+#mtx-mockup-panel {
+  position: fixed !important;
+  z-index: 999990 !important;
+  width: 240px !important;
+  background: #FFFFFF !important;
+  border-radius: 10px !important;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.15) !important;
+  font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif !important;
+  overflow: hidden !important;
+  top: 100px !important;
+  left: 16px !important;
+}
+.mtx-mk-header {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  padding: 8px 12px !important;
+  background: linear-gradient(135deg, #7B1FA2 0%, #9C27B0 100%) !important;
+  color: white !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  cursor: move !important;
+}
+.mtx-mk-header div { display: flex !important; gap: 4px !important; }
+.mtx-mk-btn-sm {
+  background: rgba(255,255,255,0.2) !important;
+  border: none !important;
+  color: white !important;
+  padding: 3px 8px !important;
+  border-radius: 4px !important;
+  font-size: 10px !important;
+  cursor: pointer !important;
+  font-weight: 600 !important;
+}
+.mtx-mk-btn-sm:hover { background: rgba(255,255,255,0.3) !important; }
+.mtx-mk-btn-sm:disabled { opacity: 0.5 !important; cursor: not-allowed !important; }
+.mtx-mk-close {
+  background: none !important;
+  border: none !important;
+  color: white !important;
+  font-size: 14px !important;
+  cursor: pointer !important;
+  opacity: 0.7 !important;
+  padding: 2px !important;
+}
+.mtx-mk-close:hover { opacity: 1 !important; }
+.mtx-mk-hint {
+  font-size: 10px !important;
+  color: #9CA3AF !important;
+  text-align: center !important;
+  padding: 2px 8px 4px !important;
+  font-style: italic !important;
+}
+.mtx-mk-grid {
+  display: grid !important;
+  grid-template-columns: repeat(2, 1fr) !important;
+  gap: 6px !important;
+  padding: 8px !important;
+  max-height: 400px !important;
+  overflow-y: auto !important;
+}
+.mtx-mk-item {
+  position: relative !important;
+  aspect-ratio: 1 !important;
+  border: 1px solid #E0E0E0 !important;
+  border-radius: 6px !important;
+  overflow: hidden !important;
+  cursor: pointer !important;
+}
+.mtx-mk-item:hover { border-color: #7B1FA2 !important; }
+.mtx-mk-item img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  cursor: grab !important;
+}
+.mtx-mk-item img:active {
+  cursor: grabbing !important;
+}
+.mtx-mk-item-actions {
+  position: absolute !important;
+  bottom: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  display: flex !important;
+  background: rgba(0,0,0,0.6) !important;
+  opacity: 0 !important;
+  transition: opacity 0.15s !important;
+}
+.mtx-mk-item:hover .mtx-mk-item-actions { opacity: 1 !important; }
+.mtx-mk-item-actions button {
+  flex: 1 !important;
+  background: none !important;
+  border: none !important;
+  color: white !important;
+  padding: 4px !important;
+  cursor: pointer !important;
+  font-size: 14px !important;
+}
+.mtx-mk-item-actions button:hover { background: rgba(255,255,255,0.1) !important; }
+/* Image dimension info overlay */
+.mtx-mk-item-info {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  background: rgba(0,0,0,0.65) !important;
+  color: #fff !important;
+  font-size: 9px !important;
+  font-weight: 600 !important;
+  text-align: center !important;
+  padding: 2px 4px !important;
+  letter-spacing: 0.3px !important;
+  font-family: 'SF Mono', 'Consolas', monospace !important;
+  line-height: 1.2 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+.mtx-mk-item-info.mtx-dim-ok {
+  background: rgba(46,125,50,0.75) !important;
+}
+.mtx-mk-item-info.mtx-dim-upscaled {
+  background: rgba(230,81,0,0.8) !important;
+}
+.mtx-mk-item-status {
+  position: absolute !important;
+  top: 18px !important;
+  right: 2px !important;
+  font-size: 14px !important;
+}
+.mtx-mk-grid::-webkit-scrollbar { width: 5px !important; }
+.mtx-mk-grid::-webkit-scrollbar-thumb { background: #D1D5DB !important; border-radius: 3px !important; }
