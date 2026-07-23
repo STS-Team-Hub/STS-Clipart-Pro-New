@@ -508,6 +508,53 @@ const profileDefault = read('content_modules/clipart/scanner-profile-default.js'
   if (!profileDefault.includes(pattern)) fail(`default profile contract missing: ${pattern}`);
 });
 
+
+const phaseOneDocs = {
+  roadmap: read('docs/clipart-roadmap.md'),
+  architecture: read('docs/clipart-profile-architecture.md'),
+  contract: read('docs/clipart-profile-contract.md'),
+  rules: read('docs/clipart-development-rules.md'),
+  onboarding: read('docs/clipart-new-site-onboarding.md')
+};
+[
+  'Status: **Complete**',
+  'Define target scanner-profile contract',
+  'Define development rules for scanner-profile-first work',
+  'Document profile systems and onboarding workflow'
+].forEach((pattern) => {
+  if (!phaseOneDocs.roadmap.includes(pattern)) fail(`Phase 1 roadmap checkpoint missing: ${pattern}`);
+});
+[
+  'scanPage(ctx)',
+  'scanVisibleState(ctx)',
+  'scanManualGroupFromTitle(titleEl, ctx)',
+  'collectOptionsInContainer(containerEl, ctx)',
+  'collectOptionsInRegion(region, ctx)',
+  'detectNearestGroupTitleFromOption(optionEl, ctx)',
+  'normalizeGroup(rawGroup, ctx)',
+  'normalizeOption(rawOption, ctx)'
+].forEach((pattern) => {
+  if (!phaseOneDocs.contract.includes(pattern)) fail(`Phase 1 profile contract missing: ${pattern}`);
+});
+[
+  'Target layer: scanner profiles',
+  'Transitional layer: V2 site profiles',
+  'Legacy layer: scanner-list routing',
+  'Legacy/manual compatibility layer',
+  'Data shape rules'
+].forEach((pattern) => {
+  if (!phaseOneDocs.rules.includes(pattern)) fail(`Phase 1 development rule missing: ${pattern}`);
+});
+[
+  'Standard onboarding steps',
+  'Implement a scanner profile under `content_modules/clipart/scanner-profile-<site>.js`',
+  'Run fixture/profile tests',
+  'Manual Chrome verification'
+].forEach((pattern) => {
+  if (!phaseOneDocs.onboarding.includes(pattern)) fail(`Phase 1 onboarding workflow missing: ${pattern}`);
+});
+if (!phaseOneDocs.architecture.includes('Current phase status')) fail('Phase 1 architecture status section missing');
+
 const changelog = read('CHANGELOG.txt');
 const versionHeaders = changelog.match(/^## \d+\.\d+\.\d+/gm) || [];
 if (versionHeaders.length !== 3) fail(`CHANGELOG must contain exactly 3 recent version headers, got ${versionHeaders.length}`);
