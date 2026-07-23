@@ -5627,19 +5627,36 @@ function scanQuoteLikeFieldsSync() {
     window.__stsPickActive = false;
   }
 
+  function getEffectiveScannerProfileForCurrentPage() {
+    var ns = window.STSClipartScanner;
+    if (!ns || !ns.profileContext || typeof ns.profileContext.create !== 'function' || !ns.profiles || typeof ns.profiles.resolve !== 'function') return null;
+    try {
+      return ns.profiles.resolve(ns.profileContext.create({ document: document, location: location, window: window }));
+    } catch (err) {
+      console.warn('[STS Clipart Pro 8.3 Clipart] Profile resolve failed:', err);
+      return null;
+    }
+  }
+
   function collectOptionsInRegion(region) {
+    var profile = getEffectiveScannerProfileForCurrentPage();
+    if (profile && typeof profile.collectOptionsInRegion === 'function') return profile.collectOptionsInRegion(region, window.STSClipartScanner.profileContext.create({ document: document, location: location, window: window }));
     var m = window.STSClipartScanner && window.STSClipartScanner.collectors;
     if (m && typeof m.collectOptionsInRegion === 'function') return m.collectOptionsInRegion(region);
     return [];
   }
 
   function collectOptionsInContainer(container) {
+    var profile = getEffectiveScannerProfileForCurrentPage();
+    if (profile && typeof profile.collectOptionsInContainer === 'function') return profile.collectOptionsInContainer(container, window.STSClipartScanner.profileContext.create({ document: document, location: location, window: window }));
     var m = window.STSClipartScanner && window.STSClipartScanner.collectors;
     if (m && typeof m.collectOptionsInContainer === 'function') return m.collectOptionsInContainer(container);
     return [];
   }
 
   function detectNearestGroupTitleFromOption(optionEl) {
+    var profile = getEffectiveScannerProfileForCurrentPage();
+    if (profile && typeof profile.detectNearestGroupTitleFromOption === 'function') return profile.detectNearestGroupTitleFromOption(optionEl, window.STSClipartScanner.profileContext.create({ document: document, location: location, window: window }));
     var m = window.STSClipartScanner && window.STSClipartScanner.collectors;
     if (m && typeof m.detectNearestGroupTitleFromOption === 'function') return m.detectNearestGroupTitleFromOption(optionEl);
     return '';
