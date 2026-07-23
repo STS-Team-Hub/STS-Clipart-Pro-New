@@ -4909,15 +4909,45 @@ function scanQuoteLikeFieldsSync() {
   function getManualTitleCandidates() {
     var activeProfile = getManualProfileForHost();
     var titles = [];
+    var candidateRecords = [];
     var seen = new Set();
-    function addTitle(titleEl, groupEl) {
+
+    function cleanManualCandidateLabel(titleEl, explicitLabel) {
+      var raw = explicitLabel != null ? explicitLabel : (titleEl && titleEl.textContent || '');
+      var ttl = activeProfile && activeProfile.cleanupTitle ? activeProfile.cleanupTitle(raw) : String(raw || '').trim();
+      return String(ttl || '').replace(/\s+/g, ' ').trim();
+    }
+
+    function addTitle(titleEl, groupEl, expandEl, label, source) {
       if (!titleEl || seen.has(titleEl)) return;
-      var ttl = activeProfile && activeProfile.cleanupTitle ? activeProfile.cleanupTitle(titleEl.textContent || '') : (titleEl.textContent || '').trim();
-      ttl = String(ttl || '').replace(/\s+/g, ' ').trim();
+      var ttl = cleanManualCandidateLabel(titleEl, label);
       if (!ttl) return;
       if (groupEl) titleEl.__stsManualProfileGroup = groupEl;
       seen.add(titleEl);
       titles.push(titleEl);
+      candidateRecords.push({
+        titleEl: titleEl,
+        groupEl: groupEl || (titleEl && titleEl.__stsManualProfileGroup) || null,
+        expandEl: expandEl || null,
+        label: ttl,
+        source: source || 'legacy'
+      });
+    }
+
+    function addCandidate(candidate, fallbackSource) {
+      if (!candidate) return;
+      if (candidate.nodeType === 1 || candidate.tagName || candidate.textContent != null) {
+        addTitle(candidate, null, null, null, fallbackSource);
+        return;
+      }
+      addTitle(candidate.titleEl, candidate.groupEl, candidate.expandEl, candidate.label, candidate.source || fallbackSource);
+    }
+
+    if (activeProfile && typeof activeProfile.getManualDrivenAutoTitleCandidates === 'function') {
+      var ctx = (ns && ns.profileContext && typeof ns.profileContext.create === 'function') ? ns.profileContext.create({ document: document, location: location, window: window }) : { document: document, location: location, window: window };
+      var profileCandidates = activeProfile.getManualDrivenAutoTitleCandidates(ctx) || [];
+      profileCandidates.forEach(function(candidate) { addCandidate(candidate, 'scanner-profile'); });
+      return { profile: activeProfile, titles: titles, candidates: candidateRecords, source: 'scanner-profile' };
     }
 
     if (activeProfile && !activeProfile.useLegacyGeneric && typeof activeProfile.getRoot === 'function' && typeof activeProfile.getGroups === 'function' && (typeof activeProfile.getTitleElement === 'function' || typeof activeProfile.getTitle === 'function')) {
@@ -4926,9 +4956,9 @@ function scanQuoteLikeFieldsSync() {
       groups.forEach(function(group) {
         if (activeProfile.isValidGroup && !activeProfile.isValidGroup(group)) return;
         var titleEl = activeProfile.getTitleElement ? activeProfile.getTitleElement(group) : activeProfile.getTitle(group);
-        addTitle(titleEl, group);
+        addTitle(titleEl, group, null, null, 'manual-profile');
       });
-      return { profile: activeProfile, titles: titles, source: 'manual-profile' };
+      return { profile: activeProfile, titles: titles, candidates: candidateRecords, source: 'manual-profile' };
     }
 
     var GROUP_SELS = [
@@ -4964,14 +4994,14 @@ function scanQuoteLikeFieldsSync() {
       if (!labelEl) return;
       var labelText = labelEl.textContent.trim();
       if (labelText.length < 2 || labelText.length > 60) return;
-      addTitle(labelEl, container);
+      addTitle(labelEl, container, null, null, 'legacy-generic-manual');
     });
-    return { profile: activeProfile || null, titles: titles, source: 'legacy-generic-manual' };
+    return { profile: activeProfile || null, titles: titles, candidates: candidateRecords, source: 'legacy-generic-manual' };
   }
 
   function hasManualDrivenAutoCandidates() {
     var candidates = getManualTitleCandidates();
-    return !!(candidates && candidates.titles && candidates.titles.length);
+    return !!(candidates && ((candidates.titles && candidates.titles.length) || (candidates.candidates && candidates.candidates.length)));
   }
 
   function collectManualGroupViaLegacyContainer(titleEl) {

@@ -214,6 +214,41 @@
     try { titleEl.click(); return true; } catch (err) { return false; }
   }
 
+
+  function isMeaningfullyVisible(el) {
+    if (!el) return false;
+    if (el.offsetParent !== undefined && el.offsetParent !== null) return true;
+    if (typeof el.getClientRects === 'function' && el.getClientRects().length) return true;
+    if (typeof el.getBoundingClientRect === 'function') {
+      var r = el.getBoundingClientRect();
+      return !!(r && (r.width > 0 || r.height > 0));
+    }
+    return true;
+  }
+
+  function normalizeManualAutoCandidateList(candidateResult) {
+    var raw = candidateResult && Array.isArray(candidateResult.candidates) ? candidateResult.candidates : (candidateResult && Array.isArray(candidateResult.titles) ? candidateResult.titles : []);
+    var out = [];
+    var seen = [];
+    function samePair(a, b) { return a && b && a.titleEl === b.titleEl && (a.groupEl || null) === (b.groupEl || null); }
+    raw.forEach(function(item) {
+      var rec = (item && (item.titleEl || item.groupEl || item.expandEl || item.label || item.source)) ? item : { titleEl: item };
+      var titleEl = rec && rec.titleEl;
+      if (!titleEl) return;
+      var groupEl = rec.groupEl || titleEl.__stsManualProfileGroup || null;
+      var label = String(rec.label || getManualAutoLabel(titleEl) || '').replace(/\s+/g, ' ').trim();
+      if (!label) return;
+      if (isUnsafeManualAutoText(label)) return;
+      if (!isMeaningfullyVisible(titleEl)) return;
+      if (groupEl && !isMeaningfullyVisible(groupEl)) return;
+      var normalized = { titleEl: titleEl, groupEl: groupEl, expandEl: rec.expandEl || null, label: label, source: rec.source || (candidateResult && candidateResult.source) || 'legacy' };
+      for (var i = 0; i < seen.length; i++) if (samePair(seen[i], normalized)) return;
+      seen.push(normalized);
+      out.push(normalized);
+    });
+    return out;
+  }
+
   function normalizeManualAutoGroup(group) {
     if (!group || !Array.isArray(group.options) || !group.options.length) return null;
     var label = String(group.label || group.name || group.title || '').trim();
@@ -235,29 +270,22 @@
     var core = c.coreFns || {};
     if (typeof core.getManualTitleCandidatesLegacy !== 'function' || typeof core.collectManualGroupViaResolverLegacy !== 'function') return null;
     var candidateResult = core.getManualTitleCandidatesLegacy();
-    var titles = candidateResult && Array.isArray(candidateResult.titles) ? candidateResult.titles : [];
+    var candidates = normalizeManualAutoCandidateList(candidateResult);
     var source = candidateResult && candidateResult.source || 'none';
     var profile = (candidateResult && candidateResult.profile) || (typeof c.getCurrentProfile === 'function' && c.getCurrentProfile()) || null;
-    if (!titles.length) return null;
+    if (!candidates.length) return null;
 
-    var seenTitleEls = new Set();
-    var uniqueTitles = titles.filter(function(titleEl) {
-      if (!titleEl || seenTitleEls.has(titleEl)) return false;
-      seenTitleEls.add(titleEl);
-      return true;
-    });
-    if (!uniqueTitles.length) return null;
-
-    if (typeof c.showProgress === 'function') c.showProgress(8, 'Manual-driven Auto: ' + uniqueTitles.length + ' titles');
+    if (typeof c.showProgress === 'function') c.showProgress(8, 'Manual-driven Auto: ' + candidates.length + ' titles');
     var groups = [];
     var seenGroups = new Set();
     var warnings = [];
     var perTitleTrace = [];
     var waitMs = profile && typeof profile.manualDrivenAutoWaitMs === 'number' ? profile.manualDrivenAutoWaitMs : 100;
 
-    for (var i = 0; i < uniqueTitles.length; i++) {
-      var titleEl = uniqueTitles[i];
-      var titleText = getManualAutoLabel(titleEl);
+    for (var i = 0; i < candidates.length; i++) {
+      var candidate = candidates[i];
+      var titleEl = candidate.titleEl;
+      var titleText = candidate.label || getManualAutoLabel(titleEl);
       var traceEntry = {
         titleText: titleText,
         click: 'skipped-click',
@@ -269,7 +297,7 @@
       if (titleEl && typeof titleEl.scrollIntoView === 'function') {
         try { titleEl.scrollIntoView({ block: 'center', inline: 'nearest' }); } catch (e) { titleEl.scrollIntoView(); }
       }
-      var expandEl = resolveManualAutoExpandTarget(profile, titleEl, c);
+      var expandEl = candidate.expandEl || resolveManualAutoExpandTarget(profile, titleEl, c);
       if (isUnsafeManualAutoText(getManualAutoLabel(expandEl))) {
         traceEntry.skipReason = 'unsafe-click-text';
         warnings.push('unsafe-click:' + titleText);
@@ -302,7 +330,7 @@
       }
       seenGroups.add(key);
       groups.push(group);
-      if (typeof c.showProgress === 'function') c.showProgress(8 + Math.round(((i + 1) / uniqueTitles.length) * 20), 'Manual-driven Auto: ' + groups.length + ' groups');
+      if (typeof c.showProgress === 'function') c.showProgress(8 + Math.round(((i + 1) / candidates.length) * 20), 'Manual-driven Auto: ' + groups.length + ' groups');
     }
 
     if (!groups.length) return null;
@@ -320,7 +348,7 @@
         source: source,
         resolvedProfileId: profile && profile.id || null,
         matchedProfileId: profile && profile.matchedProfileId || null,
-        titleCandidates: uniqueTitles.length,
+        titleCandidates: candidates.length,
         groupsAfterDedup: categories.length,
         warnings: warnings,
         perTitle: perTitleTrace,
