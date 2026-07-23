@@ -6,7 +6,7 @@ This document is the source-of-truth architecture snapshot for the current STS C
 
 ## Current phase status
 
-The repository is past the original Phase 1 baseline. The current implementation is best described as **Phase 4 complete: unified scanner-profile routing is integrated, safe UI/state ownership has been extracted, and legacy compatibility layers remain for documented fallback cases**.
+The repository is past the original Phase 1 baseline. The current implementation is best described as **Phase 5 complete: scanner-profile-first routing is integrated, safe UI/state ownership has been extracted, and legacy compatibility layers are deprecated, warning-backed fallback contracts**.
 
 Completed or mostly completed:
 
@@ -19,9 +19,9 @@ Completed or mostly completed:
 
 Still transitional:
 
-- Destructive legacy picker removal remains deferred to Phase 5; core still bridges legacy picker internals where replacement APIs are not yet proven.
-- Legacy scanner-list routing and V2 site profiles remain for compatibility.
-- Some docs/tests still need maintenance when fixture files are moved or added.
+- Legacy picker internals remain only where tests still prove runtime dependency; removal is no longer assumed safe without replacing those dependencies first.
+- Legacy scanner-list routing and V2 site profiles remain for compatibility, with the scanner-list route documented as a permanent fallback contract.
+- Manual legacy profile assets remain as compatibility fixtures for older manual fallback coverage.
 
 ## Runtime profile layers
 
@@ -67,13 +67,13 @@ Current V2 site-profile files include:
 
 ### 3. Legacy layer: scanner-list routing
 
-`content_modules/site-profiles.js` exposes the legacy scanner-list routing layer (`window.STSSiteProfiles`). It remains as fallback compatibility only.
+`content_modules/site-profiles.js` exposes the legacy scanner-list routing layer (`window.STSSiteProfiles`). It remains as a deprecated permanent fallback compatibility contract and emits a one-time warning when selected.
 
 Do not add new feature behavior here unless it is required to preserve existing legacy behavior.
 
 ### 4. Legacy/manual compatibility layer
 
-`content_modules/manual_profiles/` still contains manual-profile assets. These are compatibility assets, not the target ownership layer.
+`content_modules/manual_profiles/` still contains manual-profile assets. These are deprecated compatibility fixtures, not the target ownership layer, and the registry emits a one-time warning when one resolves.
 
 New Manual Pick behavior must prefer scanner-profile methods or adapter-backed scanner profiles.
 
@@ -89,7 +89,7 @@ New Manual Pick behavior must prefer scanner-profile methods or adapter-backed s
 
 ## Compatibility rules
 
-- Keep `window.__stsClipartPro` and other legacy globals stable until a dedicated removal phase is approved.
+- Keep `window.__stsClipartPro` and other legacy globals stable unless tests and replacement runtime bridges prove they can be removed safely.
 - Keep `<all_urls>` host permission unchanged unless explicitly requested.
 - Keep content script load order stable unless tests and docs are updated in the same change.
 - Prefer scanner-profile additions over V2 or legacy scanner-list additions.
@@ -97,7 +97,7 @@ New Manual Pick behavior must prefer scanner-profile methods or adapter-backed s
 
 ## Legacy fallback audit
 
-Legacy routes are still allowed only for compatibility cases:
+Legacy routes are deprecated and allowed only for compatibility cases:
 
 1. Auto Scan may call the legacy scan pipeline when the scanner-profile resolver is unavailable or returns no usable groups.
 2. Append Visible State may call legacy `scanDOM()` when `scanVisibleState(ctx)` returns no groups.
@@ -106,7 +106,7 @@ Legacy routes are still allowed only for compatibility cases:
 
 ## Known gaps
 
-1. Legacy core still bridges some picker internals for compatibility until Phase 5 removal, but the FAB scan-mode popup is owned by `scanner-ui.js` and Manual Scan empty-state mutation is owned by `scanner-state.js`.
+1. Legacy core still bridges some picker internals for compatibility, but the FAB scan-mode popup is owned by `scanner-ui.js` and Manual Scan empty-state mutation is owned by `scanner-state.js`.
 2. V2 site profiles and scanner profiles coexist, so there are still overlapping profile systems.
 3. Some test fixture references require repository cleanup when fixture files are moved or duplicated.
 4. The docs must be kept aligned with actual runtime routes after each phase.

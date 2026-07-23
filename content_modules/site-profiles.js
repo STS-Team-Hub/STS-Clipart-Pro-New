@@ -39,6 +39,16 @@
     }
   };
 
+  let didWarnLegacyRouter = false;
+
+  function warnLegacyRouter(reason){
+    if (didWarnLegacyRouter) return;
+    didWarnLegacyRouter = true;
+    if (typeof console !== 'undefined' && console.warn) {
+      console.warn('[STS Clipart Pro 8.3 Legacy] STSSiteProfiles scanner-list route is deprecated and kept as compatibility fallback only.', reason || '');
+    }
+  }
+
   function pickSiteProfile(hostname){
     const host = String(hostname || '').toLowerCase();
 
@@ -46,18 +56,29 @@
       const resolved = window.STSSiteProfilesV2.resolve(host);
       if (resolved && resolved.id) {
         const byId = Object.values(SITE_PROFILES).find((p) => p.key.indexOf(resolved.id) >= 0) || SITE_PROFILES[resolved.id + '.com'];
-        if (byId) return byId;
+        if (byId) {
+          warnLegacyRouter('mapped-v2-profile');
+          return byId;
+        }
       }
     }
 
-    if (!host) return DEFAULT_PROFILE;
-    if (SITE_PROFILES[host]) return SITE_PROFILES[host];
+    if (!host) {
+      warnLegacyRouter('empty-host-default');
+      return DEFAULT_PROFILE;
+    }
+    if (SITE_PROFILES[host]) {
+      warnLegacyRouter('direct-host-match');
+      return SITE_PROFILES[host];
+    }
 
     for (const key of Object.keys(SITE_PROFILES)) {
       if (host === key || host.endsWith('.' + key.replace(/^www\./, ''))) {
+        warnLegacyRouter('suffix-host-match');
         return SITE_PROFILES[key];
       }
     }
+    warnLegacyRouter('unknown-host-default');
     return DEFAULT_PROFILE;
   }
 
