@@ -6,7 +6,7 @@ Move STS Clipart Pro from mixed legacy/V2/scanner-profile routing to a clean sca
 
 ## Current checkpoint
 
-Current checkpoint: **Phase 2 complete**.
+Current checkpoint: **Phase 3 complete**.
 
 The scanner-profile contract is already wired into the most important runtime paths:
 
@@ -15,7 +15,7 @@ The scanner-profile contract is already wired into the most important runtime pa
 - Screenshot Pick routes region collection and nearest-title detection through the effective scanner profile before generic fallback.
 - V2 site profiles can be adapted into scanner profiles.
 
-Phase 2 routing is complete; core extraction and legacy removal remain scheduled for later phases.
+Phase 3 site-profile consolidation is complete; core extraction and legacy removal remain scheduled for later phases.
 
 ## Phase 0 — Architecture baseline
 
@@ -99,30 +99,33 @@ Phase 2 verification record:
 
 ## Phase 3 — Site-profile consolidation
 
-Status: **Not started**.
+Status: **Complete**.
 
-Planned work:
+Completion recorded: **2026-07-23**.
 
-1. Inventory every V2 site profile and classify it as:
-   - migrate to dedicated scanner profile,
-   - keep as adapter-backed transitional profile,
-   - remove if obsolete.
-2. Migrate high-value or complex sites to dedicated scanner profiles first:
+Completed work:
+
+1. Inventoried current V2 site profiles and classified Phase 3 ownership in `docs/clipart-profile-inventory.md`.
+2. Kept existing dedicated scanner profiles for high-value complex sites:
    - Pawesomehouse / Customily
    - Macorner / Customily
    - Geckocustom
    - Pawfecthouse / Teeinblue
-   - PersonalFury / Customily
-   - InterestPod / personalization forms
-   - Gossby / personalized form
-3. Keep fixture-driven tests for each migrated site.
-4. Update manifest load order and docs in the same change as each migration.
+3. Consolidated PersonalFury, InterestPod, and Gossby into scanner-profile registry ownership through `scanner-profile-site-v2-consolidated.js` before the generic V2 adapter pass.
+4. Kept fixture-driven tests for the consolidated sites through the existing unit fixtures.
+5. Updated manifest load order and docs in the same change.
 
 Exit criteria:
 
 - No new site behavior is added to `content_modules/site-profiles.js`.
 - Most active sites are scanner-profile-native or intentionally adapter-backed.
 - Profile inventory docs list only current, verified profiles.
+
+Phase 3 verification record:
+
+- Verified on **2026-07-23** that smoke checks pass through `npm run check`.
+- Verified on **2026-07-23** that route/profile/fallback unit coverage passes through `npm run test:unit`.
+- Result: Phase 3 is considered successfully completed; core ownership extraction remains tracked under Phase 4.
 
 ## Phase 4 — Core extraction and ownership cleanup
 
