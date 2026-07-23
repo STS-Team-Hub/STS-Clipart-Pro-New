@@ -530,7 +530,8 @@ const phaseOneDocs = {
   architecture: read('docs/clipart-profile-architecture.md'),
   contract: read('docs/clipart-profile-contract.md'),
   rules: read('docs/clipart-development-rules.md'),
-  onboarding: read('docs/clipart-new-site-onboarding.md')
+  onboarding: read('docs/clipart-new-site-onboarding.md'),
+  removalPlan: read('docs/clipart-v2-legacy-removal-plan.md')
 };
 [
   'Status: **Complete**',
@@ -554,9 +555,9 @@ const phaseOneDocs = {
 });
 [
   'Target layer: scanner profiles',
-  'Transitional layer: V2 site profiles',
-  'Legacy layer: scanner-list routing',
-  'Legacy/manual compatibility layer',
+  'Removal target: V2 site profiles',
+  'Removal target: scanner-list routing',
+  'Removal target: legacy manual profiles',
   'Data shape rules'
 ].forEach((pattern) => {
   if (!phaseOneDocs.rules.includes(pattern)) fail(`Phase 1 development rule missing: ${pattern}`);
@@ -574,6 +575,14 @@ if (!phaseOneDocs.architecture.includes('Phase 7 complete')) fail('architecture 
 if (!phaseOneDocs.contract.includes('Phase 7 complete')) fail('profile contract docs must reflect Phase 7 completion');
 if (!phaseOneDocs.rules.includes('Phase 7 complete')) fail('development rules docs must reflect Phase 7 completion');
 if (!phaseOneDocs.onboarding.includes('Phase 7 complete')) fail('onboarding docs must reflect Phase 7 completion');
+[
+  'one operational scanner flow',
+  'What will be removed',
+  'Execution phases',
+  'Definition of done'
+].forEach((pattern) => {
+  if (!phaseOneDocs.removalPlan.includes(pattern)) fail(`V2/legacy removal plan missing: ${pattern}`);
+});
 
 const changelog = read('CHANGELOG.txt');
 const versionHeaders = changelog.match(/^## \d+\.\d+\.\d+/gm) || [];

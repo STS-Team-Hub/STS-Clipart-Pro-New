@@ -52,25 +52,17 @@ Existing supported sites should migrate to this package shape when they receive 
 
 Do not add unrelated new sites to this file. If a consolidated site receives substantial work, split it into `scanner-profile-<site-id>.js` with fixtures and tests.
 
-### Transitional layer: V2 site profiles
+### Removal target: V2 site profiles
 
-Files in `content_modules/site_profiles/` are transitional V2 site profiles. They may still be used when a site already has V2 selectors/helpers or when adapting existing behavior is lower risk than rewriting it directly as a scanner profile.
+Files in `content_modules/site_profiles/` are removal targets under the Phase 8 one-flow plan. Do not add new behavior here. Remaining V2 behavior must be copied into dedicated `content_modules/clipart/scanner-profile-<site-id>.js` files, then the V2 registry and adapter scripts should be deleted when tests prove parity. See `docs/clipart-v2-legacy-removal-plan.md`.
 
-V2 profiles should be adapted into scanner profiles through `content_modules/clipart/scanner-profile-adapters.js` when possible.
+### Removal target: scanner-list routing
 
-Do not add a new V2 profile if the same feature can be implemented cleanly as a dedicated scanner profile.
+`content_modules/site-profiles.js` is the legacy scanner-list routing layer and is a Phase 8 removal target. Do not add feature behavior or new routing entries here; migrate required behavior into the relevant dedicated scanner profile.
 
-### Legacy layer: scanner-list routing
+### Removal target: legacy manual profiles
 
-`content_modules/site-profiles.js` is the legacy scanner-list routing layer. It is a deprecated permanent fallback compatibility contract and warns when selected.
-
-Do not add new feature behavior to this layer. Only update it when required to preserve legacy routing compatibility for an existing site during migration.
-
-### Legacy/manual compatibility layer
-
-Files in `content_modules/manual_profiles/` are legacy manual-profile assets. They are deprecated compatibility fixtures and warn when resolved; new Manual Pick behavior should prefer scanner profile methods.
-
-If manual-profile logic is still needed, prefer adapting or migrating it into a scanner profile instead of expanding the legacy manual layer.
+Files in `content_modules/manual_profiles/` are legacy manual-profile assets and are Phase 8 removal targets. New Manual Pick behavior must live in scanner profile methods, and any still-needed legacy manual behavior should be migrated into a dedicated scanner profile before the folder is deleted.
 
 ## Scanner core rules
 
