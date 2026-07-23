@@ -25,7 +25,7 @@ function loadAuto() {
   return { mod: windowMock.STSClipartScanner.auto, document, windowMock };
 }
 
-async function runWith({ titles, resolver, legacy, hasCandidates = true }) {
+async function runWith({ titles, resolver, legacy, hasCandidates = true, profile }) {
   const { mod, document, windowMock } = loadAuto();
   const calls = { legacyAuto: 0, panel: 0, notify: 0 };
   const CLIPART = { categories: [], capturedData: null };
@@ -38,7 +38,7 @@ async function runWith({ titles, resolver, legacy, hasCandidates = true }) {
     showClipartPanel() { calls.panel++; },
     coreFns: {
       hasManualDrivenAutoCandidatesLegacy: () => hasCandidates,
-      getManualTitleCandidatesLegacy: () => ({ source: 'manual-profile', profile: { id: 'test-manual', matchedProfileId: 'test-manual' }, titles }),
+      getManualTitleCandidatesLegacy: () => ({ source: 'manual-profile', profile: profile || { id: 'test-manual', matchedProfileId: 'test-manual' }, titles }),
       collectManualGroupViaResolverLegacy: resolver,
       collectManualGroupViaLegacyContainerLegacy: legacy,
       scanClipartsLegacy() { calls.legacyAuto++; return { categories: ['legacy'] }; }
@@ -59,6 +59,12 @@ async function runWith({ titles, resolver, legacy, hasCandidates = true }) {
   assert.equal(multi.calls.legacyAuto, 0);
   assert.equal(multi.calls.panel, 1);
   assert.equal(first.scrollIntoViewCalled, 1);
+
+
+  assert.equal(multi.result.trace.perTitle.length, 2);
+  assert.deepEqual(multi.result.trace.perTitle.map((entry) => entry.click), ['clicked', 'clicked']);
+  assert.deepEqual(multi.result.trace.perTitle.map((entry) => entry.optionCount), [1, 1]);
+  assert.equal(multi.result.trace.settleWaitMs, 100);
 
   const single = E('div', { textContent: 'Material' });
   const manualSingle = await runWith({
@@ -87,6 +93,44 @@ async function runWith({ titles, resolver, legacy, hasCandidates = true }) {
     resolver: () => ({ fallback: false, group: { label: 'Duplicate', options: [{ textContent: 'Same', rect: { w: 1, h: 1 } }] } })
   });
   assert.equal(deduped.result.categories.length, 1);
+
+  assert.equal(deduped.result.trace.perTitle.length, 2);
+  assert.equal(deduped.result.trace.perTitle[1].skipReason, 'duplicate-group');
+
+  const emptyTitle = E('div', { textContent: 'Empty' });
+  const emptyFallback = await runWith({
+    titles: [emptyTitle],
+    resolver: () => ({ fallback: false, group: { label: 'Empty', options: [] } })
+  });
+  assert.deepEqual(emptyFallback.result.categories, ['legacy']);
+  assert.equal(emptyFallback.calls.legacyAuto, 1);
+
+  const unsafeTitle = E('button', { textContent: 'Upload photo' });
+  const unsafe = await runWith({
+    titles: [unsafeTitle],
+    resolver: () => ({ fallback: false, group: { label: 'Upload photo', options: [{ textContent: 'Keep existing', rect: { w: 1, h: 1 } }] } })
+  });
+  assert.equal(unsafeTitle.clicked, 0);
+  assert.equal(unsafe.result.trace.perTitle[0].click, 'skipped-click');
+  assert.equal(unsafe.result.trace.perTitle[0].skipReason, 'unsafe-click-text');
+
+  const titleWithTarget = E('div', { textContent: 'Profile Title' });
+  const expandTarget = E('button', { textContent: 'Open profile title' });
+  const profileTarget = await runWith({
+    titles: [titleWithTarget],
+    profile: {
+      id: 'profile-target',
+      matchedProfileId: 'profile-target',
+      manualDrivenAutoWaitMs: 0,
+      getAutoExpandTarget: (title) => title === titleWithTarget ? expandTarget : title
+    },
+    resolver: () => ({ fallback: false, resolverId: 'profile-resolver', group: { label: 'Profile Title', options: [{ textContent: 'Profile option', rect: { w: 1, h: 1 } }] } })
+  });
+  assert.equal(titleWithTarget.clicked, 0);
+  assert.equal(expandTarget.clicked, 1);
+  assert.equal(profileTarget.result.trace.resolvedProfileId, 'profile-target');
+  assert.equal(profileTarget.result.trace.settleWaitMs, 0);
+  assert.equal(profileTarget.result.trace.perTitle[0].resolverUsed, 'profile-resolver');
 
   const fallback = await runWith({ titles: [], hasCandidates: false, resolver: () => ({ fallback: true }) });
   assert.deepEqual(fallback.result.categories, ['legacy']);

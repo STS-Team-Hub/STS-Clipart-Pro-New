@@ -284,3 +284,19 @@ Minimum fixture coverage:
 1. For Gossby and Pawfecthouse, do we have complete expanded personalization HTML? The current saved fixtures do not prove the title-click route.
 2. For dependent option trees, should Auto collect only the currently visible branch, or should it recursively click parent options to enumerate all possible child groups?
 3. Should hidden Customily groups be ignored by default, or collected when their inputs/swatches are already present in DOM?
+
+## Phase 1 completion record — 2026-07-23
+
+Phase 1 is implemented for the current Auto wrapper contract:
+
+- Manual-driven Auto remains the first Auto route when `hasManualDrivenAutoCandidatesLegacy()` reports candidates; the existing Pawesomehouse V2 and legacy Auto routes are still used only when Manual-driven Auto cannot return groups.
+- Each Manual title pass now records a structured trace entry with the title text, click status, resolver path, option count, and skip reason when applicable. Duplicate groups, empty groups, unsafe click text, and click failures are represented in `trace.perTitle` and summarized through warnings where useful.
+- Click expansion is profile-aware: profiles can provide `getAutoExpandTarget(titleEl, ctx)` so Auto can click a dedicated accordion/control while still collecting through the Manual resolver scoped to the original title element.
+- DOM settle timing defaults to `100ms` and can be overridden per profile with `manualDrivenAutoWaitMs`.
+- Fallback behavior is preserved: successful Manual-driven Auto scans render the left panel; zero-group Manual-driven Auto attempts fall through to the existing site-specific/legacy Auto route.
+
+Verification completed:
+
+- `node tests/unit/manual-driven-auto.test.js`
+- `npm run check`
+- `npm run test:unit`
