@@ -1,0 +1,286 @@
+# Auto using Manual title-click scan: HTML review
+
+## Question reviewed
+
+The proposed change is: when users press **Auto**, the tool should drive the existing Manual workflow automatically by iterating the title elements of each personalization group, clicking each title to reveal the group state, collecting the same icon/quote/option payload Manual Pick would collect, and writing all groups into the left panel.
+
+## Current code checkpoint
+
+This direction is already partially implemented in the Auto wrapper. `scanner-auto.js` checks `hasManualDrivenAutoCandidatesLegacy()` before falling back to legacy Auto, then calls `runManualDrivenAuto()`. That helper gets Manual title candidates, scrolls each candidate title into view, performs a guarded click, waits for DOM settle, calls the Manual resolver, normalizes/deduplicates groups, updates `CLIPART.categories`, and opens the panel.
+
+The core candidate source is `getManualTitleCandidates()` in `scanner-core.js`. It first uses the active Manual profile when available. If no dedicated Manual profile applies, it falls back to generic group containers such as Customily/product option/form elements and labels.
+
+## HTML fixture scan summary
+
+A quick fixture scan of the saved HTML under `HTML/*.txt` shows the title-click approach is feasible for the majority of currently saved sites because most fixtures expose stable group containers and title nodes.
+
+| Fixture family | Relevant DOM found | Fit for title-click Manual-driven Auto |
+| --- | --- | --- |
+| Macorner / Customily | `#cl_optionsapp`, `.customily_option`, `.option_name`, `label[role=tab/button][aria-controls]`, `.cl-option-content`, `.customily-swatch` | Strong fit. Clicking the group label/title should reveal accordion content and the Manual resolver can stay scoped to the nearest `.customily_option`. |
+| Pawesomehouse | `#cl_optionsapp`, `.customily_option`, `.option_name`, `.customily-swatch` | Strong fit. Existing Customily group/title structure matches current Manual and scanner-profile selectors. |
+| InterestPod | Mostly Customily structure in saved fixtures | Strong fit for the Customily fixtures; title-click can reveal options while preserving group scope. |
+| PersonalFury | Customily structure in saved fixtures, including some text/input-only groups | Good fit, but Auto must preserve text/input/quote metadata, not only image swatches. |
+| Wanderprints | Customily structure in saved fixtures | Good fit for saved fixtures. Need live verification for dependent groups because some options may appear only after selecting upstream choices. |
+| GeckoCustom | Mixed fixtures: one has no Customily counters, one has small Customily structure | Needs profile-specific handling. Do not rely only on global Customily selectors. |
+| Gossby / Pawfecthouse | Saved fixtures do not show Customily counters | Needs dedicated/native profile behavior. Generic Manual title-click may still work if their live DOM exposes form labels and option containers, but it is not proven by the current saved HTML. |
+| TrendingCustom | Ant Design form structure (`.ant-form-item`) instead of Customily | Feasible via generic Manual route, but needs Ant-specific title/option extraction and careful click targets. |
+
+Fixture counter snapshot from `HTML/*.txt`:
+
+- `customily_option` appears in 14/21 HTML fixtures.
+- `option_name` appears in the same 14/21 fixtures.
+- `cl_optionsapp` appears in the same 14/21 fixtures.
+- TrendingCustom fixtures have many `.ant-form-item` markers and no Customily markers.
+- Gossby and Pawfecthouse fixtures have no Customily markers in the saved HTML.
+
+## Feasibility conclusion
+
+The proposed implementation is reasonable as the default Auto strategy, with an important constraint: **Auto should not literally become one global selector that clicks every matching title on every site.** It should route through the same Manual/profile resolver per site, then use each profile's title candidates and group-scoped collector. This avoids mixing product variants, Add to Cart controls, upload buttons, and hidden unrelated DOM into the left panel.
+
+Recommended execution order:
+
+1. Keep Manual-driven Auto as the first Auto route when Manual title candidates are available.
+2. Prefer dedicated scanner profiles for named sites.
+3. For Customily sites, title candidates should be `.customily_option > label` or `.customily_option .option_name`, and collection must be scoped to that exact `.customily_option`.
+4. For Ant/native sites, add or harden dedicated profile helpers instead of expanding the generic selector too aggressively.
+5. Click only safe accordion/title triggers, then wait for DOM settle before collecting.
+6. Deduplicate by normalized group label plus option payload.
+7. Keep legacy Auto as fallback when no Manual candidates or no groups are collected.
+
+## Risk notes
+
+- Some groups are dependent: clicking only group titles may reveal the current branch, but not every branch that appears after selecting different parent options.
+- Hidden groups can be present in the DOM with `display:none` or site-specific hidden attributes; profiles should filter visibility unless the site intentionally requires hidden metadata.
+- Text, select, upload, and quote fields must remain first-class options, otherwise the panel will be image-heavy but incomplete.
+- Some title elements are labels bound to inputs. The click guard should continue blocking unsafe checkout/cart/upload-like targets.
+
+## Verdict
+
+Yes, the direction is hợp lý. The saved HTML supports this approach for the Customily-heavy sites, and the codebase already has the correct architecture shape: Auto can invoke Manual title candidate discovery and Manual group collection before falling back. The next practical work should be hardening site profiles where the HTML is not Customily (`trendingcustom`, `gossby`, `pawfecthouse`) and adding live/fixture regression tests for dependent accordion groups.
+
+## Implementation plan
+
+### Goal
+
+Make **Auto** behave like an unattended Manual scan:
+
+1. Resolve the correct site/scanner profile.
+2. Find every valid personalization group title.
+3. Click each safe title/accordion trigger to reveal its current group options.
+4. Reuse the Manual group collector for that exact group.
+5. Merge all collected icon, quote, text, select, upload, and option values into the left panel.
+6. Fall back to legacy Auto only when no Manual-driven groups can be collected.
+
+### Non-goals
+
+- Do not click arbitrary page headings, product variant controls, Add to Cart, checkout, upload/remove buttons, quantity controls, or unrelated navigation.
+- Do not replace dedicated scanner profiles with one broad global selector.
+- Do not attempt full combinatorial traversal of dependent choices in the first pass. The first release should collect the currently reachable branch for each title. Full parent/child option exploration can be a later enhancement.
+
+### Phase 1: Harden the Auto orchestration contract
+
+Files:
+
+- `content_modules/clipart/scanner-auto.js`
+- `tests/unit/manual-driven-auto.test.js`
+
+Tasks:
+
+1. Keep `runManualDrivenAuto()` as the first Auto route when Manual candidates exist.
+2. Add a structured per-title trace entry:
+   - title text
+   - clicked/skipped-click
+   - resolver used
+   - option count
+   - skip reason, if any
+3. Make click behavior profile-aware:
+   - use `profile.getAutoExpandTarget(titleEl, ctx)` when available
+   - otherwise click the current title element via the existing safe click guard
+4. Make the settle delay configurable:
+   - default: 80-120 ms
+   - profile override: `manualDrivenAutoWaitMs`
+5. Preserve current fallback behavior:
+   - if Manual-driven Auto returns at least one group, show the panel
+   - if it returns no groups, run the existing site-specific/legacy Auto route
+
+Acceptance criteria:
+
+- Existing `manual-driven-auto.test.js` still passes.
+- New tests cover duplicate titles, empty group fallback, unsafe click text, profile-provided expand target, and trace output.
+
+### Phase 2: Normalize title candidate discovery
+
+Files:
+
+- `content_modules/clipart/scanner-core.js`
+- `content_modules/clipart/scanner-profile-*.js`
+- `content_modules/site_profiles/*.js` only when still acting as compatibility adapters
+
+Tasks:
+
+1. Add an optional scanner-profile method:
+   - `getManualDrivenAutoTitleCandidates(ctx)`
+2. Candidate priority:
+   - scanner profile candidates
+   - legacy Manual profile candidates
+   - generic fallback candidates
+3. Candidate record shape should support both old and new callers:
+   - old shape: raw `titleEl`
+   - new shape: `{ titleEl, groupEl, expandEl, label, source }`
+4. Keep backward compatibility by adapting raw title elements into records internally.
+5. Filter candidates before Auto clicks:
+   - visible group/title when visibility is meaningful
+   - non-empty cleaned label
+   - no unsafe button/action text
+   - unique title/group element pair
+
+Acceptance criteria:
+
+- Manual Pick behavior remains unchanged.
+- Auto can consume both raw title elements and structured candidate records.
+- Generic fallback remains available, but named-site profiles can override it.
+
+### Phase 3: Customily profile rollout
+
+Primary site families:
+
+- Macorner
+- Pawesomehouse
+- InterestPod
+- PersonalFury
+- Wanderprints
+
+Files:
+
+- Existing dedicated scanner profiles under `content_modules/clipart/`
+- Existing V2 profiles under `content_modules/site_profiles/` where a site has not yet migrated fully
+- New fixture tests under `tests/fixtures/site-profiles/` and `tests/unit/`
+
+Tasks:
+
+1. For each Customily-heavy site, candidates should be scoped to the personalization root:
+   - root: `#cl_optionsapp` or `#customily-options`
+   - group: `.customily_option`
+   - title: `.option_name`
+   - expand target: nearest group label with `aria-controls`, `role=tab`, or `role=button`
+2. Collection must stay scoped to the same `.customily_option`.
+3. Include these option types:
+   - image swatches
+   - color swatches
+   - radio/checkbox/select values
+   - text inputs and textareas
+   - quote/title/name fields
+   - upload/file metadata when present
+4. Exclude hidden groups unless the profile explicitly marks them as collectable.
+
+Acceptance criteria:
+
+- Fixture tests prove all Customily fixture families return expected group labels and option counts.
+- Auto does not collect Shopify/product variant style options outside the Customily root.
+- Text-only groups are preserved, not dropped.
+
+### Phase 4: Native/Ant profile rollout
+
+Primary site families:
+
+- TrendingCustom
+- Gossby
+- Pawfecthouse
+- GeckoCustom cases without Customily structure
+
+Files:
+
+- `content_modules/clipart/scanner-profile-trendingcustom.js` if missing or incomplete
+- `content_modules/clipart/scanner-profile-gossby.js` if missing or incomplete
+- `content_modules/clipart/scanner-profile-pawfecthouse.js`
+- `content_modules/clipart/scanner-profile-geckocustom.js`
+- Matching tests and fixtures
+
+Tasks:
+
+1. Add profile-owned candidate selectors for native DOMs:
+   - Ant forms: `.ant-form-item`, `.ant-form-item-label label`
+   - native option blocks: site-specific personalization wrappers, labels, legends, and swatch rows
+2. Add profile-owned expand-target logic where labels are not the clickable accordion trigger.
+3. Reuse shared option collectors only after the profile has identified a safe group root.
+4. Add fixture coverage for:
+   - image options
+   - quote/text fields
+   - selected-state classes
+   - collapsed groups
+   - groups with no Customily markers
+
+Acceptance criteria:
+
+- TrendingCustom does not require Customily selectors.
+- Gossby/Pawfecthouse can produce groups from their saved/native HTML fixtures or are explicitly marked as needing fresh complete HTML.
+- GeckoCustom chooses the dedicated profile route when Customily markers are absent.
+
+### Phase 5: Panel payload and UX validation
+
+Files:
+
+- `panel.js`
+- `content_modules/sync-payload.js`
+- `content_modules/clipart/scanner-auto.js`
+
+Tasks:
+
+1. Confirm the Manual-driven Auto result uses the same category/option shape currently expected by the left panel.
+2. Preserve image fields:
+   - `imageUrl`
+   - `capturedImage`
+   - `bgColor`
+   - `optionType`
+   - `sourceKind`
+3. Preserve text/quote metadata:
+   - `textContent`
+   - `value`
+   - `name`
+   - placeholder/help text when already exposed by the collector
+4. Add a user-facing progress string:
+   - total title candidates
+   - groups collected
+   - skipped groups count
+5. Keep existing success notification after panel render.
+
+Acceptance criteria:
+
+- Left panel shows all collected groups after pressing Auto.
+- Image-backed and text-backed options render correctly.
+- Trace warnings are available for debugging but do not block successful scans.
+
+### Phase 6: Test matrix
+
+Required commands:
+
+1. `node tests/unit/manual-driven-auto.test.js`
+2. `node tests/run-unit-tests.js`
+3. Targeted fixture tests for each changed profile.
+4. Chrome/manual smoke test on at least one Customily live product page and one native/Ant page.
+
+Minimum fixture coverage:
+
+| Site family | Fixture expectation |
+| --- | --- |
+| Macorner / Customily | Multiple title clicks, image swatches, color swatches, text fields |
+| Pawesomehouse | Existing Customily groups remain scoped under `#customily-options` / `#cl_optionsapp` |
+| InterestPod | Customily groups and dependent visible branch |
+| PersonalFury | Text/input-only groups are preserved |
+| Wanderprints | Dependent groups do not crash and collect current branch |
+| TrendingCustom | Ant groups are discovered without Customily selectors |
+| Gossby / Pawfecthouse | Native groups require dedicated profile tests or fresh complete HTML fixtures |
+| GeckoCustom | Dedicated profile handles both Customily and non-Customily snapshots |
+
+### Suggested release sequence
+
+1. Ship Phase 1 and Phase 2 behind the current Manual-candidate gate.
+2. Ship Customily profile hardening first because most saved fixtures match this DOM family.
+3. Add native/Ant site profiles one by one after each has a complete fixture.
+4. Only after fixture and smoke coverage is stable, consider making Manual-driven Auto the preferred route for all supported profiles.
+
+### Open questions before coding native profiles
+
+1. For Gossby and Pawfecthouse, do we have complete expanded personalization HTML? The current saved fixtures do not prove the title-click route.
+2. For dependent option trees, should Auto collect only the currently visible branch, or should it recursively click parent options to enumerate all possible child groups?
+3. Should hidden Customily groups be ignored by default, or collected when their inputs/swatches are already present in DOM?
