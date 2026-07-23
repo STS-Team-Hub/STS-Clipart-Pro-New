@@ -6,11 +6,11 @@ This document defines current development rules for STS Clipart Pro runtime chan
 
 ## Current phase
 
-Current state: **Phase 5 complete**.
+Current state: **Phase 6 complete**.
 
 The scanner-profile contract is wired into Auto Scan, Append Visible State, Screenshot collector/title routing, and profile-aware Manual Pick paths. Safe ownership extraction has moved scan-mode UI into `scanner-ui.js` and Manual Scan empty-state mutation into `scanner-state.js`; legacy wrappers are deprecated compatibility bridges and now warn when selected where applicable.
 
-See `docs/clipart-roadmap.md` for the remaining phase plan.
+See `docs/clipart-roadmap.md` for the completed phase plan and remaining external manual Chrome verification checklist.
 
 ## Runtime layers and ownership
 

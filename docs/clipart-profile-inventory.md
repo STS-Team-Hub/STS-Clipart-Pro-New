@@ -16,8 +16,8 @@ This document records the Phase 3 classification for every current V2 site profi
 | InterestPod / personalization forms | Phase 3 consolidated scanner profile | Scanner-registry-owned transitional profile | Registered by `scanner-profile-site-v2-consolidated.js` before the generic adapter pass; fixture coverage remains in `manual-new-site-profiles.test.js`. |
 | Gossby / personalized form | Phase 3 consolidated scanner profile | Scanner-registry-owned transitional profile | Registered by `scanner-profile-site-v2-consolidated.js` before the generic adapter pass; fixture coverage remains in `manual-new-site-profiles.test.js`. |
 | Suzitee / Customily | V2 adapter-backed | Intentional transitional adapter | Existing unit coverage remains in `auto-suzitee-profile.test.js`; no Phase 3 behavior change. |
-| TrendingCustom / personalization forms | V2 adapter-backed | Intentional transitional adapter | Lower-priority active profile; keep adapter-backed until Phase 4/6 coverage expansion. |
-| Wanderprints / Customily | V2 adapter-backed | Intentional transitional adapter | Lower-priority active profile; keep adapter-backed until Phase 4/6 coverage expansion. |
+| TrendingCustom / personalization forms | V2 adapter-backed | Intentional transitional adapter | Lower-priority active profile; remains intentionally adapter-backed after Phase 6 QA hardening until a dedicated scanner-profile migration is scheduled. |
+| Wanderprints / Customily | V2 adapter-backed | Intentional transitional adapter | Lower-priority active profile; remains intentionally adapter-backed after Phase 6 QA hardening until a dedicated scanner-profile migration is scheduled. |
 | Etsy / Shopify-like forms | V2 adapter-backed | Intentional transitional adapter | Marketplace profile stays adapter-backed until legacy deprecation analysis. |
 | Generic | V2 fallback only | Not adapted | Generic V2 profile is intentionally not registered as a scanner profile because the default scanner profile owns fallback behavior. |
 

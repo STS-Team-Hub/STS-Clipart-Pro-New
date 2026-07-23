@@ -1,7 +1,7 @@
 # Clipart Target Profile Contract
 
 ## Purpose
-This document defines the scanner-profile contract used as the target runtime architecture. The repository is currently in Phase 2 partial: the contract is implemented for registry/default fallback and is wired into Auto, Append, and Screenshot collector/title routes, while Manual Pick and legacy-core ownership remain transitional.
+This document defines the scanner-profile contract used as the target runtime architecture. The repository is currently **Phase 6 complete**: the contract is implemented for registry/default fallback and wired into Auto Scan, Append Visible State, Screenshot collector/title routes, and profile-aware Manual Pick paths, while legacy routes remain warning-backed compatibility contracts.
 
 ## Target profile rule
 
@@ -69,5 +69,5 @@ effectiveProfile = {
 - V2 profiles can map into this contract with adapter logic when they expose `autoScan()` or `scanManualGroupFromTitle()`.
 - The default scanner profile supplies fallback implementations for scan, manual/container collection, screenshot region collection, nearest-title detection, and normalization.
 - Screenshot collection/title detection now route through the effective scanner profile before falling back to generic collectors.
-- Manual Pick is not fully module-native yet; legacy UI entrypoints still exist while resolver/collector paths become profile-aware.
+- Manual Pick now uses profile-aware resolver/collector paths; legacy UI entrypoints remain only as compatibility bridges where tests still prove runtime dependency.
 
