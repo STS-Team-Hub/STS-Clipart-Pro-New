@@ -32,6 +32,65 @@ The exact script list lives in `manifest.json`. Preserve these order groups unle
 8. Site router, UI, export, sync, render.
 9. Auto, manual, screenshot, panel, core, and legacy marker.
 
+
+## Frozen content-script load order
+
+Phase 0 freezes this exact `manifest.json` content-script list. Any runtime phase that changes this list must update this baseline document and the smoke check in the same commit.
+
+1. `content_modules/debug.js`
+2. `content_modules/sanitize.js`
+3. `content_modules/label-extraction.js`
+4. `content_modules/dropdown-detection.js`
+5. `content_modules/sync-payload.js`
+6. `content_modules/site-profiles.js`
+7. `content_modules/site_profiles/index.js`
+8. `content_modules/site_profiles/shared/cleanup.js`
+9. `content_modules/site_profiles/shared/dom.js`
+10. `content_modules/site_profiles/shared/values.js`
+11. `content_modules/site_profiles/macorner.js`
+12. `content_modules/site_profiles/pawesomehouse.js`
+13. `content_modules/site_profiles/suzitee.js`
+14. `content_modules/site_profiles/pawfecthouse.js`
+15. `content_modules/site_profiles/trendingcustom.js`
+16. `content_modules/site_profiles/interestpod.js`
+17. `content_modules/site_profiles/personalfury.js`
+18. `content_modules/site_profiles/generic.js`
+19. `content_modules/site_profiles/etsy.js`
+20. `content_modules/site_profiles/wanderprints.js`
+21. `content_modules/site_profiles/gossby.js`
+22. `content_modules/site_profiles/geckocustom.js`
+23. `content_modules/manual_profiles/index.js`
+24. `content_modules/manual_profiles/macorner.js`
+25. `content_modules/manual_profiles/pawesomehouse.js`
+26. `content_modules/manual_profiles/suzitee.js`
+27. `content_modules/manual_profiles/geckocustom.js`
+28. `content_modules/product-crawler.js`
+29. `content_modules/fab-manager.js`
+30. `content_modules/clipart/scanner-utils.js`
+31. `content_modules/clipart/scanner-schema.js`
+32. `content_modules/clipart/scanner-state.js`
+33. `content_modules/clipart/scanner-collectors.js`
+34. `content_modules/clipart/scanner-profile-context.js`
+35. `content_modules/clipart/scanner-profile-registry.js`
+36. `content_modules/clipart/scanner-profile-default.js`
+37. `content_modules/clipart/scanner-profile-pawesomehouse-customily.js`
+38. `content_modules/clipart/scanner-profile-macorner-customily.js`
+39. `content_modules/clipart/scanner-profile-geckocustom.js`
+40. `content_modules/clipart/scanner-profile-pawfecthouse-teeinblue.js`
+41. `content_modules/clipart/scanner-profile-adapters.js`
+42. `content_modules/clipart/scanner-site-router.js`
+43. `content_modules/clipart/scanner-ui.js`
+44. `content_modules/clipart/scanner-export.js`
+45. `content_modules/clipart/scanner-sync.js`
+46. `content_modules/clipart/scanner-render.js`
+47. `content_modules/clipart/scanner-auto-default-v2.js`
+48. `content_modules/clipart/scanner-auto.js`
+49. `content_modules/clipart/scanner-manual.js`
+50. `content_modules/clipart/scanner-screenshot.js`
+51. `content_modules/clipart/scanner-panel.js`
+52. `content_modules/clipart/scanner-core.js`
+53. `content_modules/clipart-scanner.js`
+
 ## Runtime namespace baseline
 
 Primary namespace:
