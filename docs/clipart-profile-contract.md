@@ -1,7 +1,7 @@
-# Clipart Target Profile Contract (Design Baseline)
+# Clipart Target Profile Contract
 
 ## Purpose
-This document defines the **target** profile contract for future phases. It does **not** change current runtime behavior in Phase 1.
+This document defines the scanner-profile contract used as the target runtime architecture. The repository is currently in Phase 2 partial: the contract is implemented for registry/default fallback and is wired into Auto, Append, and Screenshot collector/title routes, while Manual Pick and legacy-core ownership remain transitional.
 
 ## Target profile rule
 
@@ -66,7 +66,8 @@ effectiveProfile = {
 
 ## Compatibility notes against current repository
 
-- Current V2 profiles `pawesomehouse/suzitee` can map into this contract with adapter logic (already output `{title,items}` and manual group helpers).
-- Current legacy/generic path can supply default implementations for scan + collectors.
-- Current screenshot flow currently uses collectors module directly; this contract formalizes that behavior under profile methods.
+- V2 profiles can map into this contract with adapter logic when they expose `autoScan()` or `scanManualGroupFromTitle()`.
+- The default scanner profile supplies fallback implementations for scan, manual/container collection, screenshot region collection, nearest-title detection, and normalization.
+- Screenshot collection/title detection now route through the effective scanner profile before falling back to generic collectors.
+- Manual Pick is not fully module-native yet; legacy UI entrypoints still exist while resolver/collector paths become profile-aware.
 

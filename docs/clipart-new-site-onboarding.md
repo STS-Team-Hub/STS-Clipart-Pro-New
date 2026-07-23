@@ -1,4 +1,4 @@
-# Clipart New Site Onboarding Workflow (Phase 1 Baseline)
+# Clipart New Site Onboarding Workflow
 
 ## Goal
 Define a repeatable, low-risk onboarding process for adding a new website profile in future phases.
@@ -23,7 +23,7 @@ Provide copied HTML snippets for:
    - `group-selected-state.html` (if applicable)
    - `group-disabled-state.html` (if applicable)
    - `expected.json`
-3. Implement/update profile module under `content_modules/site_profiles/` using target contract.
+3. Implement a scanner profile under `content_modules/clipart/scanner-profile-<site>.js` when possible. Use `content_modules/site_profiles/` only for transitional V2 compatibility when a direct scanner profile is not the safest path.
 4. Add expected parsed output JSON in fixture folder.
 5. Run fixture/profile tests.
 6. Run smoke checks.
@@ -72,7 +72,7 @@ Use the following prompt template:
 > Do not change unrelated runtime behavior.
 > Provide test commands and manual verification steps for Auto/Append/Manual/Screenshot.
 
-## Notes for Phase 1
+## Current implementation note
 
-This document is planning/process only. No new website support is added in Phase 1.
+The project is currently Phase 2 partial. New onboarding should be scanner-profile-first, with V2 adapters used only as a migration bridge. Keep fixtures, manifest load order, routing tests, and docs in the same change.
 

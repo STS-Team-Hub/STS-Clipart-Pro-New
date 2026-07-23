@@ -1,10 +1,16 @@
-# Clipart Development Rules (Phase 1)
+# Clipart Development Rules
 
 ## Purpose
 
-This document defines the development rules for future clipart runtime changes. It is intended to reduce ambiguity while the codebase transitions from legacy scanner routing to the unified scanner profile contract.
+This document defines current development rules for STS Clipart Pro runtime changes. The target architecture is scanner-profile-first, with legacy and V2 layers kept only for compatibility or controlled migration.
 
-These rules do not change runtime behavior. They define where new work should go and how existing compatibility layers should be treated.
+## Current phase
+
+Current state: **Phase 2 partial**.
+
+The scanner-profile contract is already wired into Auto Scan, Append Visible State, and Screenshot collector/title routing. Manual Pick is profile-aware in supporting paths but still has a legacy top-level wrapper.
+
+See `docs/clipart-roadmap.md` for the remaining phase plan.
 
 ## Runtime layers and ownership
 
@@ -12,7 +18,7 @@ These rules do not change runtime behavior. They define where new work should go
 
 New site-specific scanner behavior should prefer the `window.STSClipartScanner.profiles` contract in `content_modules/clipart/scanner-profile-*.js`.
 
-A target scanner profile should align with the contract in `docs/clipart-profile-contract.md`:
+A scanner profile should align with `docs/clipart-profile-contract.md`:
 
 - `scanPage(ctx)` for Auto Scan.
 - `scanVisibleState(ctx)` for Append Visible State.
@@ -23,7 +29,7 @@ A target scanner profile should align with the contract in `docs/clipart-profile
 - `normalizeGroup(rawGroup, ctx)` for group normalization.
 - `normalizeOption(rawOption, ctx)` for option normalization.
 
-If a site-specific profile does not need to override a method, it should rely on the effective-profile fallback to the default scanner profile.
+If a site-specific profile does not need to override a method, it should rely on effective-profile fallback to the default scanner profile.
 
 ### Transitional layer: V2 site profiles
 
@@ -47,7 +53,7 @@ If manual-profile logic is still needed, prefer adapting or migrating it into a 
 
 ## Scanner core rules
 
-`content_modules/clipart/scanner-core.js` is the legacy orchestration core and should not receive new feature ownership unless there is no safer alternative.
+`content_modules/clipart/scanner-core.js` is legacy-heavy orchestration code and should not receive new feature ownership unless there is no safer alternative.
 
 When adding or changing behavior, prefer these ownership boundaries:
 
@@ -92,7 +98,7 @@ When adding support for a new site:
 1. Identify the site engine or DOM pattern, such as Customily, Teeinblue, Shopify options, generic personalization forms, or a custom DOM.
 2. Prefer a scanner profile in `content_modules/clipart/scanner-profile-<site>.js`.
 3. Add the new script to the ordered `manifest.json` content-script list before `scanner-profile-adapters.js` if it registers a scanner profile directly.
-4. Add fixtures under `tests/fixtures/site-profiles/<site>/` when practical.
+4. Add fixtures under `tests/fixtures/site-profiles/<site>/` when practical. If legacy tests still require `HTML/*.txt`, keep those fixture paths in sync until the tests are migrated.
 5. Add or update unit tests for routing, profile contract behavior, and normalized output shape.
 6. Run `npm run check` and relevant unit tests before shipping.
 
@@ -102,7 +108,7 @@ Refactors should be incremental and behavior-preserving.
 
 - Move one responsibility at a time.
 - Keep legacy globals and namespace contracts stable until tests prove they can be removed.
-- Preserve manifest load order unless the related tests and docs are updated in the same change.
+- Preserve manifest load order unless related tests and docs are updated in the same change.
 - Prefer adapters over rewrites when migrating existing site logic.
 - Avoid changing multiple site profiles in the same refactor unless the change is schema-only and covered by tests.
 - Keep rollback simple: one phase should be revertible without reverting unrelated features.

@@ -14,3 +14,9 @@ Run checks:
 npm run check
 
 Manual domain tests are listed in TEST_CASES.md.
+
+Architecture docs:
+- docs/clipart-profile-architecture.md
+- docs/clipart-profile-contract.md
+- docs/clipart-development-rules.md
+- docs/clipart-roadmap.md
