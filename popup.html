@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>STS Clipart Pro 8.3</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --sts-bg: #F8FAFC;
+      --sts-surface: #FFFFFF;
+      --sts-surface-soft: #F1F5F9;
+      --sts-surface-muted: #F8FAFC;
+      --sts-border: #E2E8F0;
+      --sts-border-strong: #CBD5E1;
+      --sts-text: #0F172A;
+      --sts-text-muted: #64748B;
+      --sts-text-soft: #94A3B8;
+      --sts-primary: #2563EB;
+      --sts-primary-hover: #1D4ED8;
+      --sts-primary-soft: #EFF6FF;
+      --sts-primary-border: #BFDBFE;
+      --sts-blue: #2563EB;
+      --sts-blue-hover: #1D4ED8;
+      --sts-blue-soft: #EFF6FF;
+      --sts-blue-border: #BFDBFE;
+      --sts-disabled-bg: #F1F5F9;
+      --sts-disabled-text: #64748B;
+      --sts-disabled-border: #CBD5E1;
+      --sts-warning: #D97706;
+      --sts-warning-soft: #FFFBEB;
+      --sts-warning-border: #FDE68A;
+      --sts-danger: #DC2626;
+      --sts-danger-soft: #FEF2F2;
+      --sts-danger-border: #FECACA;
+      --sts-font: Inter, "Segoe UI", sans-serif;
+    }
+    * { box-sizing: border-box; }
+    body { margin:0; width:360px; font-family: var(--sts-font); background:var(--sts-bg); color:var(--sts-text); }
+    .wrap { padding: 14px; }
+    .card { background:var(--sts-surface); border:1px solid var(--sts-border); border-radius:16px; padding:14px; box-shadow:0 8px 24px rgba(22,49,38,.08); }
+    h1 { margin:0 0 6px; font-size:16px; font-weight:700; line-height:1.25; display:flex; align-items:center; gap:10px; }
+    .brand-mark { display:inline-flex; align-items:center; justify-content:center; width:22px; height:22px; flex:0 0 22px; }
+    .btn-inner,.btn-icon{display:inline-flex;align-items:center;justify-content:center;} .btn-inner{gap:8px;} .btn-icon{width:18px;height:18px;flex:0 0 18px;}
+    p { margin:0; color:var(--sts-text-muted); font-size:12px; line-height:1.5; font-weight:500; }
+    .stack{display:grid;gap:10px;} .status,.session,.form{margin-top:12px;padding:10px 12px;border-radius:12px;border:1px solid var(--sts-border);background:var(--sts-surface-muted);font-size:12px;font-weight:500;line-height:1.45;}
+    .form{display:grid;gap:8px;background:var(--sts-surface);} .actions{margin-top:14px;display:grid;gap:8px;} .row{display:flex;gap:8px}.row>button{flex:1}
+    button{width:100%;border:1px solid #CBD5E1;border-radius:12px;padding:10px 12px;font:inherit;font-family:var(--sts-font);font-size:13px;font-weight:700;line-height:1.25;cursor:pointer;transform:translateY(0);transition:transform 120ms ease,box-shadow 120ms ease,background 120ms ease,border-color 120ms ease;background:linear-gradient(180deg,#FFFFFF 0%,#F8FAFC 100%);color:#0F172A;box-shadow:inset 0 1px 0 rgba(255,255,255,.9),0 2px 0 #CBD5E1,0 6px 12px rgba(15,23,42,.08);}
+    button:hover{box-shadow:inset 0 1px 0 rgba(255,255,255,.95),0 2px 0 #BFDBFE,0 8px 16px rgba(15,23,42,.12);}
+    button:active{transform:translateY(1px);box-shadow:inset 0 1px 2px rgba(15,23,42,.14),0 1px 0 rgba(15,23,42,.12)}
+    button:focus-visible{outline:none;box-shadow:0 0 0 3px rgba(37,99,235,.18),inset 0 1px 0 rgba(255,255,255,.9),0 2px 0 #CBD5E1,0 6px 12px rgba(15,23,42,.08)}
+    button:disabled{background:#F1F5F9;border-color:#CBD5E1;color:#64748B;box-shadow:none;cursor:not-allowed;transform:none}
+    .btn-green{background:linear-gradient(180deg,#10B981 0%,#059669 100%);color:#fff;border-color:#047857;box-shadow:inset 0 1px 0 rgba(255,255,255,.25),0 2px 0 #065F46,0 8px 16px rgba(5,150,105,.16)}
+    .btn-orange{background:linear-gradient(180deg,#FBBF24 0%,#D97706 100%);color:#fff;border-color:#B45309;box-shadow:inset 0 1px 0 rgba(255,255,255,.35),0 2px 0 #92400E,0 8px 16px rgba(217,119,6,.16)}
+    .btn-blue{background:linear-gradient(180deg,#3B82F6 0%,#2563EB 100%);color:#fff;border-color:#1D4ED8;box-shadow:inset 0 1px 0 rgba(255,255,255,.28),0 2px 0 #1E40AF,0 8px 16px rgba(37,99,235,.18)}
+    .btn-red{background:linear-gradient(180deg,#F87171 0%,#DC2626 100%);color:#fff;border-color:#B91C1C;box-shadow:inset 0 1px 0 rgba(255,255,255,.25),0 2px 0 #991B1B,0 8px 16px rgba(220,38,38,.15)}
+    .btn-ghost{background:linear-gradient(180deg,#FFFFFF 0%,#F8FAFC 100%);color:#0F172A;border-color:#CBD5E1;box-shadow:inset 0 1px 0 rgba(255,255,255,.9),0 2px 0 #CBD5E1,0 6px 12px rgba(15,23,42,.08)}
+    .tips{margin-top:12px;padding:10px 12px;border-radius:12px;background:var(--sts-surface-soft);border:1px dashed var(--sts-border-strong);font-size:11.5px;font-weight:500;color:var(--sts-text-muted);line-height:1.45}
+    .mono{font-family:var(--sts-font);font-size:11px;font-weight:600;line-height:1.2}.hidden{display:none!important}
+    .label{font-size:12px;font-weight:600;line-height:1.35;color:var(--sts-text-muted);text-transform:uppercase;letter-spacing:.02em}
+    input{width:100%;border:1px solid var(--sts-border);border-radius:10px;padding:10px 12px;font:inherit;font-family:var(--sts-font);font-size:13px;font-weight:500;line-height:1.35;outline:none;background:#fff}
+    input:focus{border-color:var(--sts-primary);box-shadow:0 0 0 3px rgba(37,99,235,.16)}
+    .subtle{font-size:11.5px;font-weight:500;color:var(--sts-text-muted);line-height:1.45}
+    a.link-btn{display:inline-block;margin-top:6px;font-size:12px;font-weight:600;line-height:1.3;color:var(--sts-primary);text-decoration:none;cursor:pointer} a.link-btn:hover{text-decoration:underline}
+    .debug-row{display:flex;align-items:center;gap:8px;margin-top:8px;padding:8px 10px;border-radius:10px;background:#F8FAFC;border:1px solid #E2E8F0;font-size:11.5px;font-weight:600;color:#475569}.debug-row input{width:16px;height:16px;padding:0;margin:0;box-shadow:none}.debug-row span{line-height:1.35}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card stack">
+      <div>
+        <h1><span id="popup-brand-icon" class="brand-mark"></span><span>STS Clipart Pro 8.3</span></h1>
+        <p>Auto / Manual Scan cho trang personalization. Screenshot + Pick nằm trong panel sau khi scan.</p>
+      </div>
+
+      <div id="setup-form" class="form hidden">
+        <div class="label">Web App URL</div>
+        <input id="webapp-url" type="url" placeholder="Dán URL Web App Google Apps Script">
+        <div class="subtle">Chỉ nhập 1 lần khi khởi động lần đầu. Sau khi lưu, link sẽ được ẩn.</div>
+        <button id="save-webapp" class="btn-blue">Lưu Web App</button>
+      </div>
+
+      <div id="login-form" class="form hidden">
+        <div class="label">Đăng nhập</div>
+        <input id="username" type="text" placeholder="User">
+        <input id="password" type="password" placeholder="Pass">
+        <button id="login-btn" class="btn-blue">Đăng nhập</button>
+        <a id="change-webapp" class="link-btn">Đổi Web App</a>
+      </div>
+
+      <div id="session-box" class="session hidden"></div>
+
+      <div id="status" class="status">
+        Đang kiểm tra tab hiện tại...
+      </div>
+
+      <div id="actions" class="actions hidden">
+        <button id="auto-scan" class="btn-blue">Auto Scan</button>
+        <button id="manual-scan" class="btn-orange">Manual Scan</button>
+        <div class="row">
+          <button id="refresh-status" class="btn-blue">Refresh</button>
+          <button id="open-help" class="btn-ghost">Hướng dẫn</button>
+        </div>
+        <button id="logout-btn" class="btn-red">Đăng xuất</button>
+      </div>
+
+
+      <label class="debug-row" title="Show STS diagnostic logs in the DevTools console.">
+        <input id="debug-toggle" type="checkbox">
+        <span>Debug logs</span>
+      </label>
+
+      <div class="tips">
+        Hotkey: <span class="mono">Alt + C</span> = Auto Scan, <span class="mono">Alt + Shift + C</span> = Manual Scan.<br>
+        Trong panel: <b>Screenshot</b>, <b>Pick</b> và <b>Append</b> để bổ sung groups/options còn thiếu.
+      </div>
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

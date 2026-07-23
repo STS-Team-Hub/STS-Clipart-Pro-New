@@ -1,0 +1,30 @@
+STS Clip Art Pro Pro 2.0 - Auth setup
+
+Expected Web App login request:
+POST <WEB_APP_URL>
+Content-Type: text/plain;charset=utf-8
+
+Body JSON:
+{
+  "action": "login",
+  "username": "<user>",
+  "password": "<pass>",
+  "source": "sts_clipart_pro"
+}
+
+Expected success response JSON:
+{
+  "ok": true,
+  "user": {
+    "username": "Admin",
+    "role": "Admin"
+  },
+  "token": ""
+}
+
+Expected failed response JSON:
+{
+  "ok": false,
+  "message": "Sai tài khoản hoặc mật khẩu"
+}
+

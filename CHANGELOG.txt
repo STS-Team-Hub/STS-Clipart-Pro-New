@@ -1,0 +1,29 @@
+
+2026-06-20 - GeckoCustom render image loading fix v3
+- Fixed Render modal preview/export image loading for GeckoCustom CSS --sl-image swatches.
+- Render now proxies external image URLs through background FETCH_AS_DATAURL before drawing to canvas.
+- Added fallback image loading without crossOrigin to avoid ITEM placeholders when CDN blocks anonymous canvas loading.
+
+STS Clipart Pro — Recent Version Logs
+
+## 8.3.0 - 2026-05-09
+- Synchronized extension version to STS Clipart Pro 8.3 / 8.3.0.
+- Kept `<all_urls>` access unchanged by user request.
+- Removed Supabase RLS work from this release scope by user request.
+- Updated the Custom frame UI: removed the manual title input field.
+- Updated Custom frame behavior: the first non-empty line of the content textarea is automatically used as the Custom frame title; remaining lines are rendered as body content.
+- Updated the rendered Custom title bar color to a light beige palette.
+- Preserved all other Custom frame controls and render behavior.
+- Updated version automation so future version bumps also update extension folder naming guidance and Chrome extension visible notes.
+- Kept changelog and logs limited to the 3 most recent versions.
+
+## 7.1.0 - 2026-05-09
+- Synchronized extension version to STS Clipart Pro 7.1 / 7.1.0.
+- Split runtime content logic into ordered content modules loaded by manifest.
+- Added shared sanitization helpers and debug toggle.
+- Added real-domain test cases including https://pawesomehouse.com and https://www.suzitee.com.
+
+## 7.0.3 - 2026-05-08
+- Full internal release package for STS Clipart Pro 7.0.3.
+- Included product crawl, clipart scan, manual pick, screenshot pick, render/export, popup, panel, and Supabase sync flows.
+- GeckoCustom render fix: use HTML --sl-image URL as imageUrl/capturedImage and let render fallback to imageUrl when capturedImage is null.

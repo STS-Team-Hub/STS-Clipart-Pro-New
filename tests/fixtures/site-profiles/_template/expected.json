@@ -1,0 +1,30 @@
+{
+  "siteId": "template",
+  "groups": [
+    {
+      "name": "Sample Group",
+      "prefix": "A",
+      "optionCount": 2,
+      "options": [
+        {
+          "label": "A1",
+          "textContent": "Option A",
+          "value": "Option A",
+          "name": "Option A",
+          "imageUrl": null,
+          "capturedImage": null,
+          "bgColor": ""
+        },
+        {
+          "label": "A2",
+          "textContent": "Option B",
+          "value": "Option B",
+          "name": "Option B",
+          "imageUrl": null,
+          "capturedImage": null,
+          "bgColor": ""
+        }
+      ]
+    }
+  ]
+}
