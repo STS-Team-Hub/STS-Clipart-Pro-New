@@ -5,7 +5,7 @@ const core = fs.readFileSync('content_modules/clipart/scanner-core.js', 'utf8');
 const popup = fs.readFileSync('popup.js', 'utf8');
 const crawler = fs.readFileSync('content_modules/product-crawler.js', 'utf8');
 
-assert.ok(core.includes("autoBtn.onclick = function() { popup.remove(); scanClipartsOrchestrated('fab'); };"), 'FAB auto must route to orchestrated auto');
+assert.ok(core.includes("scanCliparts: function() { return scanClipartsOrchestrated('fab'); }"), 'FAB auto must route to orchestrated auto through scanner-ui actions');
 assert.ok(core.includes("else scanClipartsOrchestrated('hotkey');"), 'Alt+C must route to orchestrated auto');
 assert.ok(core.includes("return scanClipartsOrchestrated(entrypointId || 'external-api');"), '__stsClipartPro.scan must route to orchestrated auto');
 assert.ok(!core.includes('scan: async function() {\n      if (!(await ensureClipartLoggedIn())) return false;\n      return scanCliparts();'), '__stsClipartPro.scan legacy direct path must be removed');

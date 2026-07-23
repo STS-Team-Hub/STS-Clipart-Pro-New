@@ -6,7 +6,7 @@ This document is the source-of-truth architecture snapshot for the current STS C
 
 ## Current phase status
 
-The repository is past the original Phase 1 baseline. The current implementation is best described as **Phase 2 complete: unified scanner-profile routing is integrated, with legacy compatibility layers preserved for documented fallback cases**.
+The repository is past the original Phase 1 baseline. The current implementation is best described as **Phase 4 complete: unified scanner-profile routing is integrated, safe UI/state ownership has been extracted, and legacy compatibility layers remain for documented fallback cases**.
 
 Completed or mostly completed:
 
@@ -19,7 +19,7 @@ Completed or mostly completed:
 
 Still transitional:
 
-- Legacy picker UI/event plumbing remains in core until Phase 4 extraction.
+- Destructive legacy picker removal remains deferred to Phase 5; core still bridges legacy picker internals where replacement APIs are not yet proven.
 - Legacy scanner-list routing and V2 site profiles remain for compatibility.
 - Some docs/tests still need maintenance when fixture files are moved or added.
 
@@ -83,7 +83,7 @@ New Manual Pick behavior must prefer scanner-profile methods or adapter-backed s
 |---|---|---|---|
 | Auto Scan | Effective scanner profile `scanPage(ctx)` | Legacy scan pipeline when resolver is unavailable or returns no usable groups | Implemented, still fallback-compatible |
 | Append Visible State | Effective scanner profile `scanVisibleState(ctx)` | Legacy `scanDOM()` append path when resolver returns no groups | Implemented, still fallback-compatible |
-| Manual Pick | `scanner-manual.js` owns Manual Scan bootstrap and exposes effective scanner profile `scanManualGroupFromTitle()` + `normalizeGroup()` collection | Legacy core picker UI/event plumbing and generic container fallback remain for compatibility-only cases | Implemented, still fallback-compatible |
+| Manual Pick | `scanner-manual.js` owns Manual Scan bootstrap and exposes effective scanner profile `scanManualGroupFromTitle()` + `normalizeGroup()` collection; Manual Scan empty-state mutation is owned by `scanner-state.js` | Legacy core picker UI/event plumbing and generic container fallback remain for compatibility-only cases | Implemented, still fallback-compatible |
 | Screenshot Pick | Effective scanner profile `collectOptionsInRegion()` and `detectNearestGroupTitleFromOption()` | Generic collectors when profile method is unavailable | Implemented at collector/title layer |
 | Normalize/output | Profile/default `normalizeGroup()` and `normalizeOption()` where resolver path is used | Legacy normalization remains in core for old routes | Partially unified |
 
@@ -106,7 +106,7 @@ Legacy routes are still allowed only for compatibility cases:
 
 ## Known gaps
 
-1. Legacy core still owns significant orchestration and UI/picker behavior.
+1. Legacy core still bridges some picker internals for compatibility until Phase 5 removal, but the FAB scan-mode popup is owned by `scanner-ui.js` and Manual Scan empty-state mutation is owned by `scanner-state.js`.
 2. V2 site profiles and scanner profiles coexist, so there are still overlapping profile systems.
 3. Some test fixture references require repository cleanup when fixture files are moved or duplicated.
 4. The docs must be kept aligned with actual runtime routes after each phase.

@@ -6,7 +6,7 @@ Move STS Clipart Pro from mixed legacy/V2/scanner-profile routing to a clean sca
 
 ## Current checkpoint
 
-Current checkpoint: **Phase 3 complete**.
+Current checkpoint: **Phase 4 complete**.
 
 The scanner-profile contract is already wired into the most important runtime paths:
 
@@ -15,7 +15,7 @@ The scanner-profile contract is already wired into the most important runtime pa
 - Screenshot Pick routes region collection and nearest-title detection through the effective scanner profile before generic fallback.
 - V2 site profiles can be adapted into scanner profiles.
 
-Phase 3 site-profile consolidation is complete; core extraction and legacy removal remain scheduled for later phases.
+Phase 4 core ownership cleanup is complete for the safe extraction targets; legacy removal remains scheduled for Phase 5.
 
 ## Phase 0 — Architecture baseline
 
@@ -129,21 +129,29 @@ Phase 3 verification record:
 
 ## Phase 4 — Core extraction and ownership cleanup
 
-Status: **Not started**.
+Status: **Complete**.
 
-Planned work:
+Completion recorded: **2026-07-23**.
 
-1. Move remaining picker orchestration out of `scanner-core.js` into feature modules where safe.
-2. Move panel/UI responsibilities toward `scanner-panel.js`, `scanner-ui.js`, and `scanner-render.js`.
-3. Move state mutations toward `scanner-state.js`.
-4. Move schema normalization toward `scanner-schema.js`.
-5. Preserve legacy globals until replacement APIs are tested.
+Completed work:
+
+1. Moved the FAB scan-mode selector UI ownership into `scanner-ui.js`; `scanner-core.js` now only supplies authenticated Auto/Manual action callbacks for that popup.
+2. Moved Manual Scan empty-state mutation into `scanner-state.js` through `startManualScanState()`, keeping `scanner-core.js` as the compatibility caller that opens the existing panel renderer.
+3. Kept panel rendering delegated through `scanner-panel.js` with the legacy renderer registered by core for rollback-safe compatibility.
+4. Preserved legacy globals such as `window.__stsClipartPro`, FAB bridge globals, and core fallback functions while replacement module APIs remain covered by tests.
+5. Updated routing/unit guards so FAB Auto Scan continues to prove it reaches `scanClipartsOrchestrated('fab')` after UI extraction.
 
 Exit criteria:
 
-- `scanner-core.js` is reduced to bootstrap/orchestration compatibility only.
-- Feature modules own their feature entrypoints.
+- Safe UI/state ownership moved out of `scanner-core.js` without changing public globals.
+- Feature modules continue to own their feature entrypoints while core remains the compatibility bridge for legacy picker/panel internals.
 - Rollback remains phase-by-phase and low risk.
+
+Phase 4 verification record:
+
+- Verified on **2026-07-23** that smoke checks pass through `npm run check`.
+- Verified on **2026-07-23** that route/profile/fallback unit coverage passes through `npm run test:unit`.
+- Result: Phase 4 is considered successfully completed for safe ownership extraction; destructive legacy removal remains tracked under Phase 5.
 
 ## Phase 5 — Legacy deprecation and removal
 
