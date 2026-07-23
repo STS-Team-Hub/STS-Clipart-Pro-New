@@ -6,7 +6,7 @@ This document is the source-of-truth architecture snapshot for the current STS C
 
 ## Current phase status
 
-The repository is past the original Phase 1 baseline. The current implementation is best described as **Phase 2 partial: unified scanner-profile routing is integrated, but legacy compatibility layers still remain**.
+The repository is past the original Phase 1 baseline. The current implementation is best described as **Phase 2 complete: unified scanner-profile routing is integrated, with legacy compatibility layers preserved for documented fallback cases**.
 
 Completed or mostly completed:
 
@@ -15,10 +15,11 @@ Completed or mostly completed:
 - Append Visible State routes through the effective scanner profile via `scanVisibleState(ctx)`.
 - Screenshot Pick option collection and nearest-title detection route through the effective scanner profile before falling back to generic collectors.
 - Legacy V2 site profiles can be adapted into scanner profiles.
+- Manual Scan panel bootstrap is owned by `scanner-manual.js`, and manual group collection exposes a profile-first route through the effective scanner profile.
 
 Still transitional:
 
-- Manual Pick is profile-aware through resolver/collector paths, but the top-level `scanner-manual.js` module is still a legacy wrapper.
+- Legacy picker UI/event plumbing remains in core until Phase 4 extraction.
 - Legacy scanner-list routing and V2 site profiles remain for compatibility.
 - Some docs/tests still need maintenance when fixture files are moved or added.
 
@@ -74,7 +75,7 @@ Do not add new feature behavior here unless it is required to preserve existing 
 
 `content_modules/manual_profiles/` still contains manual-profile assets. These are compatibility assets, not the target ownership layer.
 
-New Manual Pick behavior should prefer scanner-profile methods or adapter-backed scanner profiles.
+New Manual Pick behavior must prefer scanner-profile methods or adapter-backed scanner profiles.
 
 ## Feature routing reality
 
@@ -82,7 +83,7 @@ New Manual Pick behavior should prefer scanner-profile methods or adapter-backed
 |---|---|---|---|
 | Auto Scan | Effective scanner profile `scanPage(ctx)` | Legacy scan pipeline when resolver is unavailable or returns no usable groups | Implemented, still fallback-compatible |
 | Append Visible State | Effective scanner profile `scanVisibleState(ctx)` | Legacy `scanDOM()` append path when resolver returns no groups | Implemented, still fallback-compatible |
-| Manual Pick | Legacy UI flow with profile-aware group/container collection | Manual profile/V2 helpers and generic collectors remain | Partially migrated |
+| Manual Pick | `scanner-manual.js` owns Manual Scan bootstrap and exposes effective scanner profile `scanManualGroupFromTitle()` + `normalizeGroup()` collection | Legacy core picker UI/event plumbing and generic container fallback remain for compatibility-only cases | Implemented, still fallback-compatible |
 | Screenshot Pick | Effective scanner profile `collectOptionsInRegion()` and `detectNearestGroupTitleFromOption()` | Generic collectors when profile method is unavailable | Implemented at collector/title layer |
 | Normalize/output | Profile/default `normalizeGroup()` and `normalizeOption()` where resolver path is used | Legacy normalization remains in core for old routes | Partially unified |
 
@@ -94,10 +95,18 @@ New Manual Pick behavior should prefer scanner-profile methods or adapter-backed
 - Prefer scanner-profile additions over V2 or legacy scanner-list additions.
 - Prefer adapters over rewrites when migrating existing V2 behavior.
 
+## Legacy fallback audit
+
+Legacy routes are still allowed only for compatibility cases:
+
+1. Auto Scan may call the legacy scan pipeline when the scanner-profile resolver is unavailable or returns no usable groups.
+2. Append Visible State may call legacy `scanDOM()` when `scanVisibleState(ctx)` returns no groups.
+3. Manual Pick may call legacy core picker UI/event plumbing while the selected group collection prefers the effective scanner profile first. Generic container collection remains only when profile infrastructure is unavailable, invalid, or returns an empty default/manual group.
+4. Screenshot Pick may use generic collectors only when the effective profile does not provide the corresponding region/title method.
+
 ## Known gaps
 
-1. Manual Pick still has a legacy top-level module wrapper.
-2. Legacy core still owns significant orchestration and UI/picker behavior.
-3. V2 site profiles and scanner profiles coexist, so there are still overlapping profile systems.
-4. Some test fixture references require repository cleanup when fixture files are moved or duplicated.
-5. The docs must be kept aligned with actual runtime routes after each phase.
+1. Legacy core still owns significant orchestration and UI/picker behavior.
+2. V2 site profiles and scanner profiles coexist, so there are still overlapping profile systems.
+3. Some test fixture references require repository cleanup when fixture files are moved or duplicated.
+4. The docs must be kept aligned with actual runtime routes after each phase.

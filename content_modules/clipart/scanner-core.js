@@ -11479,7 +11479,7 @@ if (renumberBtn) renumberBtn.onclick = () => {
 
   async function openClipartPanelFromFab() {
     if (!(await ensureClipartLoggedIn())) return false;
-    startManualScan();
+    startManualScanOrchestrated();
     return true;
   }
 
@@ -11622,7 +11622,7 @@ if (renumberBtn) renumberBtn.onclick = () => {
     },
     manualScan: async function() {
       if (!(await ensureClipartLoggedIn())) return false;
-      return startManualScan();
+      return startManualScanOrchestrated();
     },
     getState: () => ({
       isScanning: CLIPART.isScanning,

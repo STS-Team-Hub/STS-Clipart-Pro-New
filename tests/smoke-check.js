@@ -317,11 +317,15 @@ if (clipartFiles.core.includes('function makeOptionFromSwatch(')) {
   'function startManualScan(ctx)',
   'function activateManualPick(ctx, data, onRefresh)',
   'function deactivateManualPick(ctx)',
-  'ctx.coreFns.startManualScanLegacy',
+  'function createManualResult(ctx)',
+  'function collectManualGroupViaProfile(ctx, titleEl)',
+  'profile.scanManualGroupFromTitle(titleEl, profileCtx)',
+  'profile.normalizeGroup(rawGroup, profileCtx)',
+  'ns.schema.normalizeClipartData(data)',
   'ctx.coreFns.activateManualPickLegacy',
   'ctx.coreFns.deactivateManualPickLegacy'
 ].forEach((pattern) => {
-  if (!clipartFiles.manual.includes(pattern)) fail(`scanner-manual wrapper contract missing: ${pattern}`);
+  if (!clipartFiles.manual.includes(pattern)) fail(`scanner-manual profile-first contract missing: ${pattern}`);
 });
 
 [

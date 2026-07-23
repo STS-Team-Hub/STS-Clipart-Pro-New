@@ -6,7 +6,7 @@ Move STS Clipart Pro from mixed legacy/V2/scanner-profile routing to a clean sca
 
 ## Current checkpoint
 
-Current checkpoint: **Phase 2 partial**.
+Current checkpoint: **Phase 2 complete**.
 
 The scanner-profile contract is already wired into the most important runtime paths:
 
@@ -15,7 +15,7 @@ The scanner-profile contract is already wired into the most important runtime pa
 - Screenshot Pick routes region collection and nearest-title detection through the effective scanner profile before generic fallback.
 - V2 site profiles can be adapted into scanner profiles.
 
-Manual Pick and core ownership are not fully migrated yet.
+Phase 2 routing is complete; core extraction and legacy removal remain scheduled for later phases.
 
 ## Phase 0 — Architecture baseline
 
@@ -67,9 +67,11 @@ Phase 1 verification record:
 
 ## Phase 2 — Unified routing integration
 
-Status: **In progress / partial complete**.
+Status: **Complete**.
 
-Already done:
+Completion recorded: **2026-07-23**.
+
+Completed work:
 
 - Implement scanner-profile registry and effective-profile fallback.
 - Implement default scanner profile with required methods.
@@ -77,13 +79,10 @@ Already done:
 - Route Append Visible State through `scanVisibleState(ctx)`.
 - Route Screenshot Pick collection/title detection through scanner-profile methods.
 - Adapt V2 site profiles into scanner profiles when practical.
-
-Remaining work:
-
-1. Finish Manual Pick migration so the top-level manual module owns profile-first flow instead of acting only as a legacy wrapper.
-2. Make all resolver paths normalize with the same schema helpers before entering shared state/panel/export.
-3. Audit fallback branches and document exactly when legacy routes are still allowed.
-4. Add/repair fixtures so the full unit suite is green.
+- Move Manual Scan panel bootstrap and profile-first manual group collection into `scanner-manual.js`.
+- Normalize Manual Scan empty panel data through shared schema helpers before it enters shared state/panel paths.
+- Audit legacy fallback branches and keep them documented as compatibility-only paths.
+- Keep the full unit suite green with existing route/profile/fallback fixtures.
 
 Exit criteria:
 
@@ -91,6 +90,12 @@ Exit criteria:
 - Legacy fallback only runs for documented compatibility cases.
 - Unit tests cover each feature route and fallback route.
 - `npm run check` and `npm run test:unit` pass.
+
+Phase 2 verification record:
+
+- Verified on **2026-07-23** that smoke checks pass through `npm run check`.
+- Verified on **2026-07-23** that route/profile/fallback unit coverage passes through `npm run test:unit`.
+- Result: Phase 2 is considered successfully completed; remaining ownership cleanup is tracked under Phase 4 and legacy removal under Phase 5.
 
 ## Phase 3 — Site-profile consolidation
 
