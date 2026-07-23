@@ -6,10 +6,10 @@ Define a repeatable, low-risk onboarding process for adding a new website profil
 
 ## Current repository context
 
-The project is currently **Phase 6 complete; Phase 7 planned**.
+The project is currently **Phase 7 complete**.
 
 - Phase 6 means scanner-profile-first routing and automated QA/release checks are in place.
-- Phase 7 will make the profile layout canonical: every supported named site should have one dedicated scanner profile file, fixture folder, and test package.
+- Phase 7 made the former consolidated profiles canonical: PersonalFury, InterestPod, and Gossby now have a dedicated scanner profile file, fixture folder, and test package. Remaining adapter-backed sites stay transitional until scheduled migration.
 - V2 adapters and legacy profile layers may still exist, but they are compatibility bridges, not the target place for new site behavior.
 
 ## Required input from user
@@ -85,14 +85,14 @@ Examples include Pawesomehouse, Macorner, GeckoCustom, and Pawfecthouse.
 - Add or update unit tests for the changed route/schema behavior.
 - Run Chrome manual verification for the changed site.
 
-### Consolidated scanner profile site
+### Former consolidated scanner profile site
 
-Examples include PersonalFury, InterestPod, and Gossby.
+PersonalFury, InterestPod, and Gossby were split in Phase 7 and are now dedicated scanner-profile-native sites.
 
-- For small, low-risk fixes, update the consolidated scanner profile only if splitting is not practical.
-- For substantial changes, split the site into `content_modules/clipart/scanner-profile-<site-id>.js`.
-- Move or copy relevant fixtures into `tests/fixtures/site-profiles/<site-id>/`.
-- Add dedicated tests and update `docs/clipart-profile-inventory.md`.
+- Update their dedicated `content_modules/clipart/scanner-profile-<site-id>.js` files for future behavior changes.
+- Keep V2 source profiles as compatibility fixtures unless a compatibility fix is required.
+- Keep fixtures in `tests/fixtures/site-profiles/<site-id>/` and route coverage in `tests/unit/phase7-canonical-site-profiles.test.js` current with behavior changes.
+- Do not add new registrations to `scanner-profile-site-v2-consolidated.js`; it is a load-order compatibility shim only.
 
 ### V2 adapter-backed site
 

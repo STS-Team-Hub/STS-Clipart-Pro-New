@@ -6,10 +6,10 @@ This document explains how older Manual-profile behavior maps into the current s
 
 ## Current architecture checkpoint
 
-The repository is currently **Phase 6 complete; Phase 7 planned**.
+The repository is currently **Phase 7 complete**.
 
 - Phase 6 completed scanner-profile-first routing for major flows and hardened automated QA.
-- Phase 7 should make each supported named site canonical by giving it one dedicated scanner profile file, fixtures, tests, and Chrome verification notes.
+- Phase 7 made consolidated supported sites canonical by giving PersonalFury, InterestPod, and Gossby dedicated scanner profile files, fixtures, tests, and documented verification notes.
 - Manual legacy profiles remain compatibility fixtures only; new Manual Pick behavior should be implemented in scanner profiles.
 
 ## Scope and inventory

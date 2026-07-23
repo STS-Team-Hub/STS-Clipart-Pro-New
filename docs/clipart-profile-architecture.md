@@ -6,12 +6,12 @@ This document is the source-of-truth architecture snapshot for the current STS C
 
 It describes two states:
 
-1. **Current state:** Phase 6 complete, scanner-profile-first routing is integrated, but scanner profiles, V2 adapter-backed profiles, consolidated profiles, and legacy compatibility layers still coexist.
+1. **Current state:** Phase 7 complete, scanner-profile-first routing is integrated, consolidated site registrations are split into canonical scanner profile files, and V2 adapter-backed plus legacy compatibility layers still coexist.
 2. **Final target:** one canonical scanner profile package per supported named site, with shared behavior kept in shared scanner modules and generic/unknown pages handled by the default scanner profile.
 
 ## Current phase status
 
-The current implementation is **Phase 6 complete; Phase 7 planned**.
+The current implementation is **Phase 7 complete**.
 
 Completed or mostly completed:
 
@@ -27,7 +27,7 @@ Still transitional:
 
 - Some picker/panel internals still bridge through legacy core where tests prove runtime dependency.
 - V2 site profiles still coexist with scanner profiles.
-- PersonalFury, InterestPod, and Gossby are scanner-registry-owned through a consolidated transitional scanner profile instead of one dedicated file per site.
+- PersonalFury, InterestPod, and Gossby now own dedicated Phase 7 scanner profile files backed by the shared V2 bridge helper.
 - Suzitee, TrendingCustom, Wanderprints, and Etsy remain intentionally adapter-backed V2 profiles until migration is scheduled.
 - Legacy scanner-list routing and manual profile assets remain warning-backed compatibility contracts.
 - Real-browser Chrome domain verification remains external to this container.
@@ -68,20 +68,15 @@ Current dedicated scanner profiles include:
 - `macorner-customily`
 - `geckocustom`
 - `pawfecthouse-teeinblue`
+- `personalfury`
+- `interestpod`
+- `gossby`
 
-Target Phase 7 work should convert remaining supported named sites into this layer.
+Phase 7 converted the former consolidated sites into this layer. Future canonicalization work should migrate the remaining adapter-backed V2 sites when scheduled.
 
 ### 2. Transitional scanner layer: consolidated site profiles
 
-`content_modules/clipart/scanner-profile-site-v2-consolidated.js` currently registers multiple site-specific profiles before the generic V2 adapter pass.
-
-Current consolidated sites:
-
-- PersonalFury
-- InterestPod
-- Gossby
-
-This layer is useful for low-risk migration but is not the final target. Phase 7 should split each consolidated site into its own canonical scanner profile file when fixtures and tests are ready.
+`content_modules/clipart/scanner-profile-site-v2-consolidated.js` is now a documented Phase 7 empty migration shim. PersonalFury, InterestPod, and Gossby register through dedicated files before the generic V2 adapter pass. The shared `scanner-profile-site-v2-bridge.js` keeps their V2 parity logic centralized while the dedicated files own runtime registration.
 
 ### 3. Transitional layer: V2 site profiles
 
