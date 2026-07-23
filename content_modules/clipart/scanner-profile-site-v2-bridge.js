@@ -104,6 +104,7 @@
       isValidGroup: legacyProfile.isValidGroup,
       isVisibleElement: legacyProfile.isVisibleElement,
       isJunkElement: legacyProfile.isJunkElement,
+      getManualDrivenAutoTitleCandidates: legacyProfile.getManualDrivenAutoTitleCandidates,
       selectors: legacyProfile.selectors,
       scanHints: Object.assign({ phase7CanonicalBridge: true }, legacyProfile.scanHints || {})
     };

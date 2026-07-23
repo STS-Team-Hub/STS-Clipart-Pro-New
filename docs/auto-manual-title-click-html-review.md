@@ -300,3 +300,20 @@ Verification completed:
 - `node tests/unit/manual-driven-auto.test.js`
 - `npm run check`
 - `npm run test:unit`
+
+## Phase 2 completion record — 2026-07-23
+
+Implementation summary:
+
+- Added the optional scanner-profile candidate hook `getManualDrivenAutoTitleCandidates(ctx)` to the Manual-driven Auto discovery path.
+- Normalized all title discovery output into backward-compatible candidate records: `{ titleEl, groupEl, expandEl, label, source }`, while continuing to expose the legacy `titles` array for old callers.
+- Preserved the Phase 2 priority order: scanner profile candidates first, legacy Manual profile candidates second, generic fallback candidates last.
+- Added Auto-side candidate normalization and filtering before clicks: non-empty cleaned labels, unsafe action text rejection, meaningful visibility checks, and unique title/group element pairs.
+- Updated regression coverage so Manual-driven Auto consumes both raw title elements and structured candidate records, and unsafe title candidates fall back to legacy Auto without being clicked.
+
+Verification:
+
+- `node --check content_modules/clipart/scanner-auto.js`
+- `node --check content_modules/clipart/scanner-core.js`
+- `node tests/run-unit-tests.js` — passed 27 unit files.
+- `npm test -- --runInBand` — not available in this package because `package.json` has no `test` script.

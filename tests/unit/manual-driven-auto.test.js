@@ -111,8 +111,19 @@ async function runWith({ titles, resolver, legacy, hasCandidates = true, profile
     resolver: () => ({ fallback: false, group: { label: 'Upload photo', options: [{ textContent: 'Keep existing', rect: { w: 1, h: 1 } }] } })
   });
   assert.equal(unsafeTitle.clicked, 0);
-  assert.equal(unsafe.result.trace.perTitle[0].click, 'skipped-click');
-  assert.equal(unsafe.result.trace.perTitle[0].skipReason, 'unsafe-click-text');
+  assert.deepEqual(unsafe.result.categories, ['legacy']);
+  assert.equal(unsafe.calls.legacyAuto, 1);
+
+  const structuredTitle = E('div', { textContent: 'Raw ignored' });
+  const structuredGroup = E('div', { textContent: 'Group text' });
+  const structuredExpand = E('button', { textContent: 'Open structured' });
+  const structured = await runWith({
+    titles: [{ titleEl: structuredTitle, groupEl: structuredGroup, expandEl: structuredExpand, label: 'Structured Label', source: 'scanner-profile' }],
+    resolver: (title) => ({ fallback: false, group: { label: title === structuredTitle ? 'Structured Label' : 'Wrong', options: [{ textContent: 'Structured option', rect: { w: 1, h: 1 } }] } })
+  });
+  assert.equal(structuredExpand.clicked, 1);
+  assert.equal(structured.result.trace.source, 'manual-profile');
+  assert.equal(structured.result.trace.perTitle[0].titleText, 'Structured Label');
 
   const titleWithTarget = E('div', { textContent: 'Profile Title' });
   const expandTarget = E('button', { textContent: 'Open profile title' });

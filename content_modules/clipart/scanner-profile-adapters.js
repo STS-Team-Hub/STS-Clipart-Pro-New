@@ -80,7 +80,7 @@
       };
     }
 
-    ['getRoot', 'getGroups', 'getTitleElement', 'getItems', 'extractValue', 'cleanupTitle', 'cleanupValue', 'isValidGroup', 'isVisibleElement', 'isJunkElement'].forEach(function(methodName) {
+    ['getRoot', 'getGroups', 'getTitleElement', 'getItems', 'extractValue', 'cleanupTitle', 'cleanupValue', 'isValidGroup', 'isVisibleElement', 'isJunkElement', 'getManualDrivenAutoTitleCandidates'].forEach(function(methodName) {
       if (typeof legacyProfile[methodName] === 'function') adapter[methodName] = legacyProfile[methodName];
     });
 
