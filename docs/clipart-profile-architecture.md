@@ -6,7 +6,7 @@ This document is the source-of-truth architecture snapshot for the current STS C
 
 ## Current phase status
 
-The repository is past the original Phase 1 baseline. The current implementation is best described as **Phase 5 complete: scanner-profile-first routing is integrated, safe UI/state ownership has been extracted, and legacy compatibility layers are deprecated, warning-backed fallback contracts**.
+The repository is past the original Phase 1 baseline. The current implementation is best described as **Phase 6 complete: scanner-profile-first routing is integrated, safe UI/state ownership has been extracted, legacy compatibility layers are deprecated warning-backed fallback contracts, and automated QA/release checks are hardened**.
 
 Completed or mostly completed:
 
@@ -22,6 +22,7 @@ Still transitional:
 - Legacy picker internals remain only where tests still prove runtime dependency; removal is no longer assumed safe without replacing those dependencies first.
 - Legacy scanner-list routing and V2 site profiles remain for compatibility, with the scanner-list route documented as a permanent fallback contract.
 - Manual legacy profile assets remain as compatibility fixtures for older manual fallback coverage.
+- Phase 6 automated QA/release checks run through the discovered unit suite and release consistency guards; real-browser domain verification remains external.
 
 ## Runtime profile layers
 

@@ -57,7 +57,7 @@ Phase 1 progress notes:
 - Contract scope is complete: the target scanner-profile shape and effective-profile fallback rules are documented.
 - Development rules are complete: target, transitional, legacy, and manual-compatibility layers are separated with ownership boundaries.
 - Onboarding guidance is complete: future site work has fixture, manifest, test, and manual-verification steps.
-- Current runtime progress has moved beyond Phase 1 into Phase 2 partial; remaining work is tracked under Phase 2 and later phases below.
+- Current runtime progress has moved beyond Phase 1 and completed Phases 2 through 6; historical details remain tracked under the later phase sections below.
 
 Phase 1 verification record:
 

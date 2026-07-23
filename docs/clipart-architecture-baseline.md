@@ -77,19 +77,20 @@ Phase 0 freezes this exact `manifest.json` content-script list. Any runtime phas
 38. `content_modules/clipart/scanner-profile-macorner-customily.js`
 39. `content_modules/clipart/scanner-profile-geckocustom.js`
 40. `content_modules/clipart/scanner-profile-pawfecthouse-teeinblue.js`
-41. `content_modules/clipart/scanner-profile-adapters.js`
-42. `content_modules/clipart/scanner-site-router.js`
-43. `content_modules/clipart/scanner-ui.js`
-44. `content_modules/clipart/scanner-export.js`
-45. `content_modules/clipart/scanner-sync.js`
-46. `content_modules/clipart/scanner-render.js`
-47. `content_modules/clipart/scanner-auto-default-v2.js`
-48. `content_modules/clipart/scanner-auto.js`
-49. `content_modules/clipart/scanner-manual.js`
-50. `content_modules/clipart/scanner-screenshot.js`
-51. `content_modules/clipart/scanner-panel.js`
-52. `content_modules/clipart/scanner-core.js`
-53. `content_modules/clipart-scanner.js`
+41. `content_modules/clipart/scanner-profile-site-v2-consolidated.js`
+42. `content_modules/clipart/scanner-profile-adapters.js`
+43. `content_modules/clipart/scanner-site-router.js`
+44. `content_modules/clipart/scanner-ui.js`
+45. `content_modules/clipart/scanner-export.js`
+46. `content_modules/clipart/scanner-sync.js`
+47. `content_modules/clipart/scanner-render.js`
+48. `content_modules/clipart/scanner-auto-default-v2.js`
+49. `content_modules/clipart/scanner-auto.js`
+50. `content_modules/clipart/scanner-manual.js`
+51. `content_modules/clipart/scanner-screenshot.js`
+52. `content_modules/clipart/scanner-panel.js`
+53. `content_modules/clipart/scanner-core.js`
+54. `content_modules/clipart-scanner.js`
 
 ## Runtime namespace baseline
 

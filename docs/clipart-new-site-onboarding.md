@@ -74,5 +74,5 @@ Use the following prompt template:
 
 ## Current implementation note
 
-The project is currently Phase 2 partial. New onboarding should be scanner-profile-first, with V2 adapters used only as a migration bridge. Keep fixtures, manifest load order, routing tests, and docs in the same change.
+The project is currently Phase 6 complete. New onboarding should remain scanner-profile-first, with V2 adapters used only as a migration bridge. Keep fixtures, manifest load order, routing tests, and docs in the same change.
 

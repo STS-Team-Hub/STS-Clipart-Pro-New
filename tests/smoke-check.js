@@ -76,6 +76,12 @@ expectedContentFiles.forEach((file, idx) => {
 contentFiles.forEach((file) => {
   if (!fs.existsSync(path.join(root, file))) fail(`missing content script file: ${file}`);
 });
+
+const architectureBaseline = read('docs/clipart-architecture-baseline.md');
+expectedContentFiles.forEach((file, idx) => {
+  const numberedEntry = `${idx + 1}. \`${file}\``;
+  if (!architectureBaseline.includes(numberedEntry)) fail(`architecture baseline load order missing: ${numberedEntry}`);
+});
 ['content_modules/debug.js', 'content_modules/sanitize.js', 'content_modules/product-crawler.js', 'content_modules/clipart-scanner.js'].forEach(file => {
   if (!contentFiles.includes(file)) fail(`manifest missing content file: ${file}`);
   if (!fs.existsSync(path.join(root, file))) fail(`missing file: ${file}`);
@@ -560,6 +566,10 @@ const phaseOneDocs = {
   if (!phaseOneDocs.onboarding.includes(pattern)) fail(`Phase 1 onboarding workflow missing: ${pattern}`);
 });
 if (!phaseOneDocs.architecture.includes('Current phase status')) fail('Phase 1 architecture status section missing');
+if (!phaseOneDocs.architecture.includes('Phase 6 complete')) fail('architecture docs must reflect Phase 6 completion');
+if (!phaseOneDocs.contract.includes('Phase 6 complete')) fail('profile contract docs must reflect Phase 6 completion');
+if (!phaseOneDocs.rules.includes('Phase 6 complete')) fail('development rules docs must reflect Phase 6 completion');
+if (!phaseOneDocs.onboarding.includes('Phase 6 complete')) fail('onboarding docs must reflect Phase 6 completion');
 
 const changelog = read('CHANGELOG.txt');
 const versionHeaders = changelog.match(/^## \d+\.\d+\.\d+/gm) || [];
