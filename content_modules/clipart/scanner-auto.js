@@ -185,11 +185,32 @@
     return textKey(group && (group.label || group.name)) + '::' + opts;
   }
 
+
+  function getManualAutoLabel(titleEl) {
+    return String((titleEl && (titleEl.textContent || (titleEl.getAttribute && titleEl.getAttribute('aria-label')))) || '').replace(/\s+/g, ' ').trim();
+  }
+
+  function isUnsafeManualAutoText(value) {
+    var unsafe = /\b(add to cart|buy now|checkout|upload|delete|remove|quantity|qty|cart|payment|pay now|submit order)\b/i;
+    return unsafe.test(String(value || ''));
+  }
+
+  function resolveManualAutoExpandTarget(profile, titleEl, ctx) {
+    if (profile && typeof profile.getAutoExpandTarget === 'function') {
+      try {
+        return profile.getAutoExpandTarget(titleEl, ctx || {}) || titleEl;
+      } catch (err) {
+        if (typeof console !== 'undefined' && console.warn) console.warn('[STS Clipart Pro 8.3 Clipart] Manual-driven Auto expand target failed:', err);
+        return titleEl;
+      }
+    }
+    return titleEl;
+  }
+
   function safeManualAutoClick(titleEl) {
     if (!titleEl || typeof titleEl.click !== 'function') return false;
-    var txt = textKey(titleEl.textContent || titleEl.getAttribute && titleEl.getAttribute('aria-label') || '');
-    var unsafe = /\b(add to cart|buy now|checkout|upload|delete|remove|quantity|qty|cart|payment|pay now|submit order)\b/i;
-    if (unsafe.test(txt)) return false;
+    var txt = getManualAutoLabel(titleEl);
+    if (isUnsafeManualAutoText(txt)) return false;
     try { titleEl.click(); return true; } catch (err) { return false; }
   }
 
@@ -216,7 +237,7 @@
     var candidateResult = core.getManualTitleCandidatesLegacy();
     var titles = candidateResult && Array.isArray(candidateResult.titles) ? candidateResult.titles : [];
     var source = candidateResult && candidateResult.source || 'none';
-    var profile = candidateResult && candidateResult.profile || null;
+    var profile = (candidateResult && candidateResult.profile) || (typeof c.getCurrentProfile === 'function' && c.getCurrentProfile()) || null;
     if (!titles.length) return null;
 
     var seenTitleEls = new Set();
@@ -231,28 +252,54 @@
     var groups = [];
     var seenGroups = new Set();
     var warnings = [];
+    var perTitleTrace = [];
+    var waitMs = profile && typeof profile.manualDrivenAutoWaitMs === 'number' ? profile.manualDrivenAutoWaitMs : 100;
 
     for (var i = 0; i < uniqueTitles.length; i++) {
       var titleEl = uniqueTitles[i];
+      var titleText = getManualAutoLabel(titleEl);
+      var traceEntry = {
+        titleText: titleText,
+        click: 'skipped-click',
+        resolverUsed: 'manual-resolver',
+        optionCount: 0,
+        skipReason: ''
+      };
+      perTitleTrace.push(traceEntry);
       if (titleEl && typeof titleEl.scrollIntoView === 'function') {
         try { titleEl.scrollIntoView({ block: 'center', inline: 'nearest' }); } catch (e) { titleEl.scrollIntoView(); }
       }
-      safeManualAutoClick(titleEl);
-      await waitForDomSettle(80);
+      var expandEl = resolveManualAutoExpandTarget(profile, titleEl, c);
+      if (isUnsafeManualAutoText(getManualAutoLabel(expandEl))) {
+        traceEntry.skipReason = 'unsafe-click-text';
+        warnings.push('unsafe-click:' + titleText);
+      } else if (safeManualAutoClick(expandEl)) {
+        traceEntry.click = 'clicked';
+      } else {
+        traceEntry.skipReason = 'click-failed';
+      }
+      await waitForDomSettle(waitMs);
 
       var picked = core.collectManualGroupViaResolverLegacy(titleEl);
       var group = picked && !picked.fallback ? picked.group : null;
+      if (picked && picked.resolverId) traceEntry.resolverUsed = picked.resolverId;
       if ((!group || !Array.isArray(group.options) || !group.options.length) && typeof core.collectManualGroupViaLegacyContainerLegacy === 'function') {
+        traceEntry.resolverUsed = 'legacy-container';
         group = core.collectManualGroupViaLegacyContainerLegacy(titleEl);
       }
       group = normalizeManualAutoGroup(group);
       if (!group) {
-        warnings.push('empty:' + String((titleEl && titleEl.textContent) || '').trim());
-        if (typeof console !== 'undefined' && console.warn) console.warn('[STS Clipart Pro 8.3 Clipart] Manual-driven Auto skipped empty group:', titleEl && titleEl.textContent);
+        traceEntry.skipReason = traceEntry.skipReason || 'empty-group';
+        warnings.push('empty:' + titleText);
+        if (typeof console !== 'undefined' && console.warn) console.warn('[STS Clipart Pro 8.3 Clipart] Manual-driven Auto skipped empty group:', titleText);
         continue;
       }
+      traceEntry.optionCount = (group.options || []).length;
       var key = groupKey(group);
-      if (seenGroups.has(key)) continue;
+      if (seenGroups.has(key)) {
+        traceEntry.skipReason = 'duplicate-group';
+        continue;
+      }
       seenGroups.add(key);
       groups.push(group);
       if (typeof c.showProgress === 'function') c.showProgress(8 + Math.round(((i + 1) / uniqueTitles.length) * 20), 'Manual-driven Auto: ' + groups.length + ' groups');
@@ -275,7 +322,9 @@
         matchedProfileId: profile && profile.matchedProfileId || null,
         titleCandidates: uniqueTitles.length,
         groupsAfterDedup: categories.length,
-        warnings: warnings
+        warnings: warnings,
+        perTitle: perTitleTrace,
+        settleWaitMs: waitMs
       }
     };
     if (c.CLIPART) {
