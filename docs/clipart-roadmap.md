@@ -273,6 +273,30 @@ Phase 7 verification record:
 - Verified with `npm run check` and `npm run test:unit`.
 - Result: Phase 7 repository work is complete for splitting the consolidated profiles; browser-domain verification remains the external Chrome checklist before release sign-off.
 
+## Phase 8 — V2 and legacy removal / one operational scanner flow
+
+Status: **Planned**.
+
+Phase 8 converts the Phase 7 compatibility architecture into one operational scanner flow. The detailed execution plan lives in `docs/clipart-v2-legacy-removal-plan.md`.
+
+Target deliverables:
+
+1. Freeze V2, legacy scanner-list, and manual profile layers as removal targets.
+2. Create dedicated scanner profiles for Suzitee, TrendingCustom, Wanderprints, and Etsy.
+3. De-bridge PersonalFury, InterestPod, and Gossby so their dedicated profiles no longer depend on `window.STSSiteProfilesV2`.
+4. Remove runtime fallback references to `window.STSSiteProfiles`, `window.STSSiteProfilesV2`, and `window.STSManualProfiles`.
+5. Remove compatibility scripts from `manifest.json` after route/tests prove scanner-profile parity.
+6. Rename reusable modules that still carry historical V2 naming only after their APIs are profile-system-neutral.
+
+Working rule: each supported site travels through the same scanner-profile route; site-specific selectors and extraction behavior live as that site's dedicated profile "color" on the shared road. If a site breaks after compatibility removal, capture refreshed HTML and fix the dedicated scanner profile rather than restoring V2/legacy routing.
+
+Exit criteria:
+
+- No runtime scan behavior depends on V2 or legacy profile globals.
+- `manifest.json` loads only shared scanner modules, the default profile, and dedicated site scanner profiles.
+- Every supported named site is scanner-profile-native or intentionally removed from supported-site scope.
+- Automated checks cover profile resolution and normalized output shape for every supported named site.
+
 ## Final repo definition of done
 
 The repository reaches its final target state when:
