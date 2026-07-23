@@ -128,6 +128,20 @@ When a Manual or V2 site needs meaningful new behavior:
 6. Keep legacy/V2 behavior as compatibility only until parity is verified.
 7. Run Chrome verification before marking the site canonical.
 
+## Request workflow for new or updated site profiles
+
+Yes: when adding a new site or updating an existing site's profile, the preferred handoff is to save the HTML for that site's personalized/customization area into a `.txt` fixture and ask Codex to update the scanner profile from that fixture.
+
+Use this handoff format:
+
+1. Open a real product page on the target site.
+2. Copy the full DOM/HTML for the personalized/customization wrapper, including option titles, option containers, swatches, images, selects, text inputs, upload fields, and selected-state classes/attributes.
+3. Save that HTML into a clearly named `.txt` file, ideally under the existing `HTML/` fixture folder with the site/domain in the filename.
+4. Tell Codex whether the fixture is for a brand-new site profile or an update to an existing site.
+5. Ask Codex to create or update the dedicated `content_modules/clipart/scanner-profile-<site-id>.js` file, plus any fixture expectations and regression tests needed for the copied DOM.
+
+The copied HTML should be the complete personalized section, not only a single option row, because profile work usually needs the root selector, group structure, title labels, option item markup, visual metadata, text-field limits/placeholders, and selected-state signals. If the site lazy-loads or reveals choices only after clicks, include the expanded/revealed DOM state too.
+
 ## Optional fields for dynamic sites
 
 If future profiles require Auto to click each title before options exist in the DOM, add optional profile fields or helper behavior without changing old profiles:
