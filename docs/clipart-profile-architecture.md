@@ -27,8 +27,8 @@ Still transitional:
 
 - Some picker/panel internals still bridge through legacy core where tests prove runtime dependency.
 - V2 site profiles still coexist with scanner profiles.
-- PersonalFury, InterestPod, Gossby, Suzitee, TrendingCustom, Wanderprints, and Etsy now own dedicated scanner profile files; some still reuse the shared V2 bridge/helper path until de-bridging is complete.
-- V2 and manual profile files remain loaded as compatibility/source layers until Phase 8 de-bridging and manifest cleanup are complete.
+- PersonalFury, InterestPod, and Gossby are Phase 2 de-bridged canonical scanner profiles; Suzitee, TrendingCustom, Wanderprints, and Etsy still own dedicated scanner profile files with remaining compatibility debt to audit.
+- V2 and manual profile files remain loaded as compatibility/source layers until Phase 2/3 de-bridging and manifest cleanup are complete; de-bridged canonical profiles must not call the V2/manual registries.
 - Legacy scanner-list routing and manual profile assets remain warning-backed compatibility contracts.
 - Real-browser Chrome domain verification remains external to this container.
 

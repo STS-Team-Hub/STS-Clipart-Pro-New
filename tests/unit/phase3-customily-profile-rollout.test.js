@@ -41,6 +41,7 @@ ctx.window = windowMock;
   'content_modules/site_profiles/interestpod.js',
   'content_modules/clipart/scanner-profile-registry.js',
   'content_modules/clipart/scanner-profile-default.js',
+  'content_modules/clipart/scanner-profile-native-adapter.js',
   'content_modules/clipart/scanner-profile-site-v2-bridge.js',
   'content_modules/clipart/scanner-profile-macorner-customily.js',
   'content_modules/clipart/scanner-profile-pawesomehouse-customily.js',
