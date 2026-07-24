@@ -2,61 +2,34 @@
 
 Inventory date: **2026-07-24**.
 
-This document records current site-profile ownership and the target migration state for the final one-site-one-scanner-profile architecture.
+This document records the current scanner-profile ownership for STS Clipart Pro 8.3. The migration to scanner-profile-first runtime is complete; this inventory should describe current runtime ownership, not historical phase progress.
 
 ## Ownership classes
 
-- **Canonical scanner profile:** the site has its own `content_modules/clipart/scanner-profile-<site-id>.js` file and should receive future feature work there.
-- **V2 adapter-backed:** historical ownership class only; Phase 3 runtime must not use this class for supported named sites.
-- **Default fallback:** unknown/generic pages are handled by the default scanner profile instead of a named site profile.
-- **Legacy compatibility:** historical/source fixture files only; Phase 3 runtime must not load them.
+- **Canonical scanner profile:** a supported named site owns one `content_modules/clipart/scanner-profile-<site-id>.js` file.
+- **Default fallback:** unknown or unsupported pages are handled by `content_modules/clipart/scanner-profile-default.js`.
+- **Reference fixture:** raw copied HTML samples under `HTML/` are research inputs only and are not runtime-loaded.
 
-## Current classification and target migration
+## Current runtime ownership
 
-| Site/profile | Current runtime state | Final canonical owner | Canonical lock / remaining gap |
+| Site/profile | Runtime owner | Auto/Manual expectation | Reference HTML pattern |
 | --- | --- | --- | --- |
-| Pawesomehouse / Customily | Phase 3 canonical scanner-profile-native; legacy V2/manual files are not runtime-loaded | `content_modules/clipart/scanner-profile-pawesomehouse-customily.js` | Complete for Phase 2: canonical profile owns auto, visible-state, manual-pick, container option collection, nearest-title detection, and normalization helpers without V2/manual/legacy registry references. |
-| Macorner / Customily | Phase 3 canonical scanner-profile-native; legacy V2/manual files are not runtime-loaded | `content_modules/clipart/scanner-profile-macorner-customily.js` | Complete for Phase 2: canonical profile owns auto, visible-state, manual-pick, container option collection, nearest-title detection, and normalization helpers without V2/manual/legacy registry references. |
-| GeckoCustom | Phase 3 canonical scanner-profile-native; legacy V2/manual files are not runtime-loaded | `content_modules/clipart/scanner-profile-geckocustom.js` | Complete for Phase 2: canonical profile owns GeckoCustom auto, visible-state, manual-pick, container option collection, and nearest-title behavior without V2/manual/legacy registry references. |
-| Pawfecthouse / Teeinblue | Phase 2 audited scanner-profile-native; legacy V2 files are not runtime-loaded | `content_modules/clipart/scanner-profile-pawfecthouse-teeinblue.js` | Complete for Phase 2: canonical profile owns Pawfecthouse auto, visible-state, manual-pick, container option collection, and nearest-title behavior without V2/manual/legacy registry references. |
-| PersonalFury / Customily | Phase 2 de-bridged canonical scanner profile; legacy V2 source file has been removed | `content_modules/clipart/scanner-profile-personalfury.js` | Complete for Phase 2 step 1: canonical profile no longer depends on `content_modules/site_profiles/personalfury.js`, `STSSiteProfilesV2`, or `scanner-profile-site-v2-consolidated.js`. |
-| InterestPod / personalization forms | Phase 2 de-bridged canonical scanner profile; legacy V2 source file has been removed | `content_modules/clipart/scanner-profile-interestpod.js` | Complete for Phase 2 step 1: canonical profile no longer depends on `content_modules/site_profiles/interestpod.js`, `STSSiteProfilesV2`, or `scanner-profile-site-v2-consolidated.js`. |
-| Gossby / personalized form | Phase 2 de-bridged canonical scanner profile; legacy V2 source file has been removed | `content_modules/clipart/scanner-profile-gossby.js` | Complete for Phase 2 step 1: canonical profile no longer depends on `content_modules/site_profiles/gossby.js`, `STSSiteProfilesV2`, or `scanner-profile-site-v2-consolidated.js`. |
-| Suzitee / Customily | Phase 2 de-bridged canonical scanner profile; legacy V2/manual source files have been removed | `content_modules/clipart/scanner-profile-suzitee.js` | Complete for Phase 2 step 2: canonical profile no longer depends on `content_modules/site_profiles/suzitee.js`, `content_modules/manual_profiles/suzitee.js`, V2/manual registries, or scanner-profile adapters. |
-| TrendingCustom / personalization forms | Phase 2 de-bridged canonical scanner profile; legacy V2 source file has been removed | `content_modules/clipart/scanner-profile-trendingcustom.js` | Complete for Phase 2 step 2: canonical profile no longer depends on `content_modules/site_profiles/trendingcustom.js`, V2 registries, or scanner-profile adapters. |
-| Wanderprints / Customily | Phase 2 de-bridged canonical scanner profile; legacy V2 source file has been removed | `content_modules/clipart/scanner-profile-wanderprints.js` | Complete for Phase 2 step 2: canonical profile no longer depends on `content_modules/site_profiles/wanderprints.js`, V2 registries, or scanner-profile adapters. |
-| Etsy / Shopify-like forms | Phase 2 de-bridged canonical scanner profile with generic/default scan scope retained | `content_modules/clipart/scanner-profile-etsy.js` | Complete for Phase 2 step 2: canonical profile no longer depends on `content_modules/site_profiles/etsy.js`, V2 registries, or scanner-profile adapters; generic/unknown behavior remains default-only. |
-| Generic / unknown pages | Default scanner profile only | `content_modules/clipart/scanner-profile-default.js` | Locked as default-only. Do not create a site-specific `generic` scanner profile. |
+| Pawesomehouse / Customily | `content_modules/clipart/scanner-profile-pawesomehouse-customily.js` | Auto should reuse Manual title expansion and profile collection when candidates exist. | Customily `customily_option`, `option_name`, `customily-swatch` samples. |
+| Macorner / Customily | `content_modules/clipart/scanner-profile-macorner-customily.js` | Auto should reuse Manual title expansion and profile collection when candidates exist. | Customily groups and swatches. |
+| GeckoCustom | `content_modules/clipart/scanner-profile-geckocustom.js` | Profile-specific Manual candidates/containers should drive Auto where available. | GeckoCustom/custom product group markup. |
+| Pawfecthouse / Teeinblue | `content_modules/clipart/scanner-profile-pawfecthouse-teeinblue.js` | Auto must use Teeinblue-aware profile collection instead of Customily assumptions. | Teeinblue option markup. |
+| PersonalFury / Customily | `content_modules/clipart/scanner-profile-personalfury.js` | Auto should reuse Manual title expansion and profile collection when candidates exist. | Customily groups/options. |
+| InterestPod / personalization forms | `content_modules/clipart/scanner-profile-interestpod.js` | Auto should reuse Manual title expansion and profile collection when candidates exist. | Customily/personalization groups. |
+| Gossby / personalized form | `content_modules/clipart/scanner-profile-gossby.js` | Profile selectors should determine whether Manual-driven Auto can run. | Site-specific personalized form markup. |
+| Suzitee / Customily | `content_modules/clipart/scanner-profile-suzitee.js` | Auto should reuse Manual title expansion and profile collection when candidates exist. | Customily groups/options. |
+| TrendingCustom / personalization forms | `content_modules/clipart/scanner-profile-trendingcustom.js` | Auto should use Ant Design form-item candidates and profile collection. | Ant Design `ant-form-item` groups. |
+| Wanderprints / Customily | `content_modules/clipart/scanner-profile-wanderprints.js` | Auto should reuse Manual title expansion and profile collection when candidates exist. | Customily groups/swatch options. |
+| Etsy / Shopify-like forms | `content_modules/clipart/scanner-profile-etsy.js` | Etsy hosts resolve to the Etsy profile; generic/unknown pages stay default-only. | Etsy/generic listing form scope. |
+| Generic / unknown pages | `content_modules/clipart/scanner-profile-default.js` | Default fallback only; do not create a site-specific generic profile. | Generic page markup. |
 
-## Why profiles are currently grouped
+## Maintenance rules
 
-The profile system is grouped because the project migrated incrementally from legacy/V2 routing toward scanner-profile-first routing:
-
-1. High-value complex sites were moved first into dedicated scanner profiles.
-2. Some similar sites were moved into a consolidated scanner registry bridge to reduce migration risk.
-3. Existing V2/manual/legacy files are retained only as historical/source fixtures; they are not loaded by the Phase 3 runtime.
-4. The manifest and runtime guards now prevent legacy layers from becoming operational owners again.
-
-This grouping is temporary for site ownership. The final target is one canonical scanner profile package for every supported named site.
-
-## Migration priority
-
-1. Keep native scanner profiles stable and use them as templates.
-2. Phase 7 split the former consolidated profiles into dedicated scanner profile files:
-   - PersonalFury
-   - InterestPod
-   - Gossby
-3. Phase 2 step 2 de-bridged the Phase 8 native profiles without waiting for future feature work:
-   - Suzitee
-   - TrendingCustom
-   - Wanderprints
-   - Etsy
-4. Do not create site-specific files for unknown/generic hosts; keep default scanner profile ownership.
-5. Keep legacy files non-operational; no feature expansion is allowed outside canonical scanner profiles.
-
-## Inventory maintenance rules
-
-- Update this file whenever a site changes ownership class.
-- Record whether a site is canonical, consolidated, adapter-backed, default-only, or legacy compatibility-only.
-- Do not mark a site canonical until it has a dedicated scanner profile, fixtures/tests, and Chrome manual verification notes.
-- If a V2 adapter-backed site cannot be migrated yet, document the reason and revisit during future canonicalization work.
+- Add a site only when it has a canonical scanner profile, fixture coverage, and route/profile tests.
+- Keep one runtime owner per supported named site.
+- Put new site-specific selectors, expand-target behavior, and extraction overrides in the canonical profile file.
+- Keep raw HTML under `HTML/` flat and use it only as reference material for fixtures/tests.
