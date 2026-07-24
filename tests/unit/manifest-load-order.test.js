@@ -4,26 +4,47 @@ const fs = require('fs');
 const manifest = JSON.parse(fs.readFileSync('manifest.json', 'utf8'));
 const scripts = (((manifest || {}).content_scripts || [])[0] || {}).js || [];
 
-const v2Idx = scripts.indexOf('content_modules/clipart/scanner-auto-default-v2.js');
-const autoIdx = scripts.indexOf('content_modules/clipart/scanner-auto.js');
-const coreIdx = scripts.indexOf('content_modules/clipart/scanner-core.js');
-const bridgeIdx = scripts.indexOf('content_modules/clipart/scanner-profile-site-v2-bridge.js');
-const canonicalIds = ['personalfury', 'interestpod', 'gossby'];
-const canonicalIdxs = canonicalIds.map((id) => scripts.indexOf(`content_modules/clipart/scanner-profile-${id}.js`));
-const consolidatedIdx = scripts.indexOf('content_modules/clipart/scanner-profile-site-v2-consolidated.js');
-const adaptersIdx = scripts.indexOf('content_modules/clipart/scanner-profile-adapters.js');
+const indexOf = (file) => scripts.indexOf(file);
+const requiredBeforeCore = [
+  'content_modules/clipart/scanner-profile-context.js',
+  'content_modules/clipart/scanner-profile-registry.js',
+  'content_modules/clipart/scanner-profile-default.js',
+  'content_modules/clipart/scanner-profile-pawesomehouse-customily.js',
+  'content_modules/clipart/scanner-profile-macorner-customily.js',
+  'content_modules/clipart/scanner-profile-geckocustom.js',
+  'content_modules/clipart/scanner-profile-pawfecthouse-teeinblue.js',
+  'content_modules/clipart/scanner-profile-native-adapter.js',
+  'content_modules/clipart/scanner-profile-suzitee.js',
+  'content_modules/clipart/scanner-profile-trendingcustom.js',
+  'content_modules/clipart/scanner-profile-wanderprints.js',
+  'content_modules/clipart/scanner-profile-etsy.js',
+  'content_modules/clipart/scanner-profile-personalfury.js',
+  'content_modules/clipart/scanner-profile-interestpod.js',
+  'content_modules/clipart/scanner-profile-gossby.js'
+];
+const removedRuntimePrefixes = [
+  'content_modules/site-profiles.js',
+  'content_modules/site_profiles/',
+  'content_modules/manual_profiles/'
+];
+const removedRuntimeFiles = [
+  'content_modules/clipart/scanner-profile-adapters.js',
+  'content_modules/clipart/scanner-profile-site-v2-bridge.js',
+  'content_modules/clipart/scanner-profile-site-v2-consolidated.js'
+];
+const coreIdx = indexOf('content_modules/clipart/scanner-core.js');
 
-assert.ok(v2Idx >= 0, 'scanner-auto-default-v2.js missing');
-assert.ok(autoIdx >= 0, 'scanner-auto.js missing');
 assert.ok(coreIdx >= 0, 'scanner-core.js missing');
-assert.ok(bridgeIdx >= 0, 'scanner-profile-site-v2-bridge.js missing');
-canonicalIds.forEach((id, idx) => assert.ok(canonicalIdxs[idx] >= 0, `scanner-profile-${id}.js missing`));
-assert.ok(consolidatedIdx >= 0, 'scanner-profile-site-v2-consolidated.js shim missing');
-assert.ok(adaptersIdx >= 0, 'scanner-profile-adapters.js missing');
-assert.ok(v2Idx < autoIdx, 'V2 must load before scanner-auto.js');
-assert.ok(v2Idx < coreIdx, 'V2 must load before scanner-core.js');
-assert.ok(bridgeIdx < adaptersIdx, 'Phase 7 V2 bridge must load before generic V2 adapters');
-canonicalIds.forEach((id, idx) => assert.ok(canonicalIdxs[idx] < adaptersIdx, `Phase 7 canonical ${id} profile must load before generic V2 adapters`));
-assert.ok(consolidatedIdx < adaptersIdx, 'Phase 7 consolidated shim must load before generic V2 adapters for compatibility');
+requiredBeforeCore.forEach((file) => {
+  assert.ok(indexOf(file) >= 0, `${file} missing`);
+  assert.ok(indexOf(file) < coreIdx, `${file} must load before scanner-core.js`);
+});
+removedRuntimeFiles.forEach((file) => assert.equal(indexOf(file), -1, `${file} must not load in Phase 3 runtime`));
+scripts.forEach((file) => {
+  removedRuntimePrefixes.forEach((prefix) => {
+    if (prefix.endsWith('/')) assert.ok(!file.startsWith(prefix), `${file} must not load in Phase 3 runtime`);
+    else assert.notEqual(file, prefix, `${file} must not load in Phase 3 runtime`);
+  });
+});
 
 console.log('manifest load order test passed');

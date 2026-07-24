@@ -4,15 +4,14 @@
   ns.modules = ns.modules || {};
 
   function resolve(hostname){
+    if (!ns.profiles || typeof ns.profiles.resolve !== 'function') return null;
     var host = hostname || (location && location.hostname) || '';
-    if (window.STSSiteProfilesV2 && typeof window.STSSiteProfilesV2.resolve === 'function') {
-      var p = window.STSSiteProfilesV2.resolve(host);
-      if (p) return p;
-    }
-    if (window.STSSiteProfiles && typeof window.STSSiteProfiles.pickSiteProfile === 'function') {
-      return window.STSSiteProfiles.pickSiteProfile(host);
-    }
-    return null;
+    var href = (location && location.href) || (host ? ('https://' + host + '/') : '');
+    return ns.profiles.resolve({
+      document: document,
+      location: { hostname: host, href: href },
+      window: window
+    });
   }
 
   ns.siteRouter = ns.siteRouter || {};

@@ -8,24 +8,24 @@ This document records current site-profile ownership and the target migration st
 
 - **Canonical scanner profile:** the site has its own `content_modules/clipart/scanner-profile-<site-id>.js` file and should receive future feature work there.
 - **Consolidated scanner profile:** the site is registered through `scanner-profile-site-v2-consolidated.js`; this is scanner-registry-owned but not yet one file per site.
-- **V2 adapter-backed:** the site remains primarily in `content_modules/site_profiles/` and is adapted into scanner-profile routing by `scanner-profile-adapters.js`.
+- **V2 adapter-backed:** historical ownership class only; Phase 3 runtime must not use this class for supported named sites.
 - **Default fallback:** unknown/generic pages are handled by the default scanner profile instead of a named site profile.
-- **Legacy compatibility:** `content_modules/site-profiles.js` and `content_modules/manual_profiles/` remain fallback contracts only.
+- **Legacy compatibility:** historical/source fixture files only; Phase 3 runtime must not load them.
 
 ## Current classification and target migration
 
 | Site/profile | Current runtime state | Final canonical owner | Canonical lock / remaining gap |
 | --- | --- | --- | --- |
-| Pawesomehouse / Customily | Phase 2 audited scanner-profile-native; V2/manual files still loaded only as Phase 3 compatibility debt | `content_modules/clipart/scanner-profile-pawesomehouse-customily.js` | Complete for Phase 2: canonical profile owns auto, visible-state, manual-pick, container option collection, nearest-title detection, and normalization helpers without V2/manual/legacy registry references. |
-| Macorner / Customily | Phase 2 audited scanner-profile-native; V2/manual files still loaded only as Phase 3 compatibility debt | `content_modules/clipart/scanner-profile-macorner-customily.js` | Complete for Phase 2: canonical profile owns auto, visible-state, manual-pick, container option collection, nearest-title detection, and normalization helpers without V2/manual/legacy registry references. |
-| GeckoCustom | Phase 2 audited scanner-profile-native; V2/manual files still loaded only as Phase 3 compatibility debt | `content_modules/clipart/scanner-profile-geckocustom.js` | Complete for Phase 2: canonical profile owns GeckoCustom auto, visible-state, manual-pick, container option collection, and nearest-title behavior without V2/manual/legacy registry references. |
-| Pawfecthouse / Teeinblue | Phase 2 audited scanner-profile-native; V2 files still loaded only as Phase 3 compatibility debt | `content_modules/clipart/scanner-profile-pawfecthouse-teeinblue.js` | Complete for Phase 2: canonical profile owns Pawfecthouse auto, visible-state, manual-pick, container option collection, and nearest-title behavior without V2/manual/legacy registry references. |
-| PersonalFury / Customily | Phase 2 de-bridged canonical scanner profile; legacy V2 source file still loaded only as compatibility debt | `content_modules/clipart/scanner-profile-personalfury.js` | Complete for Phase 2 step 1: canonical profile no longer depends on `content_modules/site_profiles/personalfury.js`, `STSSiteProfilesV2`, or `scanner-profile-site-v2-consolidated.js`. |
-| InterestPod / personalization forms | Phase 2 de-bridged canonical scanner profile; legacy V2 source file still loaded only as compatibility debt | `content_modules/clipart/scanner-profile-interestpod.js` | Complete for Phase 2 step 1: canonical profile no longer depends on `content_modules/site_profiles/interestpod.js`, `STSSiteProfilesV2`, or `scanner-profile-site-v2-consolidated.js`. |
-| Gossby / personalized form | Phase 2 de-bridged canonical scanner profile; legacy V2 source file still loaded only as compatibility debt | `content_modules/clipart/scanner-profile-gossby.js` | Complete for Phase 2 step 1: canonical profile no longer depends on `content_modules/site_profiles/gossby.js`, `STSSiteProfilesV2`, or `scanner-profile-site-v2-consolidated.js`. |
-| Suzitee / Customily | Phase 2 de-bridged canonical scanner profile; legacy V2/manual source files still loaded only as compatibility debt | `content_modules/clipart/scanner-profile-suzitee.js` | Complete for Phase 2 step 2: canonical profile no longer depends on `content_modules/site_profiles/suzitee.js`, `content_modules/manual_profiles/suzitee.js`, V2/manual registries, or scanner-profile adapters. |
-| TrendingCustom / personalization forms | Phase 2 de-bridged canonical scanner profile; legacy V2 source file still loaded only as compatibility debt | `content_modules/clipart/scanner-profile-trendingcustom.js` | Complete for Phase 2 step 2: canonical profile no longer depends on `content_modules/site_profiles/trendingcustom.js`, V2 registries, or scanner-profile adapters. |
-| Wanderprints / Customily | Phase 2 de-bridged canonical scanner profile; legacy V2 source file still loaded only as compatibility debt | `content_modules/clipart/scanner-profile-wanderprints.js` | Complete for Phase 2 step 2: canonical profile no longer depends on `content_modules/site_profiles/wanderprints.js`, V2 registries, or scanner-profile adapters. |
+| Pawesomehouse / Customily | Phase 3 canonical scanner-profile-native; legacy V2/manual files are not runtime-loaded | `content_modules/clipart/scanner-profile-pawesomehouse-customily.js` | Complete for Phase 2: canonical profile owns auto, visible-state, manual-pick, container option collection, nearest-title detection, and normalization helpers without V2/manual/legacy registry references. |
+| Macorner / Customily | Phase 3 canonical scanner-profile-native; legacy V2/manual files are not runtime-loaded | `content_modules/clipart/scanner-profile-macorner-customily.js` | Complete for Phase 2: canonical profile owns auto, visible-state, manual-pick, container option collection, nearest-title detection, and normalization helpers without V2/manual/legacy registry references. |
+| GeckoCustom | Phase 3 canonical scanner-profile-native; legacy V2/manual files are not runtime-loaded | `content_modules/clipart/scanner-profile-geckocustom.js` | Complete for Phase 2: canonical profile owns GeckoCustom auto, visible-state, manual-pick, container option collection, and nearest-title behavior without V2/manual/legacy registry references. |
+| Pawfecthouse / Teeinblue | Phase 2 audited scanner-profile-native; legacy V2 files are not runtime-loaded | `content_modules/clipart/scanner-profile-pawfecthouse-teeinblue.js` | Complete for Phase 2: canonical profile owns Pawfecthouse auto, visible-state, manual-pick, container option collection, and nearest-title behavior without V2/manual/legacy registry references. |
+| PersonalFury / Customily | Phase 2 de-bridged canonical scanner profile; legacy V2 source file is not runtime-loaded | `content_modules/clipart/scanner-profile-personalfury.js` | Complete for Phase 2 step 1: canonical profile no longer depends on `content_modules/site_profiles/personalfury.js`, `STSSiteProfilesV2`, or `scanner-profile-site-v2-consolidated.js`. |
+| InterestPod / personalization forms | Phase 2 de-bridged canonical scanner profile; legacy V2 source file is not runtime-loaded | `content_modules/clipart/scanner-profile-interestpod.js` | Complete for Phase 2 step 1: canonical profile no longer depends on `content_modules/site_profiles/interestpod.js`, `STSSiteProfilesV2`, or `scanner-profile-site-v2-consolidated.js`. |
+| Gossby / personalized form | Phase 2 de-bridged canonical scanner profile; legacy V2 source file is not runtime-loaded | `content_modules/clipart/scanner-profile-gossby.js` | Complete for Phase 2 step 1: canonical profile no longer depends on `content_modules/site_profiles/gossby.js`, `STSSiteProfilesV2`, or `scanner-profile-site-v2-consolidated.js`. |
+| Suzitee / Customily | Phase 2 de-bridged canonical scanner profile; legacy V2/manual source files are not runtime-loaded | `content_modules/clipart/scanner-profile-suzitee.js` | Complete for Phase 2 step 2: canonical profile no longer depends on `content_modules/site_profiles/suzitee.js`, `content_modules/manual_profiles/suzitee.js`, V2/manual registries, or scanner-profile adapters. |
+| TrendingCustom / personalization forms | Phase 2 de-bridged canonical scanner profile; legacy V2 source file is not runtime-loaded | `content_modules/clipart/scanner-profile-trendingcustom.js` | Complete for Phase 2 step 2: canonical profile no longer depends on `content_modules/site_profiles/trendingcustom.js`, V2 registries, or scanner-profile adapters. |
+| Wanderprints / Customily | Phase 2 de-bridged canonical scanner profile; legacy V2 source file is not runtime-loaded | `content_modules/clipart/scanner-profile-wanderprints.js` | Complete for Phase 2 step 2: canonical profile no longer depends on `content_modules/site_profiles/wanderprints.js`, V2 registries, or scanner-profile adapters. |
 | Etsy / Shopify-like forms | Phase 2 de-bridged canonical scanner profile with generic/default scan scope retained | `content_modules/clipart/scanner-profile-etsy.js` | Complete for Phase 2 step 2: canonical profile no longer depends on `content_modules/site_profiles/etsy.js`, V2 registries, or scanner-profile adapters; generic/unknown behavior remains default-only. |
 | Generic / unknown pages | Default scanner profile only | `content_modules/clipart/scanner-profile-default.js` | Locked as default-only. Do not create a site-specific `generic` scanner profile. |
 
@@ -35,8 +35,8 @@ The profile system is grouped because the project migrated incrementally from le
 
 1. High-value complex sites were moved first into dedicated scanner profiles.
 2. Some similar sites were moved into a consolidated scanner registry bridge to reduce migration risk.
-3. Existing V2/manual/legacy files remain only as frozen compatibility debt until Phase 2 absorbs required behavior into the locked canonical scanner profiles.
-4. Legacy layers remain as compatibility fallbacks because tests and runtime bridges still depend on them in specific cases.
+3. Existing V2/manual/legacy files are retained only as historical/source fixtures; they are not loaded by the Phase 3 runtime.
+4. The manifest and runtime guards now prevent legacy layers from becoming operational owners again.
 
 This grouping is temporary for site ownership. The final target is one canonical scanner profile package for every supported named site.
 
@@ -53,7 +53,7 @@ This grouping is temporary for site ownership. The final target is one canonical
    - Wanderprints
    - Etsy
 4. Do not create site-specific files for unknown/generic hosts; keep default scanner profile ownership.
-5. Keep legacy compatibility layers frozen unless a compatibility fix is required; no feature expansion is allowed outside canonical scanner profiles.
+5. Keep legacy files non-operational; no feature expansion is allowed outside canonical scanner profiles.
 
 ## Inventory maintenance rules
 

@@ -1,17 +1,14 @@
-# Clipart Profile Architecture — Current State and Final Target
+# Clipart Profile Architecture — Phase 3 Runtime
 
 ## Scope
 
 This document is the source-of-truth architecture snapshot for the current STS Clipart Pro 8.3 runtime and the target architecture for future profile work.
 
-It describes two states:
-
-1. **Current state:** Phase 8 in progress, scanner-profile-first routing is integrated, supported named sites have dedicated scanner profile files, and V2/manual/legacy compatibility layers still coexist until removal cleanup is complete.
-2. **Final target:** one canonical scanner profile package per supported named site, with shared behavior kept in shared scanner modules and generic/unknown pages handled by the default scanner profile.
+It describes the Phase 3 runtime: one canonical scanner profile package per supported named site, shared behavior in shared scanner modules, and generic/unknown pages handled by the default scanner profile.
 
 ## Current phase status
 
-The current implementation is **Phase 8 in progress**.
+The current implementation is **Phase 3 complete for runtime loading as of 2026-07-24**.
 
 Completed or mostly completed:
 
@@ -23,13 +20,11 @@ Completed or mostly completed:
 - Manual Scan panel bootstrap is owned by `scanner-manual.js`, and manual group collection exposes a profile-first route through the effective scanner profile.
 - Automated QA/release checks run through the discovered unit suite and release consistency guards.
 
-Still transitional:
+Phase 3 runtime cleanup completed:
 
-- Some picker/panel internals still bridge through legacy core where tests prove runtime dependency.
-- V2 site profiles still coexist with scanner profiles.
-- PersonalFury, InterestPod, and Gossby are Phase 2 de-bridged canonical scanner profiles; Suzitee, TrendingCustom, Wanderprints, and Etsy still own dedicated scanner profile files with remaining compatibility debt to audit.
-- V2 and manual profile files remain loaded as compatibility/source layers until Phase 2/3 de-bridging and manifest cleanup are complete; de-bridged canonical profiles must not call the V2/manual registries.
-- Legacy scanner-list routing and manual profile assets remain warning-backed compatibility contracts.
+- `manifest.json` no longer loads `content_modules/site-profiles.js`, `content_modules/site_profiles/`, `content_modules/manual_profiles/`, `scanner-profile-adapters.js`, `scanner-profile-site-v2-bridge.js`, or `scanner-profile-site-v2-consolidated.js`.
+- Operational scanner routing no longer depends on `window.STSSiteProfiles`, `window.STSSiteProfilesV2`, `window.STSManualProfiles`, or `ns.siteV2Bridge`.
+- Legacy files may remain in the repository as historical fixtures for older tests, but they are not runtime owners.
 - Real-browser Chrome domain verification remains external to this container.
 
 ## Final architecture target
@@ -74,44 +69,18 @@ Current dedicated scanner profiles include:
 
 Phase 7 converted the former consolidated sites into this layer. Future canonicalization work should migrate the remaining adapter-backed V2 sites when scheduled.
 
-### 2. Transitional scanner layer: consolidated site profiles
+### 2. Removed legacy profile runtime
 
-`content_modules/clipart/scanner-profile-site-v2-consolidated.js` is now a documented Phase 7 empty migration shim. PersonalFury, InterestPod, and Gossby register through dedicated files before the generic V2 adapter pass. The shared `scanner-profile-site-v2-bridge.js` keeps their V2 parity logic centralized while the dedicated files own runtime registration.
+The following profile systems are no longer loaded by the operational content-script runtime:
 
-### 3. Transitional layer: V2 site profiles
+- `content_modules/site-profiles.js`
+- `content_modules/site_profiles/`
+- `content_modules/manual_profiles/`
+- `content_modules/clipart/scanner-profile-adapters.js`
+- `content_modules/clipart/scanner-profile-site-v2-bridge.js`
+- `content_modules/clipart/scanner-profile-site-v2-consolidated.js`
 
-V2 site profiles live under `content_modules/site_profiles/` and register with `window.STSSiteProfilesV2`.
-
-They are transitional because they predate the scanner-profile contract. When a V2 profile exposes `autoScan()` or `scanManualGroupFromTitle()`, `content_modules/clipart/scanner-profile-adapters.js` adapts it into a scanner profile.
-
-Current V2 site-profile files include:
-
-- `generic`
-- `macorner`
-- `pawesomehouse`
-- `suzitee`
-- `pawfecthouse`
-- `trendingcustom`
-- `interestpod`
-- `personalfury`
-- `etsy`
-- `wanderprints`
-- `gossby`
-- `geckocustom`
-
-Final target: V2 files are compatibility/source fixtures only, not the primary ownership layer for new feature behavior.
-
-### 4. Legacy layer: scanner-list routing
-
-`content_modules/site-profiles.js` exposes the legacy scanner-list routing layer (`window.STSSiteProfiles`). It remains as a deprecated permanent fallback compatibility contract and emits a one-time warning when selected.
-
-Do not add new feature behavior here unless it is required to preserve existing legacy behavior during a staged migration.
-
-### 5. Legacy/manual compatibility layer
-
-`content_modules/manual_profiles/` still contains manual-profile assets. These are deprecated compatibility fixtures, not the target ownership layer, and the registry emits a one-time warning when one resolves.
-
-New Manual Pick behavior must prefer scanner-profile methods.
+Do not add new runtime loading for these files. New or changed site behavior must live in the matching canonical scanner profile file.
 
 ## Feature routing reality
 
