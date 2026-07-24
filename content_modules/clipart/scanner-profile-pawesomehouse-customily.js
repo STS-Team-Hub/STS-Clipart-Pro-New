@@ -275,6 +275,9 @@
       }
       return out;
     },
+    scanVisibleState: function(ctx) {
+      return this.scanPage(ctx);
+    },
     scanManualGroupFromTitle: function(titleEl, ctx) {
       var c = ctx || {};
       var doc = c.document || document;
@@ -295,6 +298,31 @@
       }
 
       return rawGroup;
+    },
+    collectOptionsInContainer: function(containerEl, ctx) {
+      if (!containerEl || !containerEl.querySelector) return [];
+      var options = extractCustomilyOptions(containerEl, { includeFormInputs: !!(ctx && ctx.includeFormInputs) });
+      return options;
+    },
+    detectNearestGroupTitleFromOption: function(optionEl) {
+      var groupEl = optionEl && optionEl.closest && optionEl.closest('.customily_option');
+      var titleEl = groupEl && groupEl.querySelector && (groupEl.querySelector('.option_name') || groupEl.querySelector('label[role="tab"]'));
+      return cleanText(titleEl && titleEl.textContent);
+    },
+    normalizeGroup: function(rawGroup) {
+      if (!rawGroup) return null;
+      var name = cleanText(rawGroup.name || rawGroup.label || rawGroup.title || '');
+      var options = Array.isArray(rawGroup.options) ? rawGroup.options : [];
+      if (!name && !options.length) return null;
+      return Object.assign({}, rawGroup, { name: name || 'Manual Group', label: name || rawGroup.label || 'Manual Group', options: options });
+    },
+    normalizeOption: function(rawOption) {
+      if (!rawOption) return null;
+      return Object.assign({}, rawOption, {
+        label: cleanText(rawOption.label || rawOption.textContent || rawOption.value || rawOption.name || ''),
+        textContent: cleanText(rawOption.textContent || rawOption.label || rawOption.value || ''),
+        value: cleanText(rawOption.value || rawOption.textContent || rawOption.label || '')
+      });
     },
     getRoot: function(doc) {
       var d = doc || document;

@@ -198,6 +198,9 @@
       }
       return [];
     },
+    scanVisibleState: function(ctx) {
+      return this.scanPage(ctx);
+    },
     scanManualGroupFromTitle: function(titleEl, ctx) {
       var c = ctx || {};
       var doc = c.document || document;
@@ -213,6 +216,29 @@
       }
       var name = extractGroupLabel(groupEl) || 'Manual Group';
       return { name: name, options: extractOptions(groupEl, name), traceReason: '' };
+    },
+    collectOptionsInContainer: function(containerEl) {
+      var label = extractGroupLabel(containerEl) || '';
+      return containerEl && containerEl.querySelector ? extractOptions(containerEl, label) : [];
+    },
+    detectNearestGroupTitleFromOption: function(optionEl) {
+      var groupEl = optionEl && optionEl.closest && optionEl.closest('.customily_option');
+      return extractGroupLabel(groupEl);
+    },
+    normalizeGroup: function(rawGroup) {
+      if (!rawGroup) return null;
+      var name = cleanText(rawGroup.name || rawGroup.label || rawGroup.title || '');
+      var options = Array.isArray(rawGroup.options) ? rawGroup.options : [];
+      if (!name && !options.length) return null;
+      return Object.assign({}, rawGroup, { name: name || 'Manual Group', label: name || rawGroup.label || 'Manual Group', options: options });
+    },
+    normalizeOption: function(rawOption) {
+      if (!rawOption) return null;
+      return Object.assign({}, rawOption, {
+        label: cleanText(rawOption.label || rawOption.textContent || rawOption.value || rawOption.name || ''),
+        textContent: cleanText(rawOption.textContent || rawOption.label || rawOption.value || ''),
+        value: cleanText(rawOption.value || rawOption.textContent || rawOption.label || '')
+      });
     },
     getRoot: function(doc) {
       var d = doc || document;
