@@ -14,7 +14,7 @@ The final target is:
 
 ## Current checkpoint
 
-Current checkpoint: **Phase 7 complete**.
+Current checkpoint: **Phase 8 in progress; Phase 5 Customily profile rollout complete**.
 
 The repository is complete for the Phase 6 automation/package baseline:
 
@@ -192,6 +192,24 @@ Phase 5 verification record:
 - Verified on **2026-07-23** that smoke checks pass through `npm run check`.
 - Verified on **2026-07-23** that route/profile/fallback unit coverage passes through `npm run test:unit`.
 - Result: Phase 5 is complete with legacy routes documented as compatibility contracts rather than removed runtime code.
+
+## Phase 5 Customily profile rollout — repository follow-up
+
+Status: **Complete**.
+
+Completion recorded: **2026-07-24**.
+
+Completed work:
+
+1. Marked the active Customily-source scanner profiles with `phase5CustomilyRollout` so the registry can distinguish the Phase 5 rollout checkpoint from the earlier Phase 3/4 migration markers.
+2. Included Macorner, Pawesomehouse, PersonalFury, InterestPod, Wanderprints, and Suzitee in the Phase 5 Customily rollout guard.
+3. Added automated coverage in `phase5-customily-profile-rollout.test.js` to verify every Phase 5 Customily profile file exists, registers, declares `source: customily`, resolves for its production host, and exposes the shared Customily collection hooks (`getRoot`, `getGroups`, and `getTitleElement`).
+
+Phase 5 Customily rollout verification record:
+
+- Verified on **2026-07-24** that smoke checks pass through `npm run check`.
+- Verified on **2026-07-24** that the full discovered unit suite passes through `npm run test:unit`.
+- Result: Phase 5 Customily profile rollout is complete in repository automation; real-browser Chrome domain verification remains external.
 
 ## Phase 6 — QA hardening and release packaging
 
