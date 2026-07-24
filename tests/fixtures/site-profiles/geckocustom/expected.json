@@ -1,6 +1,8 @@
 {
   "siteId": "geckocustom",
-  "domains": ["geckocustom.com"],
+  "domains": [
+    "geckocustom.com"
+  ],
   "groups": [
     {
       "title": "Choose Design",
@@ -12,5 +14,7 @@
       "optionCount": 1,
       "hasTextInput": true
     }
-  ]
+  ],
+  "profileFile": "content_modules/clipart/scanner-profile-geckocustom.js",
+  "canonical": true
 }

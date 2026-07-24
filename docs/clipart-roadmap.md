@@ -59,7 +59,7 @@ The repository is **not yet at the final architecture** because scanner profiles
 
 ## Phase 1 — Canonical ownership lock and gap audit
 
-Status: **Planned**.
+Status: **Complete on 2026-07-24**.
 
 Purpose:
 
@@ -89,6 +89,34 @@ Exit criteria:
 - Every supported named site has exactly one declared final owner.
 - CI exposes any duplicate profile owner that still needs migration.
 - `npm run check` and `npm run test:unit` pass.
+
+Phase 1 progress recorded on 2026-07-24:
+
+- Locked canonical ownership in `docs/clipart-profile-inventory.md`; every supported named site now declares exactly one final scanner-profile owner and the inventory removes deferred “substantial updates later” migration language.
+- Added `tests/unit/phase1-canonical-ownership-audit.test.js` to enforce canonical profile files, manifest registration before `scanner-core.js`, fixture folders, expected output JSON, and named route/profile unit coverage for every supported named site.
+- Added canonical Phase 1 fixture packages for Pawesomehouse / Customily, Macorner / Customily, Pawfecthouse / Teeinblue, Suzitee, TrendingCustom, Wanderprints, and Etsy under `tests/fixtures/site-profiles/<site-id>/`. Existing GeckoCustom, PersonalFury, InterestPod, and Gossby fixture packages remain the canonical fixtures for those sites.
+- Duplicate-owner audit is now exposed through `npm run test:unit`; it records the legacy/V2/manual files below as migration debt instead of allowing undocumented secondary owners.
+- V2/manual/legacy files are frozen for compatibility fixes only; new site behavior must land in the canonical scanner profile listed in the inventory.
+
+Phase 1 duplicate-owner gap audit:
+
+| Duplicate owner file | Supported site(s) affected | Canonical absorber method(s) required in Phase 2 |
+| --- | --- | --- |
+| `content_modules/site_profiles/pawesomehouse.js` and `content_modules/manual_profiles/pawesomehouse.js` | Pawesomehouse / Customily | `scanPage(ctx)`, `scanVisibleState(ctx)`, `scanManualGroupFromTitle(titleEl, ctx)`, `collectOptionsInContainer(containerEl, ctx)`, `normalizeGroup(rawGroup, ctx)`, `normalizeOption(rawOption, ctx)` |
+| `content_modules/site_profiles/macorner.js` and `content_modules/manual_profiles/macorner.js` | Macorner / Customily | `scanPage(ctx)`, `scanVisibleState(ctx)`, `scanManualGroupFromTitle(titleEl, ctx)`, `collectOptionsInContainer(containerEl, ctx)`, `normalizeGroup(rawGroup, ctx)`, `normalizeOption(rawOption, ctx)` |
+| `content_modules/site_profiles/geckocustom.js` and `content_modules/manual_profiles/geckocustom.js` | GeckoCustom | `scanPage(ctx)`, `scanVisibleState(ctx)`, `scanManualGroupFromTitle(titleEl, ctx)`, `collectOptionsInRegion(region, ctx)`, `detectNearestGroupTitleFromOption(optionEl, ctx)`, `normalizeGroup(rawGroup, ctx)`, `normalizeOption(rawOption, ctx)` |
+| `content_modules/site_profiles/pawfecthouse.js` | Pawfecthouse / Teeinblue | `scanPage(ctx)`, `scanVisibleState(ctx)`, `normalizeGroup(rawGroup, ctx)`, `normalizeOption(rawOption, ctx)` |
+| `content_modules/site_profiles/personalfury.js` | PersonalFury / Customily | `scanPage(ctx)`, `scanVisibleState(ctx)`, `scanManualGroupFromTitle(titleEl, ctx)`, `collectOptionsInContainer(containerEl, ctx)`, `normalizeGroup(rawGroup, ctx)`, `normalizeOption(rawOption, ctx)` |
+| `content_modules/site_profiles/interestpod.js` | InterestPod / personalization forms | `scanPage(ctx)`, `scanVisibleState(ctx)`, `scanManualGroupFromTitle(titleEl, ctx)`, `collectOptionsInContainer(containerEl, ctx)`, `normalizeGroup(rawGroup, ctx)`, `normalizeOption(rawOption, ctx)` |
+| `content_modules/site_profiles/gossby.js` | Gossby / personalized form | `scanPage(ctx)`, `scanVisibleState(ctx)`, `scanManualGroupFromTitle(titleEl, ctx)`, `collectOptionsInContainer(containerEl, ctx)`, `normalizeGroup(rawGroup, ctx)`, `normalizeOption(rawOption, ctx)` |
+| `content_modules/site_profiles/suzitee.js` and `content_modules/manual_profiles/suzitee.js` | Suzitee / Customily | `scanPage(ctx)`, `scanVisibleState(ctx)`, `scanManualGroupFromTitle(titleEl, ctx)`, `collectOptionsInContainer(containerEl, ctx)`, `normalizeGroup(rawGroup, ctx)`, `normalizeOption(rawOption, ctx)` |
+| `content_modules/site_profiles/trendingcustom.js` | TrendingCustom / personalization forms | `scanPage(ctx)`, `scanVisibleState(ctx)`, `scanManualGroupFromTitle(titleEl, ctx)`, `collectOptionsInContainer(containerEl, ctx)`, `normalizeGroup(rawGroup, ctx)`, `normalizeOption(rawOption, ctx)` |
+| `content_modules/site_profiles/wanderprints.js` | Wanderprints / Customily | `scanPage(ctx)`, `scanVisibleState(ctx)`, `scanManualGroupFromTitle(titleEl, ctx)`, `collectOptionsInContainer(containerEl, ctx)`, `normalizeGroup(rawGroup, ctx)`, `normalizeOption(rawOption, ctx)` |
+| `content_modules/site_profiles/etsy.js` | Etsy / Shopify-like forms | `scanPage(ctx)`, `scanVisibleState(ctx)`, `collectOptionsInContainer(containerEl, ctx)`, `normalizeGroup(rawGroup, ctx)`, `normalizeOption(rawOption, ctx)` |
+| `content_modules/site-profiles.js` | Legacy scanner-list behavior across supported sites | Move any still-required scanner-list selectors into each affected canonical profile’s `scanPage(ctx)`, `collectOptionsInContainer(containerEl, ctx)`, `normalizeGroup(rawGroup, ctx)`, and `normalizeOption(rawOption, ctx)` |
+| `content_modules/clipart/scanner-profile-site-v2-consolidated.js` | PersonalFury, InterestPod, Gossby historical consolidation shim | Confirm no behavior remains outside canonical `scanPage(ctx)`, `scanVisibleState(ctx)`, and normalization methods; delete or reduce to non-operational metadata in Phase 2/3 |
+| `content_modules/clipart/scanner-profile-adapters.js` | V2 adapter path for supported named sites | Move any adapter-only behavior into each canonical profile’s scanner methods, then remove supported-site adaptation in Phase 2/3 |
+
 
 ## Phase 2 — Site-by-site de-bridging into canonical scanner profiles
 

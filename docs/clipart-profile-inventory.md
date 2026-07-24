@@ -14,20 +14,20 @@ This document records current site-profile ownership and the target migration st
 
 ## Current classification and target migration
 
-| Site/profile | Current ownership | Runtime status | Final target | Notes |
-| --- | --- | --- | --- | --- |
-| Pawesomehouse / Customily | Dedicated scanner profile | Scanner-profile-native | Already canonical, keep fixtures/tests current | Owned by `scanner-profile-pawesomehouse-customily.js`; V2 profile remains as compatibility/source; included in the 2026-07-24 Phase 5 Customily profile rollout guard. |
-| Macorner / Customily | Dedicated scanner profile | Scanner-profile-native | Already canonical, keep fixtures/tests current | Owned by `scanner-profile-macorner-customily.js`; V2 profile remains as compatibility/source; included in the 2026-07-24 Phase 5 Customily profile rollout guard. |
-| Geckocustom | Dedicated scanner profile | Scanner-profile-native | Already canonical, keep fixtures/tests current | Owned by `scanner-profile-geckocustom.js`; V2 and manual assets remain compatibility/source. |
-| Pawfecthouse / Teeinblue | Dedicated scanner profile | Scanner-profile-native | Already canonical, keep fixtures/tests current | Owned by `scanner-profile-pawfecthouse-teeinblue.js`; V2 profile remains as compatibility/source. |
-| PersonalFury / Customily | Dedicated scanner profile | Scanner-profile-native | Canonical after Phase 7 split | Owned by `scanner-profile-personalfury.js`; V2 profile remains compatibility/source, with canonical fixtures in `tests/fixtures/site-profiles/personalfury/` and route coverage in `phase7-canonical-site-profiles.test.js`; included in the 2026-07-24 Phase 5 Customily profile rollout guard. |
-| InterestPod / personalization forms | Dedicated scanner profile | Scanner-profile-native | Canonical after Phase 7 split | Owned by `scanner-profile-interestpod.js`; V2 profile remains compatibility/source, with canonical fixtures in `tests/fixtures/site-profiles/interestpod/` and route coverage in `phase7-canonical-site-profiles.test.js`; included in the 2026-07-24 Phase 5 Customily profile rollout guard. |
-| Gossby / personalized form | Dedicated scanner profile | Scanner-profile-native | Canonical after Phase 7 split | Owned by `scanner-profile-gossby.js`; V2 profile remains compatibility/source, with canonical fixtures in `tests/fixtures/site-profiles/gossby/` and route coverage in `phase7-canonical-site-profiles.test.js`. |
-| Suzitee / Customily | Dedicated scanner profile | Phase 8 scanner-profile-native with V2 compatibility retained | Dedicated `scanner-profile-suzitee.js` added in Phase 8 Phase B | Registry coverage in `phase8-native-site-profiles.test.js`; legacy V2 file remains loaded only until Phase D manifest cleanup; included in the 2026-07-24 Phase 5 Customily profile rollout guard. |
-| TrendingCustom / personalization forms | Dedicated scanner profile | Phase 8 scanner-profile-native with V2 compatibility retained | Dedicated `scanner-profile-trendingcustom.js` added in Phase 8 Phase B | Registry coverage in `phase8-native-site-profiles.test.js`; legacy V2 file remains loaded only until Phase D manifest cleanup. |
-| Wanderprints / Customily | Dedicated scanner profile | Phase 8 scanner-profile-native with V2 compatibility retained | Dedicated `scanner-profile-wanderprints.js` added in Phase 8 Phase B | Registry coverage in `phase8-native-site-profiles.test.js`; legacy V2 file remains loaded only until Phase D manifest cleanup; included in the 2026-07-24 Phase 5 Customily profile rollout guard. |
-| Etsy / Shopify-like forms | Dedicated scanner profile | Phase 8 scanner-profile-native generic listing marker with V2 compatibility retained | Dedicated `scanner-profile-etsy.js` added in Phase 8 Phase B | Registry coverage in `phase8-native-site-profiles.test.js`; it currently exposes empty scanner scans while retaining generic fallback hints until support scope is finalized. |
-| Generic / unknown pages | Default scanner profile | Default fallback | Remain default-only | Generic V2 profile is intentionally not registered as a scanner profile because the default scanner profile owns fallback behavior. |
+| Site/profile | Current runtime state | Final canonical owner | Canonical lock / remaining gap |
+| --- | --- | --- | --- |
+| Pawesomehouse / Customily | Scanner-profile-native with V2 compatibility files still loaded | `content_modules/clipart/scanner-profile-pawesomehouse-customily.js` | Locked. Phase 2 must absorb or retire duplicate behavior from `content_modules/site_profiles/pawesomehouse.js`, `content_modules/manual_profiles/pawesomehouse.js`, and scanner-list/adapter bridges. |
+| Macorner / Customily | Scanner-profile-native with V2 compatibility files still loaded | `content_modules/clipart/scanner-profile-macorner-customily.js` | Locked. Phase 2 must absorb or retire duplicate behavior from `content_modules/site_profiles/macorner.js`, `content_modules/manual_profiles/macorner.js`, and scanner-list/adapter bridges. |
+| GeckoCustom | Scanner-profile-native with V2/manual compatibility files still loaded | `content_modules/clipart/scanner-profile-geckocustom.js` | Locked. Phase 2 must absorb or retire duplicate behavior from `content_modules/site_profiles/geckocustom.js`, `content_modules/manual_profiles/geckocustom.js`, and scanner-list/adapter bridges. |
+| Pawfecthouse / Teeinblue | Scanner-profile-native with V2 compatibility files still loaded | `content_modules/clipart/scanner-profile-pawfecthouse-teeinblue.js` | Locked. Phase 2 must absorb or retire duplicate behavior from `content_modules/site_profiles/pawfecthouse.js` and scanner-list/adapter bridges. |
+| PersonalFury / Customily | Dedicated scanner profile with historical V2 bridge compatibility still loaded | `content_modules/clipart/scanner-profile-personalfury.js` | Locked. Phase 2 must remove dependence on `content_modules/site_profiles/personalfury.js` and `scanner-profile-site-v2-consolidated.js`. |
+| InterestPod / personalization forms | Dedicated scanner profile with historical V2 bridge compatibility still loaded | `content_modules/clipart/scanner-profile-interestpod.js` | Locked. Phase 2 must remove dependence on `content_modules/site_profiles/interestpod.js` and `scanner-profile-site-v2-consolidated.js`. |
+| Gossby / personalized form | Dedicated scanner profile with historical V2 bridge compatibility still loaded | `content_modules/clipart/scanner-profile-gossby.js` | Locked. Phase 2 must remove dependence on `content_modules/site_profiles/gossby.js` and `scanner-profile-site-v2-consolidated.js`. |
+| Suzitee / Customily | Phase 8 scanner-profile-native with V2/manual compatibility retained | `content_modules/clipart/scanner-profile-suzitee.js` | Locked. Phase 2 must absorb or retire duplicate behavior from `content_modules/site_profiles/suzitee.js` and `content_modules/manual_profiles/suzitee.js`. |
+| TrendingCustom / personalization forms | Phase 8 scanner-profile-native with V2 compatibility retained | `content_modules/clipart/scanner-profile-trendingcustom.js` | Locked. Phase 2 must absorb or retire duplicate behavior from `content_modules/site_profiles/trendingcustom.js`. |
+| Wanderprints / Customily | Phase 8 scanner-profile-native with V2 compatibility retained | `content_modules/clipart/scanner-profile-wanderprints.js` | Locked. Phase 2 must absorb or retire duplicate behavior from `content_modules/site_profiles/wanderprints.js`. |
+| Etsy / Shopify-like forms | Phase 8 scanner-profile-native with V2 compatibility retained while support scope is finalized | `content_modules/clipart/scanner-profile-etsy.js` | Locked. Phase 2 must absorb or retire duplicate behavior from `content_modules/site_profiles/etsy.js`; generic/unknown behavior remains default-only. |
+| Generic / unknown pages | Default scanner profile only | `content_modules/clipart/scanner-profile-default.js` | Locked as default-only. Do not create a site-specific `generic` scanner profile. |
 
 ## Why profiles are currently grouped
 
@@ -35,7 +35,7 @@ The profile system is grouped because the project migrated incrementally from le
 
 1. High-value complex sites were moved first into dedicated scanner profiles.
 2. Some similar sites were moved into a consolidated scanner registry bridge to reduce migration risk.
-3. Existing V2 profiles that were already working remain adapter-backed until dedicated migration is justified.
+3. Existing V2/manual/legacy files remain only as frozen compatibility debt until Phase 2 absorbs required behavior into the locked canonical scanner profiles.
 4. Legacy layers remain as compatibility fallbacks because tests and runtime bridges still depend on them in specific cases.
 
 This grouping is temporary for site ownership. The final target is one canonical scanner profile package for every supported named site.
@@ -47,13 +47,13 @@ This grouping is temporary for site ownership. The final target is one canonical
    - PersonalFury
    - InterestPod
    - Gossby
-3. Migrate adapter-backed V2 profiles when they receive substantial updates:
+3. De-bridge the Phase 8 native profiles without waiting for future feature work:
    - Suzitee
    - TrendingCustom
    - Wanderprints
    - Etsy
 4. Do not create site-specific files for unknown/generic hosts; keep default scanner profile ownership.
-5. Keep legacy compatibility layers frozen unless a compatibility fix is required.
+5. Keep legacy compatibility layers frozen unless a compatibility fix is required; no feature expansion is allowed outside canonical scanner profiles.
 
 ## Inventory maintenance rules
 
