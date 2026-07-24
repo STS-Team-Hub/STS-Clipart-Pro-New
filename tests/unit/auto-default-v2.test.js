@@ -22,6 +22,10 @@ function buildFixture(){
   function group(name){ const g=root.appendChild(E('div',{className:'customily_option'})); g.appendChild(E('div',{className:'option_name',textContent:name})); return g; }
   const gt=group('Choose The Title'); const sel=gt.appendChild(E('select',{name:'properties[Choose The Title]'})); sel.appendChild(E('option',{value:'',textContent:'Choose'})); sel.appendChild(E('option',{value:'Dad',textContent:'Dad'}));
   const kids=group('Number Of Kids'); kids.appendChild(E('div',{className:'customily-swatch swatch'})).appendChild(E('img',{src:'https://img/k1.png'}));
+  const imageValueOnly=group('Choose Background Color');
+  const ivo=imageValueOnly.appendChild(E('div',{className:'customily-swatch swatch'}));
+  ivo.appendChild(E('input',{attrs:{type:'radio',value:'Value 1'}}));
+  ivo.appendChild(E('label',{})).appendChild(E('img',{src:'https://img/background-pink.png'}));
   const body=group("Man's Body Type");
   const bodyWrap = body.appendChild(E('div',{className:'swatch-container swatch'}));
   const b1 = bodyWrap.appendChild(E('div',{className:'customily-swatch swatch'}));
@@ -50,11 +54,15 @@ function buildFixture(){
   const v2 = loadV2(doc);
   const res = await v2.runAutoV2({ document: doc }, { rootSelector: '#customily-options', resolvedProfileId: 'pawesomehouse-customily-manual', maxClicks: 4 });
   const names = res.groups.map(g=>g.label);
-  ['Choose The Title','Number Of Kids',"Man's Body Type","Man's Body Type Tile","Man's Skin Color","Man's Hair Color",'black',"Man's Beard Color",'Beard Style',"Man's Glasses"].forEach(n=>assert.ok(names.includes(n), n));
+  ['Choose The Title','Number Of Kids','Choose Background Color',"Man's Body Type","Man's Body Type Tile","Man's Skin Color","Man's Hair Color",'black',"Man's Beard Color",'Beard Style',"Man's Glasses"].forEach(n=>assert.ok(names.includes(n), n));
   assert.ok(!names.includes('Color'));
   assert.ok(!names.includes('Upload Photo'));
   const kids = res.groups.find(g=>g.label==='Number Of Kids');
   assert.equal(kids.options[0].optionType, 'image');
+  const imageOnly = res.groups.find(g=>g.label==='Choose Background Color');
+  assert.equal(imageOnly.options[0].optionType, 'image');
+  assert.equal(imageOnly.options[0].imageUrl, 'https://img/background-pink.png');
+  assert.equal(imageOnly.options[0].textContent, '');
   assert.equal(kids.options[0].optionKind, 'icon');
   assert.equal(kids.options[0].originalOptionKind, 'icon');
   assert.equal(kids.options[0].displayKind, 'icon');
