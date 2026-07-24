@@ -242,6 +242,48 @@ Verification:
 - `npm run check` passed on 2026-07-24.
 - `npm run test:unit` passed on 2026-07-24, including the new Phase 4 Customily rollout regression.
 
+## Phase 3 completion record — 2026-07-23
+
+Implementation summary:
+
+- Rolled out scanner-profile Phase 3 ownership markers for the Customily-heavy families: Macorner, Pawesomehouse, InterestPod, PersonalFury, and Wanderprints.
+- Added registry-level regression coverage in `tests/unit/phase3-customily-profile-rollout.test.js` to prove every Phase 3 family registers as a Customily scanner profile, resolves by host, and exposes root/group/title scoping functions.
+- Hardened the V2 bridge used by InterestPod and PersonalFury so bridge-created scanner profiles expose Manual-driven Auto title candidate records scoped to the Customily root/group and carry the Phase 3 rollout marker.
+- Preserved existing fixture coverage for Macorner, Pawesomehouse, InterestPod, and PersonalFury; the Phase 3 registry test ties those fixture suites to the rollout contract.
+
+Verification:
+
+- `npm run check` passed on 2026-07-23.
+- `npm run test:unit` passed on 2026-07-23, including the Phase 3 rollout regression.
+
+## Phase 4 completion record — 2026-07-24
+
+Implementation summary:
+
+- Completed the Phase 4 Customily profile rollout checkpoint by marking all currently scanner-owned Customily families with `phase4CustomilyRollout`: Macorner, Pawesomehouse, PersonalFury, InterestPod, Wanderprints, and Suzitee.
+- Promoted Suzitee into the Customily rollout guard so it is verified alongside the earlier Customily-heavy families rather than only by later native-profile registry coverage.
+- Added `tests/unit/phase4-customily-profile-rollout.test.js` to prove each Phase 4 Customily profile file exists, declares the Customily source, exposes root/group/title scoping helpers, records the Phase 4 marker, and resolves by host through the scanner registry.
+- Kept the Native/Ant acceptance scope tracked separately for TrendingCustom, Gossby, Pawfecthouse, and GeckoCustom non-Customily structures.
+
+Verification:
+
+- `npm run check` passed on 2026-07-24.
+- `npm run test:unit` passed on 2026-07-24, including the Phase 4 Customily rollout regression.
+
+## Phase 5 completion record — 2026-07-24
+
+Implementation summary:
+
+- Marked active Customily-source scanner profiles with `phase5CustomilyRollout` so the registry can distinguish the Phase 5 panel/payload checkpoint from Phase 3 and Phase 4 migration markers.
+- Included Macorner, Pawesomehouse, PersonalFury, InterestPod, Wanderprints, and Suzitee in the Phase 5 Customily rollout guard.
+- Added `tests/unit/phase5-customily-profile-rollout.test.js` to verify every Phase 5 Customily profile file exists, registers, declares `source: customily`, resolves for its production host, and exposes the shared Customily collection hooks (`getRoot`, `getGroups`, and `getTitleElement`).
+- Revalidated panel-compatible payload assumptions through the full unit suite, including image-field preservation, image-backed render classification, scanner render/sync packaging, and sync payload shape coverage.
+
+Verification:
+
+- `npm run check` passed on 2026-07-24.
+- `npm run test:unit` passed on 2026-07-24, including the Phase 5 Customily rollout regression.
+
 ### Phase 5: Panel payload and UX validation
 
 Files:
@@ -297,6 +339,24 @@ Minimum fixture coverage:
 | TrendingCustom | Ant groups are discovered without Customily selectors |
 | Gossby / Pawfecthouse | Native groups require dedicated profile tests or fresh complete HTML fixtures |
 | GeckoCustom | Dedicated profile handles both Customily and non-Customily snapshots |
+
+## Phase 6 completion record — 2026-07-24
+
+Implementation summary:
+
+- Executed the required Manual-driven Auto regression command: `node tests/unit/manual-driven-auto.test.js`.
+- Executed the full discovered unit suite command: `node tests/run-unit-tests.js`, which completed 30 unit files.
+- Executed targeted fixture/profile rollout coverage for the changed profile checkpoints: `phase3-customily-profile-rollout.test.js`, `phase4-customily-profile-rollout.test.js`, `phase5-customily-profile-rollout.test.js`, and `phase8-native-site-profiles.test.js`.
+- Executed the repository smoke/static check command: `npm run check`, including syntax checks for scanner/profile/render/sync modules and `tests/smoke-check.js`.
+- Chrome/manual live-site smoke testing remains external to this non-interactive container; `TEST_CASES.md` remains the manual domain checklist for one Customily live product page and one native/Ant page.
+
+Verification completed on 2026-07-24:
+
+- `node tests/unit/manual-driven-auto.test.js` — passed.
+- `node tests/unit/phase3-customily-profile-rollout.test.js && node tests/unit/phase4-customily-profile-rollout.test.js && node tests/unit/phase5-customily-profile-rollout.test.js && node tests/unit/phase8-native-site-profiles.test.js` — passed.
+- `node tests/run-unit-tests.js` — passed 30 unit files.
+- `npm run check` — passed; npm emitted a non-blocking warning about unknown env config `http-proxy`.
+- Manual Chrome smoke test — not run in this container; requires external browser execution against live Customily and native/Ant product pages.
 
 ### Suggested release sequence
 
