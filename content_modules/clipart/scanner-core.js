@@ -1443,9 +1443,7 @@ function readDropdownNodeText(node) {
     if (window.STSClipartScanner && window.STSClipartScanner.siteRouter && typeof window.STSClipartScanner.siteRouter.resolve === 'function') {
       return window.STSClipartScanner.siteRouter.resolve((location && location.hostname) || '');
     }
-    var reg = window.STSSiteProfilesV2;
-    if (!reg || typeof reg.resolve !== 'function') return null;
-    return reg.resolve((location && location.hostname) || '');
+    return null;
   }
 
   function mapNormalizedProfileGroup(group) {
@@ -1478,9 +1476,7 @@ function getManualProfileForHost() {
     if (window.STSClipartScanner && window.STSClipartScanner.siteRouter && typeof window.STSClipartScanner.siteRouter.resolve === 'function') {
       return window.STSClipartScanner.siteRouter.resolve((location && location.hostname) || '');
     }
-    var reg = window.STSSiteProfilesV2;
-    if (!reg || typeof reg.resolve !== 'function') return null;
-    return reg.resolve((location && location.hostname) || '');
+    return null;
   }
 
   function collectGroupFromManualProfile(profile, groupEl) {
@@ -2020,9 +2016,7 @@ function getManualProfileForHost() {
       return cleanupScannedGroups(scanFromUnifiedProfile(unifiedProfile, document));
     }
 
-    var activeProfile = (window.STSSiteProfiles && typeof window.STSSiteProfiles.pickSiteProfile === 'function')
-      ? window.STSSiteProfiles.pickSiteProfile(location.hostname)
-      : { key: 'default', scanners: ['customily','shopify','personalizationForm','gossby','select','textDropdown','quote','callieText','generic','deep'] };
+    var activeProfile = { key: 'default', scanners: ['customily','shopify','personalizationForm','gossby','select','textDropdown','quote','callieText','generic','deep'] };
     var activeScanners = Array.isArray(activeProfile.scanners) ? activeProfile.scanners : [];
 
     // v8.3.0: Enhanced debug logging

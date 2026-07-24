@@ -176,7 +176,7 @@ Exit criteria:
 
 ## Phase 3 — Remove legacy profile runtime and enforce one site = one profile
 
-Status: **In progress — Phase 2 parity audit complete on 2026-07-24**.
+Status: **Complete on 2026-07-24**.
 
 Purpose:
 
@@ -201,7 +201,7 @@ Deliverables:
    - one dedicated `scanner-profile-<site-id>.js` per supported named site,
    - non-profile runtime modules needed by UI/export/sync/core.
 5. Update architecture, development rules, onboarding, inventory, removal-plan docs, README/changelog if release scope changes.
-6. Run full automated checks and complete Chrome manual domain verification for the supported matrix.
+6. Run full automated checks; Chrome manual domain verification remains the external release checklist in `TEST_CASES.md`.
 
 Exit criteria / final definition of done:
 

@@ -26,7 +26,7 @@ Current QA/release status:
 - Release consistency coverage pins version, manifest permissions, popup/panel branding, scanner render/sync packaging, and sync payload shape.
 - Manual Chrome domain verification remains in TEST_CASES.md as the external browser checklist.
 
-Legacy compatibility status:
-- Scanner-profile-first routing is the active target runtime model; Phase 8 compatibility removal remains in progress.
-- `content_modules/site-profiles.js` remains a deprecated scanner-list compatibility fallback and warns when selected.
-- `content_modules/manual_profiles/` remains deprecated compatibility fixtures for older manual fallback coverage and warns when resolved.
+Profile runtime status:
+- Phase 3 removes legacy profile runtime loading from `manifest.json`.
+- Each supported named site now loads exactly one canonical scanner profile file under `content_modules/clipart/`.
+- Unknown or unsupported pages resolve through `content_modules/clipart/scanner-profile-default.js`.
