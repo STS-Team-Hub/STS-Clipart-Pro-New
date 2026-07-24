@@ -38,6 +38,15 @@
     return first + second;
   }
 
+  function resolveOriginAwareOptionKind(opt, imageUrl, capturedImage) {
+    if (opt && (opt.optionKind || opt.originalOptionKind)) return opt.optionKind || opt.originalOptionKind;
+    if (imageUrl || capturedImage || (opt && (opt.bgColor || opt.hasVisual || opt.needsCapture))) return 'icon';
+    var sourceKind = String((opt && opt.sourceKind) || '').toLowerCase();
+    var optionType = String((opt && opt.optionType) || '').toLowerCase();
+    if (/^(select|text-input|textarea|input|text-field|form-field)$/.test(sourceKind) || /text|select|textarea|input/.test(optionType)) return 'text';
+    return 'item';
+  }
+
   function mapV2GroupsToCategories(groups) {
     return (groups || []).map(function(group, idx) {
       var label = String((group && group.label) || '').trim();
@@ -45,6 +54,7 @@
       var options = ((group && group.options) || []).map(function(opt, oIdx) {
         var imageUrl = (opt && opt.imageUrl) || null;
         var capturedImage = (opt && opt.capturedImage) || null;
+        var originKind = resolveOriginAwareOptionKind(opt, imageUrl, capturedImage);
         return {
           id: String(idx) + '-' + String(oIdx),
           label: pfx + String(oIdx + 1),
@@ -71,9 +81,9 @@
           optionText: (opt && opt.optionText) || (opt && (opt.textContent || opt.value || opt.name)) || '',
           element: (opt && opt.element) || null,
           captureTarget: (opt && opt.captureTarget) || null,
-          originalOptionKind: (opt && opt.originalOptionKind) || (opt && opt.optionKind) || (imageUrl || capturedImage || (opt && (opt.bgColor || opt.hasVisual || opt.needsCapture)) ? 'icon' : ((opt && opt.sourceKind) === 'select' || (opt && opt.optionType) === 'text' ? 'text' : 'item')),
-          optionKind: (opt && opt.optionKind) || (opt && opt.originalOptionKind) || (imageUrl || capturedImage || (opt && (opt.bgColor || opt.hasVisual || opt.needsCapture)) ? 'icon' : ((opt && opt.sourceKind) === 'select' || (opt && opt.optionType) === 'text' ? 'text' : 'item')),
-          displayKind: (opt && opt.displayKind) || (opt && opt.optionKind) || (opt && opt.originalOptionKind) || (imageUrl || capturedImage || (opt && (opt.bgColor || opt.hasVisual || opt.needsCapture)) ? 'icon' : ((opt && opt.sourceKind) === 'select' || (opt && opt.optionType) === 'text' ? 'text' : 'item'))
+          originalOptionKind: (opt && opt.originalOptionKind) || originKind,
+          optionKind: (opt && opt.optionKind) || (opt && opt.originalOptionKind) || originKind,
+          displayKind: (opt && opt.displayKind) || (opt && opt.optionKind) || (opt && opt.originalOptionKind) || originKind
         };
       });
       return {

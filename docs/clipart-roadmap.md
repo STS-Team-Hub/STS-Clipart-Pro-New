@@ -59,7 +59,19 @@ Auto's goal is: **return canonical Groups using the source site's visible Title,
 - If an option is neither a visual swatch nor plain text, Auto keeps it as `item`.
 - Existing rendering fields such as `optionType`, `imageUrl`, `capturedImage`, `bgColor`, and `needsCapture` remain intact.
 
-**Result log:** Pawesomehouse/Customily Auto V2 now emits `optionKind`, `originalOptionKind`, and `displayKind` while preserving icon-like visual options for capture when no image URL exists.
+**Result log:** Pawesomehouse/Customily Auto V2 now emits `optionKind`, `originalOptionKind`, and `displayKind` while preserving icon-like visual options for capture when no image URL exists. The final Phase 3 pass also keeps text-input/select source options classified as `text` when V2 groups are mapped into STS categories, so canonical Auto output preserves origin-aware metadata through panel/export payloads.
+
+**Phase 3 status:** Completed. Auto now returns canonical source-title groups with origin-aware `icon`, `item`, or `text` option metadata across the profile-first runtime and category normalization boundary.
+
+| Phase 3 goal item | Status | Result |
+| --- | --- | --- |
+| Canonical visible Title groups | Completed | Manual-driven Auto and Auto V2 keep source-visible group labels through scanner profile normalization. |
+| Icon origin metadata | Completed | Image/color/visual swatches remain `icon`, including capture-needed visual text tiles without image URLs. |
+| Text origin metadata | Completed | Select, text input, textarea/input-like options remain `text` when normalized to STS categories. |
+| Item fallback metadata | Completed | Non-visual and non-plain-text options continue to fall back to `item`. |
+| Rendering field preservation | Completed | `optionType`, `imageUrl`, `capturedImage`, `bgColor`, `needsCapture`, and related capture fields are retained. |
+
+**Remaining Phase 3 steps:** 0.
 
 ## Current status
 
