@@ -313,7 +313,7 @@
     cleanupTitle: function(text) {
       return cleanText(text || '');
     },
-    scanHints: { source: 'customily', phase3CustomilyRollout: true, phase4CustomilyRollout: true, preferVisualSwatches: true, supportsTextInputs: true, supportsSelects: true, supportsFileInputs: true },
+    scanHints: { source: 'customily', phase3CustomilyRollout: true, phase4CustomilyRollout: true, phase5CustomilyRollout: true, preferVisualSwatches: true, supportsTextInputs: true, supportsSelects: true, supportsFileInputs: true },
     isValidGroup: function(groupEl) {
       if (!groupEl || !groupEl.querySelector) return false;
       var titleEl = groupEl.querySelector('.option_name') || groupEl.querySelector('label[role="tab"]');

@@ -1,6 +1,6 @@
 # Clipart Site Profile Inventory
 
-Inventory date: **2026-07-23**.
+Inventory date: **2026-07-24**.
 
 This document records current site-profile ownership and the target migration state for the final one-site-one-scanner-profile architecture.
 
@@ -16,16 +16,16 @@ This document records current site-profile ownership and the target migration st
 
 | Site/profile | Current ownership | Runtime status | Final target | Notes |
 | --- | --- | --- | --- | --- |
-| Pawesomehouse / Customily | Dedicated scanner profile | Scanner-profile-native | Already canonical, keep fixtures/tests current | Owned by `scanner-profile-pawesomehouse-customily.js`; V2 profile remains as compatibility/source. |
-| Macorner / Customily | Dedicated scanner profile | Scanner-profile-native | Already canonical, keep fixtures/tests current | Owned by `scanner-profile-macorner-customily.js`; V2 profile remains as compatibility/source. |
+| Pawesomehouse / Customily | Dedicated scanner profile | Scanner-profile-native | Already canonical, keep fixtures/tests current | Owned by `scanner-profile-pawesomehouse-customily.js`; V2 profile remains as compatibility/source; included in the 2026-07-24 Phase 5 Customily profile rollout guard. |
+| Macorner / Customily | Dedicated scanner profile | Scanner-profile-native | Already canonical, keep fixtures/tests current | Owned by `scanner-profile-macorner-customily.js`; V2 profile remains as compatibility/source; included in the 2026-07-24 Phase 5 Customily profile rollout guard. |
 | Geckocustom | Dedicated scanner profile | Scanner-profile-native | Already canonical, keep fixtures/tests current | Owned by `scanner-profile-geckocustom.js`; V2 and manual assets remain compatibility/source. |
 | Pawfecthouse / Teeinblue | Dedicated scanner profile | Scanner-profile-native | Already canonical, keep fixtures/tests current | Owned by `scanner-profile-pawfecthouse-teeinblue.js`; V2 profile remains as compatibility/source. |
-| PersonalFury / Customily | Dedicated scanner profile | Scanner-profile-native | Canonical after Phase 7 split | Owned by `scanner-profile-personalfury.js`; V2 profile remains compatibility/source, with canonical fixtures in `tests/fixtures/site-profiles/personalfury/` and route coverage in `phase7-canonical-site-profiles.test.js`. |
-| InterestPod / personalization forms | Dedicated scanner profile | Scanner-profile-native | Canonical after Phase 7 split | Owned by `scanner-profile-interestpod.js`; V2 profile remains compatibility/source, with canonical fixtures in `tests/fixtures/site-profiles/interestpod/` and route coverage in `phase7-canonical-site-profiles.test.js`. |
+| PersonalFury / Customily | Dedicated scanner profile | Scanner-profile-native | Canonical after Phase 7 split | Owned by `scanner-profile-personalfury.js`; V2 profile remains compatibility/source, with canonical fixtures in `tests/fixtures/site-profiles/personalfury/` and route coverage in `phase7-canonical-site-profiles.test.js`; included in the 2026-07-24 Phase 5 Customily profile rollout guard. |
+| InterestPod / personalization forms | Dedicated scanner profile | Scanner-profile-native | Canonical after Phase 7 split | Owned by `scanner-profile-interestpod.js`; V2 profile remains compatibility/source, with canonical fixtures in `tests/fixtures/site-profiles/interestpod/` and route coverage in `phase7-canonical-site-profiles.test.js`; included in the 2026-07-24 Phase 5 Customily profile rollout guard. |
 | Gossby / personalized form | Dedicated scanner profile | Scanner-profile-native | Canonical after Phase 7 split | Owned by `scanner-profile-gossby.js`; V2 profile remains compatibility/source, with canonical fixtures in `tests/fixtures/site-profiles/gossby/` and route coverage in `phase7-canonical-site-profiles.test.js`. |
-| Suzitee / Customily | Dedicated scanner profile | Phase 8 scanner-profile-native with V2 compatibility retained | Dedicated `scanner-profile-suzitee.js` added in Phase 8 Phase B | Registry coverage in `phase8-native-site-profiles.test.js`; legacy V2 file remains loaded only until Phase D manifest cleanup. |
+| Suzitee / Customily | Dedicated scanner profile | Phase 8 scanner-profile-native with V2 compatibility retained | Dedicated `scanner-profile-suzitee.js` added in Phase 8 Phase B | Registry coverage in `phase8-native-site-profiles.test.js`; legacy V2 file remains loaded only until Phase D manifest cleanup; included in the 2026-07-24 Phase 5 Customily profile rollout guard. |
 | TrendingCustom / personalization forms | Dedicated scanner profile | Phase 8 scanner-profile-native with V2 compatibility retained | Dedicated `scanner-profile-trendingcustom.js` added in Phase 8 Phase B | Registry coverage in `phase8-native-site-profiles.test.js`; legacy V2 file remains loaded only until Phase D manifest cleanup. |
-| Wanderprints / Customily | Dedicated scanner profile | Phase 8 scanner-profile-native with V2 compatibility retained | Dedicated `scanner-profile-wanderprints.js` added in Phase 8 Phase B | Registry coverage in `phase8-native-site-profiles.test.js`; legacy V2 file remains loaded only until Phase D manifest cleanup. |
+| Wanderprints / Customily | Dedicated scanner profile | Phase 8 scanner-profile-native with V2 compatibility retained | Dedicated `scanner-profile-wanderprints.js` added in Phase 8 Phase B | Registry coverage in `phase8-native-site-profiles.test.js`; legacy V2 file remains loaded only until Phase D manifest cleanup; included in the 2026-07-24 Phase 5 Customily profile rollout guard. |
 | Etsy / Shopify-like forms | Dedicated scanner profile | Phase 8 scanner-profile-native generic listing marker with V2 compatibility retained | Dedicated `scanner-profile-etsy.js` added in Phase 8 Phase B | Registry coverage in `phase8-native-site-profiles.test.js`; it currently exposes empty scanner scans while retaining generic fallback hints until support scope is finalized. |
 | Generic / unknown pages | Default scanner profile | Default fallback | Remain default-only | Generic V2 profile is intentionally not registered as a scanner profile because the default scanner profile owns fallback behavior. |
 

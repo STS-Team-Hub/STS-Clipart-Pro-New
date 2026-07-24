@@ -23,6 +23,6 @@
   profiles.register(bridge.createScannerProfile(legacyProfile, {
     id: 'personalfury',
     sourceKind: 'scanner-profile-personalfury',
-    scanHints: { phase3CustomilyRollout: true, phase4CustomilyRollout: true }
+    scanHints: { phase3CustomilyRollout: true, phase4CustomilyRollout: true, phase5CustomilyRollout: true }
   }));
 })();
