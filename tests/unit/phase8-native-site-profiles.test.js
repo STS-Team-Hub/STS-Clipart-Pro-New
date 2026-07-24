@@ -11,6 +11,7 @@ const ctx = vm.createContext({ window: windowMock, document: windowMock.document
 [
   'content_modules/clipart/scanner-profile-registry.js',
   'content_modules/clipart/scanner-profile-default.js',
+  'content_modules/clipart/scanner-profile-native-adapter.js',
   'content_modules/clipart/scanner-profile-suzitee.js',
   'content_modules/clipart/scanner-profile-trendingcustom.js',
   'content_modules/clipart/scanner-profile-wanderprints.js',
