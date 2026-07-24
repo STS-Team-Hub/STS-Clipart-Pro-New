@@ -1,6 +1,7 @@
 (function(){
   var ns = window.STSClipartScanner = window.STSClipartScanner || {};
   var profiles = ns.profiles; if (!profiles || typeof profiles.register !== 'function') return;
+  var nativeAdapter = ns.nativeProfileAdapter; if (!nativeAdapter || typeof nativeAdapter.toScannerProfile !== 'function') return;
   var shared = window.STSSiteProfileShared || {};
   var dom = shared.dom || {};
   var cleanup = shared.cleanup || {};
@@ -84,37 +85,6 @@
     return items.length ? { title: title, items: items } : null;
   }
 
-  function cleanScannerText(value){ return String(value == null ? '' : value).replace(/\s+/g, ' ').trim(); }
-  function mapOption(item){
-    if (!item || typeof item !== 'object') return item || {};
-    var text = cleanScannerText(item.textContent || item.label || item.value || item.rawValue || item.name || '');
-    var imageUrl = item.imageUrl || item.image || item.capturedImage || null;
-    return Object.assign({}, item, {
-      label: cleanScannerText(item.label || text),
-      textContent: cleanScannerText(item.textContent || text),
-      value: cleanScannerText(item.value || item.rawValue || text),
-      name: cleanScannerText(item.name || item.label || item.value || text),
-      imageUrl: imageUrl,
-      capturedImage: item.capturedImage || imageUrl,
-      optionType: item.optionType || (imageUrl ? 'image' : 'text')
-    });
-  }
-  function mapGroupForScanner(group){
-    if (!group || typeof group !== 'object') return null;
-    var rawOptions = Array.isArray(group.options) ? group.options : (Array.isArray(group.items) ? group.items : []);
-    var title = cleanScannerText(group.label || group.name || group.title || '');
-    if (!title && !rawOptions.length) return null;
-    return Object.assign({}, group, { label: group.label || title, name: group.name || title, title: group.title || title, options: rawOptions.map(mapOption) });
-  }
-  function toScannerProfile(profile){
-    profile.hosts = (profile.domains || []).reduce(function(out, domain){ out.push(domain, '*.' + domain); return out; }, []);
-    profile.detect = function(ctx){ var host = String((ctx && ctx.location && ctx.location.hostname) || location.hostname || '').toLowerCase(); var href = String((ctx && ctx.location && ctx.location.href) || location.href || ''); return typeof profile.match === 'function' ? !!profile.match(host, href) : (typeof profile.matchHost === 'function' ? !!profile.matchHost(host, href) : false); };
-    profile.scanPage = function(ctx){ var doc = (ctx && ctx.document) || document; return (typeof profile.autoScan === 'function' ? profile.autoScan(doc) : []).map(mapGroupForScanner).filter(Boolean); };
-    profile.scanVisibleState = function(ctx){ return profile.scanPage(ctx); };
-    if (typeof profile.scanManualGroupFromTitle === 'function') { var manual = profile.scanManualGroupFromTitle; profile.scanManualGroupFromTitle = function(titleEl, ctx){ return mapGroupForScanner(manual.call(profile, titleEl, ctx)); }; }
-    profile.scanHints = Object.assign({ phase8Native: true }, profile.scanHints || {});
-    return profile;
-  }
   var profile = {
     id: 'wanderprints',
     name: 'Wanderprints',
@@ -139,5 +109,5 @@
     cleanupRules: { trim: true, collapseWhitespace: true },
     fallback: { useLegacyGeneric: false }
   };
-  profiles.register(toScannerProfile(profile));
+  profiles.register(nativeAdapter.toScannerProfile(profile, { sourceKind: 'scanner-profile-wanderprints', scanHints: { phase8Native: true } }));
 })();
