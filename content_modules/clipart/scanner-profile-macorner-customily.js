@@ -31,6 +31,15 @@
     if (/(personalized|personalised|custom|customize|customise|personalization|personalisation)/.test(txt)) return true;
     return false;
   }
+
+  function getAccordionToggle(groupEl) {
+    if (!groupEl || !groupEl.querySelector) return null;
+    return groupEl.querySelector('label[role="tab"], [role="tab"], label[aria-controls]') || null;
+  }
+  function isUnsafeTitle(label) {
+    return /\b(add to cart|buy now|checkout|upload|delete|remove|quantity|qty|cart|payment|pay now|submit order)\b/i.test(String(label || ''));
+  }
+
   function extractGroupLabel(groupEl) {
     var titleEl = groupEl && groupEl.querySelector ? groupEl.querySelector('.option_name') : null;
     return cleanText(titleEl && titleEl.textContent);
@@ -223,7 +232,38 @@
     cleanupTitle: function(text) {
       return cleanText(text || '');
     },
-    scanHints: { source: 'customily', phase3CustomilyRollout: true, phase4CustomilyRollout: true, phase5CustomilyRollout: true, preferVisualSwatches: true, supportsTextInputs: true, supportsSelects: true, supportsFileInputs: true },
+    getManualDrivenAutoTitleCandidates: function(ctx) {
+      var c = ctx || {};
+      var doc = c.document || document;
+      var root = getRoot(doc);
+      if (!root) return [];
+      return this.getGroups(root).map(function(groupEl) {
+        var titleEl = profile.getTitleElement(groupEl);
+        var label = extractGroupLabel(groupEl);
+        if (!titleEl || !label || isUnsafeTitle(label)) return null;
+        return {
+          titleEl: titleEl,
+          groupEl: groupEl,
+          expandEl: getAccordionToggle(groupEl) || titleEl,
+          label: label,
+          source: 'macorner-customily-profile'
+        };
+      }).filter(Boolean).sort(function(a, b) {
+        var sa = parseInt(a.groupEl && a.groupEl.getAttribute && a.groupEl.getAttribute('sort-id'), 10);
+        var sb = parseInt(b.groupEl && b.groupEl.getAttribute && b.groupEl.getAttribute('sort-id'), 10);
+        var va = isFinite(sa); var vb = isFinite(sb);
+        if (va && vb && sa !== sb) return sa - sb;
+        if (va && !vb) return -1;
+        if (!va && vb) return 1;
+        return 0;
+      });
+    },
+    getAutoExpandTarget: function(titleEl) {
+      var groupEl = titleEl && titleEl.closest ? titleEl.closest('.customily_option') : null;
+      return getAccordionToggle(groupEl) || titleEl;
+    },
+    manualDrivenAutoWaitMs: 160,
+    scanHints: { source: 'customily', phase3CustomilyRollout: true, phase4CustomilyRollout: true, phase5CustomilyRollout: true, preferVisualSwatches: true, supportsTextInputs: true, supportsSelects: true, supportsFileInputs: true, manualDrivenAutoPreferred: true },
     isValidGroup: function(groupEl) {
       if (!groupEl || !groupEl.querySelector || !groupEl.closest) return false;
       var root = groupEl.closest('#customily-options');
