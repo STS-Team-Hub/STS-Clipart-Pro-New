@@ -6,10 +6,10 @@ Define a repeatable, low-risk onboarding process for adding a new website profil
 
 ## Current repository context
 
-The project is currently **Phase 7 complete**.
+The project is currently **Phase 8 in progress**.
 
 - Phase 6 means scanner-profile-first routing and automated QA/release checks are in place.
-- Phase 7 made the former consolidated profiles canonical: PersonalFury, InterestPod, and Gossby now have a dedicated scanner profile file, fixture folder, and test package. Remaining adapter-backed sites stay transitional until scheduled migration.
+- Phase 7 made the former consolidated profiles canonical: PersonalFury, InterestPod, and Gossby now have a dedicated scanner profile file, fixture folder, and test package. Phase 8 added dedicated scanner profile files for Suzitee, TrendingCustom, Wanderprints, and Etsy while leaving compatibility cleanup in progress.
 - V2 adapters and legacy profile layers may still exist, but they are compatibility bridges, not the target place for new site behavior.
 
 ## Required input from user

@@ -13,10 +13,10 @@ For current profile routing, phase status, and final target, use:
 
 ## Current state versus final target
 
-Current state: **Phase 7 complete**.
+Current state: **Phase 8 in progress**.
 
 - Scanner-profile-first routing is integrated into the main scanner flows.
-- Dedicated scanner profiles, consolidated scanner profiles, V2 adapter-backed profiles, and legacy compatibility layers still coexist.
+- All supported named sites now have dedicated scanner profile files; V2, legacy scanner-list, manual-profile, adapter, and consolidated shim layers still coexist as compatibility/removal targets.
 - The final target is one canonical scanner profile package per supported named site.
 - Unknown/custom/generic pages should continue to resolve through the default scanner profile.
 

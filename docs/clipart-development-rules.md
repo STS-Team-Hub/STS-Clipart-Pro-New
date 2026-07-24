@@ -6,11 +6,11 @@ This document defines current development rules for STS Clipart Pro runtime chan
 
 ## Current phase
 
-Current state: **Phase 7 complete**.
+Current state: **Phase 8 in progress**.
 
 The scanner-profile contract is wired into Auto Scan, Append Visible State, Screenshot collector/title routing, and profile-aware Manual Pick paths. Safe ownership extraction has moved scan-mode UI into `scanner-ui.js` and Manual Scan empty-state mutation into `scanner-state.js`; legacy wrappers are deprecated compatibility bridges and warn when selected where applicable.
 
-Phase 7 standardized consolidated site ownership so PersonalFury, InterestPod, and Gossby now have dedicated scanner profile files, fixtures, and tests. See `docs/clipart-roadmap.md` for the phase plan and `TEST_CASES.md` for the external Chrome checklist.
+Phase 8 has added dedicated scanner profiles for the remaining adapter-backed named sites (Suzitee, TrendingCustom, Wanderprints, and Etsy) while retaining V2/legacy compatibility layers until de-bridging and manifest cleanup are complete. See `docs/clipart-roadmap.md` for the phase plan and `TEST_CASES.md` for the external Chrome checklist.
 
 ## Runtime layers and ownership
 
