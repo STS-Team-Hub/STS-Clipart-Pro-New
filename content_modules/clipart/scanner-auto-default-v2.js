@@ -127,7 +127,7 @@
     var o = opt || {};
     var element = o.element || null;
     var imageUrl = o.imageUrl || resolveImageUrlV2(element) || '';
-    var txt = norm(o.textContent || o.label || o.value || o.name || '');
+    var txt = norm(o.textContent || o.label || o.value || '');
     var value = norm(o.value || txt);
     var name = norm(o.name || value || txt);
     var optionType = imageUrl ? 'image' : (o.optionType || 'text');
@@ -256,13 +256,15 @@
         if (!isVisible(target)) target = candidate;
         var txtMeta = preferredText(target, input, label);
         var text = norm(txtMeta.text || '');
+        var imageUrl = resolveImageUrlV2(target) || resolveImageUrlV2(candidate) || '';
+        var bgColor = bgColorOf(target) || bgColorOf(candidate) || '';
         if (!text || normKey(text) === normKey(label) || text === '1' || text === '2') {
           var imgAlt = norm((target.querySelector && target.querySelector('img') && target.querySelector('img').getAttribute('alt')) || '');
           if (imgAlt) text = imgAlt;
         }
-        if (!text || normKey(text) === normKey(label)) return;
-        var imageUrl = resolveImageUrlV2(target) || resolveImageUrlV2(candidate) || '';
-        var bgColor = bgColorOf(target) || bgColorOf(candidate) || '';
+        var genericValueText = /^value\s+\d+$/i.test(text);
+        if ((!text || normKey(text) === normKey(label) || genericValueText) && !imageUrl && !bgColor) return;
+        if (!text || normKey(text) === normKey(label) || genericValueText) text = '';
         var optionType = imageUrl ? 'image' : (bgColor ? 'color' : 'text');
         var hasVisual = !!(imageUrl || bgColor || swatchLooksVisualTile(target));
         var needsCapture = !imageUrl && !bgColor && hasVisual;
