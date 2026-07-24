@@ -31,11 +31,34 @@ assert.equal(swatchGroup.options[0].imageUrl,'https://cdn.example/1.jpg');
 assert.equal(swatchGroup.options[0].capturedImage,'https://cdn.example/1.jpg');
 assert.equal(swatchGroup.options[0].optionType,'image');
 assert.equal(swatchGroup.options[0].sourceKind,'customily-swatch');
+assert.equal(swatchGroup.options[0].optionKind,'icon');
+assert.equal(swatchGroup.options[0].originalOptionKind,'icon');
+assert.equal(swatchGroup.options[0].displayKind,'icon');
 
 const selectGroup=groups.find(g=>g.name==='Number of kids');
 assert.ok(selectGroup && selectGroup.options.length===1);
 assert.equal(selectGroup.options[0].optionType,'text');
 assert.equal(selectGroup.options[0].sourceKind,'customily-select');
+assert.equal(selectGroup.options[0].optionKind,'text');
+assert.equal(selectGroup.options[0].originalOptionKind,'text');
+assert.equal(selectGroup.options[0].displayKind,'text');
+
+const g3=root.appendChild(el('div',{className:'customily_option'}));
+g3.appendChild(el('div',{className:'option_name',textContent:'Hair Color'}));
+const colorSw=g3.appendChild(el('div',{className:'customily-swatch swatch'}));
+colorSw.appendChild(el('input',{attrs:{type:'radio',name:'properties[Hair Color]'},value:'Brown'}));
+colorSw.appendChild(el('label',{attrs:{style:'background-color: rgb(146, 91, 19);'}}));
+const colorGroups=profile.scanPage({document:documentMock,location:{hostname:'pawesomehouse.com'}});
+const colorGroup=colorGroups.find(g=>g.name==='Hair Color');
+assert.ok(colorGroup && colorGroup.options.length===1);
+assert.equal(colorGroup.options[0].optionKind,'icon');
+assert.equal(colorGroup.options[0].originalOptionKind,'icon');
+assert.equal(colorGroup.options[0].displayKind,'icon');
+assert.equal(colorGroup.options[0].optionType,'color');
+assert.equal(colorGroup.options[0].bgColor,'rgb(146, 91, 19)');
+assert.equal(colorGroup.options[0].imageUrl,null);
+assert.equal(colorGroup.options[0].capturedImage,null);
+assert.equal(colorGroup.options[0].needsCapture,true);
 
 console.log('pawesomehouse image swatch contract test passed.');
 

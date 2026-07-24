@@ -85,6 +85,20 @@
     return (fileInputs + textareas + textInputs) > 0;
   }
 
+  function applyOptionKind(option, kind) {
+    if (!option || !kind) return option;
+    option.optionKind = kind;
+    option.originalOptionKind = kind;
+    option.displayKind = kind;
+    return option;
+  }
+
+  function markVisualSwatchForCapture(option) {
+    if (!option) return option;
+    if (!option.imageUrl && !option.capturedImage) option.needsCapture = true;
+    return option;
+  }
+
   function extractCustomilyOptions(groupEl, opts) {
     var includeFormInputs = !!(opts && opts.includeFormInputs);
     var options = [];
@@ -117,6 +131,8 @@
         optionType: hasImage ? 'image' : (bgColor ? 'color' : 'text'),
         sourceKind: 'customily-swatch'
       };
+      applyOptionKind(option, 'icon');
+      markVisualSwatchForCapture(option);
       if (selected) option.isSelected = true;
       if (option.value || option.textContent || option.imageUrl || option.bgColor) options.push(option);
     });
@@ -129,7 +145,7 @@
         var value = cleanText(optEl.value || (optEl.getAttribute && optEl.getAttribute('value')) || '');
         var text = cleanText(optEl.textContent);
         if (!value && !text) return;
-        options.push({
+        options.push(applyOptionKind({
           label: text || value || selectName || '',
           textContent: text || value || '',
           value: value || text || '',
@@ -139,7 +155,7 @@
           bgColor: null,
           optionType: 'text',
           sourceKind: 'customily-select'
-        });
+        }, 'text'));
       });
     });
 
@@ -152,7 +168,7 @@
       var value = cleanText(inputEl.value || (inputEl.getAttribute && inputEl.getAttribute('value')) || '');
       var label = cleanText(fieldName || placeholder || value || groupEl.querySelector('.option_name') && groupEl.querySelector('.option_name').textContent || 'Text');
       if (!label && !value && !placeholder) return;
-      options.push({
+      options.push(applyOptionKind({
         label: label || value || placeholder || 'Text',
         textContent: label || placeholder || value || '',
         value: value || '',
@@ -167,7 +183,7 @@
         placeholder: placeholder || '',
         maxlength: inputEl.getAttribute && inputEl.getAttribute('maxlength') != null ? String(inputEl.getAttribute('maxlength')) : '',
         inputType: inputType
-      });
+      }, 'text'));
     });
 
     if (includeFormInputs) Array.from(groupEl.querySelectorAll('input[type="file"]')).forEach(function(inputEl) {
@@ -175,7 +191,7 @@
       var fieldName = cleanNameLike(inputEl.name || (inputEl.getAttribute && inputEl.getAttribute('name')) || '');
       var accept = String((inputEl.getAttribute && inputEl.getAttribute('accept')) || '').trim();
       var label = fieldName || cleanText(groupEl.querySelector('.option_name') && groupEl.querySelector('.option_name').textContent) || 'Upload File';
-      options.push({
+      options.push(applyOptionKind({
         label: label,
         textContent: label,
         value: accept || label,
@@ -188,7 +204,7 @@
         hasVisual: false,
         needsCapture: false,
         accept: accept || ''
-      });
+      }, 'item'));
     });
 
     return options.filter(function(option) {
@@ -318,11 +334,17 @@
     },
     normalizeOption: function(rawOption) {
       if (!rawOption) return null;
-      return Object.assign({}, rawOption, {
+      var normalized = Object.assign({}, rawOption, {
         label: cleanText(rawOption.label || rawOption.textContent || rawOption.value || rawOption.name || ''),
         textContent: cleanText(rawOption.textContent || rawOption.label || rawOption.value || ''),
         value: cleanText(rawOption.value || rawOption.textContent || rawOption.label || '')
       });
+      var inferredKind = normalized.optionKind || normalized.displayKind || (normalized.sourceKind === 'customily-swatch' ? 'icon' : (/text|select|textarea/i.test(String(normalized.sourceKind || normalized.optionType || '')) ? 'text' : 'item'));
+      normalized.optionKind = inferredKind;
+      normalized.originalOptionKind = normalized.originalOptionKind || inferredKind;
+      normalized.displayKind = normalized.displayKind || inferredKind;
+      if (inferredKind === 'icon' && !normalized.imageUrl && !normalized.capturedImage) normalized.needsCapture = true;
+      return normalized;
     },
     getRoot: function(doc) {
       var d = doc || document;
