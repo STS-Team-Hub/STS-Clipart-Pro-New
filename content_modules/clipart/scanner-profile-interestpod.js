@@ -22,6 +22,7 @@
 
   profiles.register(bridge.createScannerProfile(legacyProfile, {
     id: 'interestpod',
-    sourceKind: 'scanner-profile-interestpod'
+    sourceKind: 'scanner-profile-interestpod',
+    scanHints: { phase3CustomilyRollout: true }
   }));
 })();
