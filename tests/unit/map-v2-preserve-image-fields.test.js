@@ -37,3 +37,9 @@ const visualOut = map([{ label:'Body Type', options:[{ textContent:'YOUNG', valu
 assert.equal(visualOut[0].options[0].capturedImage, null);
 assert.equal(visualOut[0].options[0].optionType, 'visual-text');
 assert.equal(visualOut[0].options[0].needsCapture, true);
+
+
+const textInputOut = map([{ label:'Custom Name', options:[{ textContent:'Custom Name', value:'', name:'properties[Custom Name]', optionType:'text', sourceKind:'text-input', imageUrl:null, capturedImage:null }] }]);
+assert.equal(textInputOut[0].options[0].optionKind, 'text');
+assert.equal(textInputOut[0].options[0].originalOptionKind, 'text');
+assert.equal(textInputOut[0].options[0].displayKind, 'text');
