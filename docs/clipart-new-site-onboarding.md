@@ -36,7 +36,7 @@ Each supported named site should have:
    - `tests/fixtures/site-profiles/<site-id>/`
 3. Expected output JSON for supported DOM patterns.
 4. Unit tests for profile resolution, route behavior, and normalized schema.
-5. Manifest registration before `content_modules/clipart/scanner-profile-adapters.js` when the file registers a scanner profile directly.
+5. Manifest registration before scanner routing/core scripts when the file registers a scanner profile directly.
 6. Manual Chrome verification notes for Auto Scan, Append Visible State, Manual Pick, and Screenshot Pick.
 
 ## Standard onboarding steps for a new site
@@ -61,7 +61,7 @@ Compatibility note: older docs described this step as: Implement a scanner profi
    - `expected.json`
 5. Implement scanner profile:
    - `content_modules/clipart/scanner-profile-<site-id>.js`
-6. Add the profile script to `manifest.json` before `scanner-profile-adapters.js` if it registers directly.
+6. Add the profile script to `manifest.json` before scanner routing/core scripts if it registers directly.
 7. Add expected parsed output JSON in the fixture folder.
 8. Add or update unit tests.
 9. Run fixture/profile tests.
@@ -92,7 +92,6 @@ PersonalFury, InterestPod, and Gossby were split in Phase 7 and are now dedicate
 - Update their dedicated `content_modules/clipart/scanner-profile-<site-id>.js` files for future behavior changes.
 - Keep V2 source profiles as compatibility fixtures unless a compatibility fix is required.
 - Keep fixtures in `tests/fixtures/site-profiles/<site-id>/` and route coverage in `tests/unit/phase7-canonical-site-profiles.test.js` current with behavior changes.
-- Do not add new registrations to `scanner-profile-site-v2-consolidated.js`; it is a load-order compatibility shim only.
 
 ### V2 adapter-backed site
 
@@ -104,9 +103,8 @@ Examples include Suzitee, TrendingCustom, Wanderprints, and Etsy.
 
 ### Legacy scanner-list or manual-profile behavior
 
-- Do not expand `content_modules/site-profiles.js` for new feature behavior.
-- Do not expand `content_modules/manual_profiles/` for new Manual Pick behavior.
-- Port required logic into a scanner profile and leave legacy code only as a compatibility fallback.
+- Do not recreate removed V2/manual/legacy profile layers.
+- Port required logic into a scanner profile and shared scanner helpers only.
 
 ## Data schema compatibility (must preserve)
 
@@ -161,7 +159,7 @@ Use the following prompt template:
 > Preserve output schema compatibility.
 > Add fixtures under `tests/fixtures/site-profiles/<site-id>/` and expected output JSON.
 > Add or update unit tests for resolver, Auto Scan, Append Visible State, Manual Pick, Screenshot Pick where applicable, and schema normalization.
-> Register the script in `manifest.json` before `scanner-profile-adapters.js` if it registers directly.
+> Register the script in `manifest.json` before scanner routing/core scripts if it registers directly.
 > Do not add new feature behavior to V2 or legacy profile layers unless explicitly documented as compatibility-only.
 > Provide test commands and manual verification steps for Auto/Append/Manual/Screenshot.
 

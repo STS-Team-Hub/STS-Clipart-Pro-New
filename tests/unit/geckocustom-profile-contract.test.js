@@ -113,21 +113,6 @@ const ctx = vm.createContext({
 ctx.window = ctx;
 
 [
-  'content_modules/site_profiles/index.js',
-  'content_modules/site_profiles/shared/cleanup.js',
-  'content_modules/site_profiles/shared/dom.js',
-  'content_modules/site_profiles/shared/values.js',
-  'content_modules/site_profiles/geckocustom.js'
-].forEach(file => run(file, ctx));
-
-const v2 = ctx.window.STSSiteProfilesV2.resolve('geckocustom.com');
-assert.equal(v2.id, 'geckocustom');
-const groups = v2.autoScan(doc);
-assert.ok(groups.some(g => g.title === 'Choose Design' && g.items.length === 2 && g.items[0].image), 'V2 geckocustom extracts image swatches');
-assert.ok(groups.some(g => g.title === 'Enter Family Name' && g.items.length === 1), 'V2 geckocustom extracts text input group');
-assert.equal(v2.scanManualGroupFromTitle(doc.querySelector('.sl-option-set-item_label')).title, 'Choose Design', 'V2 manual title maps to nearest group');
-
-[
   'content_modules/clipart/scanner-profile-registry.js',
   'content_modules/clipart/scanner-profile-default.js',
   'content_modules/clipart/scanner-profile-geckocustom.js'
@@ -143,12 +128,5 @@ assert.equal(manual.name, 'Choose Design');
 assert.equal(manual.options.length, 2);
 assert.ok(manual.options[0].imageUrl && manual.options[0].capturedImage, 'clipart geckocustom keeps --sl-image as imageUrl and capturedImage for render');
 
-[
-  'content_modules/manual_profiles/index.js',
-  'content_modules/manual_profiles/geckocustom.js'
-].forEach(file => run(file, ctx));
-const manualLegacy = ctx.window.STSManualProfiles.resolve('www.geckocustom.com');
-assert.equal(manualLegacy.key, 'geckocustom');
-assert.ok(manualLegacy.getGroups().length >= 2, 'legacy manual profile is available for GeckoCustom fallback paths');
 
 console.log('geckocustom profile contract test passed.');

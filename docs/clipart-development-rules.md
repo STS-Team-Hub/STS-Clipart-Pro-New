@@ -41,28 +41,26 @@ Every new supported named site must include a canonical profile package:
 2. `tests/fixtures/site-profiles/<site-id>/`
 3. expected output JSON for relevant DOM patterns
 4. unit coverage for resolver/routing/schema behavior
-5. manifest load-order registration before `scanner-profile-adapters.js` when the profile registers directly
+5. manifest load-order registration before scanner routing/core scripts when the profile registers directly
 6. manual Chrome verification notes for Auto Scan, Append Visible State, Manual Pick, and Screenshot Pick
 
 Existing supported sites should migrate to this package shape when they receive substantial updates.
 
 ### Transitional consolidated scanner profiles
 
-`content_modules/clipart/scanner-profile-site-v2-consolidated.js` is a transitional bridge for sites that were moved into scanner registry ownership together.
-
 Do not add unrelated new sites to this file. If a consolidated site receives substantial work, split it into `scanner-profile-<site-id>.js` with fixtures and tests.
 
 ### Removal target: V2 site profiles
 
-Files in `content_modules/site_profiles/` are removal targets under the Phase 8 one-flow plan. Do not add new behavior here. Remaining V2 behavior must be copied into dedicated `content_modules/clipart/scanner-profile-<site-id>.js` files, then the V2 registry and adapter scripts should be deleted when tests prove parity. See `docs/clipart-v2-legacy-removal-plan.md`.
+The former `content_modules/site_profiles/` V2 folder has been removed. New behavior must live in dedicated `content_modules/clipart/scanner-profile-<site-id>.js` files.
 
 ### Removal target: scanner-list routing
 
-`content_modules/site-profiles.js` is the legacy scanner-list routing layer and is a Phase 8 removal target. Do not add feature behavior or new routing entries here; migrate required behavior into the relevant dedicated scanner profile.
+The former `content_modules/site-profiles.js` scanner-list router has been removed. Add routing behavior only to scanner profiles and shared scanner modules.
 
 ### Removal target: legacy manual profiles
 
-Files in `content_modules/manual_profiles/` are legacy manual-profile assets and are Phase 8 removal targets. New Manual Pick behavior must live in scanner profile methods, and any still-needed legacy manual behavior should be migrated into a dedicated scanner profile before the folder is deleted.
+The former `content_modules/manual_profiles/` assets have been removed. New Manual Pick behavior must live in scanner profile methods.
 
 ## Scanner core rules
 
@@ -110,7 +108,7 @@ When adding support for a new site:
 
 1. Identify the site engine or DOM pattern, such as Customily, Teeinblue, Shopify options, generic personalization forms, or a custom DOM.
 2. Create `content_modules/clipart/scanner-profile-<site-id>.js`.
-3. Add the new script to the ordered `manifest.json` content-script list before `scanner-profile-adapters.js` if it registers a scanner profile directly.
+3. Add the new script to the ordered `manifest.json` content-script list before `scanner-site-router.js`/scanner entrypoints if it registers a scanner profile directly.
 4. Add fixtures under `tests/fixtures/site-profiles/<site-id>/` when practical. If legacy tests still require `HTML/*.txt`, keep those fixture paths in sync until the tests are migrated.
 5. Add or update unit tests for routing, profile contract behavior, and normalized output shape.
 6. Update `docs/clipart-profile-inventory.md`, `docs/clipart-new-site-onboarding.md` if the workflow changed, and `docs/clipart-roadmap.md` if phase status changed.
@@ -124,7 +122,6 @@ When modifying an existing site:
 - If it already has a dedicated scanner profile, update that profile and its fixtures/tests.
 - If it is consolidated, split it into a dedicated scanner profile when the change is substantial.
 - If it is V2 adapter-backed, keep small compatibility fixes in V2 only when lower risk; otherwise create a dedicated scanner profile and leave V2 as a compatibility/source fixture.
-- If the behavior currently lives in `content_modules/site-profiles.js` or `content_modules/manual_profiles/`, migrate it into a scanner profile instead of expanding legacy code.
 
 ## Refactor rules
 

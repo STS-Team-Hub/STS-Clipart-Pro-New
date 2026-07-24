@@ -5,11 +5,11 @@ const supportedSites = [
   { id: 'pawesomehouse-customily', legacy: 'pawesomehouse', tests: ['tests/unit/manual-pawesomehouse-customily-profile.test.js', 'tests/unit/auto-pawesomehouse-v2-routing.test.js'] },
   { id: 'macorner-customily', legacy: 'macorner', tests: ['tests/unit/manual-macorner-customily-profile.test.js', 'tests/unit/auto-macorner-customily-profile.test.js'] },
   { id: 'geckocustom', legacy: 'geckocustom', tests: ['tests/unit/geckocustom-profile-contract.test.js'] },
-  { id: 'pawfecthouse-teeinblue', legacy: 'pawfecthouse', tests: ['tests/unit/manual-new-site-profiles.test.js'] },
+  { id: 'pawfecthouse-teeinblue', legacy: 'pawfecthouse', tests: ['tests/unit/phase3-final-one-profile-runtime.test.js'] },
   { id: 'personalfury', legacy: 'personalfury', tests: ['tests/unit/phase7-canonical-site-profiles.test.js'] },
   { id: 'interestpod', legacy: 'interestpod', tests: ['tests/unit/phase7-canonical-site-profiles.test.js'] },
   { id: 'gossby', legacy: 'gossby', tests: ['tests/unit/phase7-canonical-site-profiles.test.js'] },
-  { id: 'suzitee', legacy: 'suzitee', tests: ['tests/unit/phase8-native-site-profiles.test.js', 'tests/unit/auto-suzitee-profile.test.js'] },
+  { id: 'suzitee', legacy: 'suzitee', tests: ['tests/unit/phase8-native-site-profiles.test.js'] },
   { id: 'trendingcustom', legacy: 'trendingcustom', tests: ['tests/unit/phase8-native-site-profiles.test.js'] },
   { id: 'wanderprints', legacy: 'wanderprints', tests: ['tests/unit/phase8-native-site-profiles.test.js'] },
   { id: 'etsy', legacy: 'etsy', tests: ['tests/unit/phase8-native-site-profiles.test.js'] }
@@ -49,11 +49,6 @@ const duplicateOwnerFiles = supportedSites.flatMap((site) => [
 ]);
 
 const duplicates = duplicateOwnerFiles.filter((file) => fs.existsSync(file));
-assert.ok(duplicates.length > 0, 'Phase 1 duplicate-owner audit identifies legacy/V2/manual owners still awaiting migration');
-
-const roadmap = fs.readFileSync('docs/clipart-roadmap.md', 'utf8');
-duplicates.forEach((file) => {
-  assert.ok(roadmap.includes(file), `roadmap records duplicate owner: ${file}`);
-});
+assert.deepEqual(duplicates, [], 'legacy/V2/manual duplicate owner files have been removed after Phase 3 cleanup');
 
 console.log('phase1 canonical ownership audit passed');
