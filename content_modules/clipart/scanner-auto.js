@@ -61,7 +61,10 @@
           groupLabel: (opt && opt.groupLabel) || label,
           optionText: (opt && opt.optionText) || (opt && (opt.textContent || opt.value || opt.name)) || '',
           element: (opt && opt.element) || null,
-          captureTarget: (opt && opt.captureTarget) || null
+          captureTarget: (opt && opt.captureTarget) || null,
+          originalOptionKind: (opt && opt.originalOptionKind) || (opt && opt.optionKind) || (imageUrl || capturedImage || (opt && (opt.bgColor || opt.hasVisual || opt.needsCapture)) ? 'icon' : ((opt && opt.sourceKind) === 'select' || (opt && opt.optionType) === 'text' ? 'text' : 'item')),
+          optionKind: (opt && opt.optionKind) || (opt && opt.originalOptionKind) || (imageUrl || capturedImage || (opt && (opt.bgColor || opt.hasVisual || opt.needsCapture)) ? 'icon' : ((opt && opt.sourceKind) === 'select' || (opt && opt.optionType) === 'text' ? 'text' : 'item')),
+          displayKind: (opt && opt.displayKind) || (opt && opt.optionKind) || (opt && opt.originalOptionKind) || (imageUrl || capturedImage || (opt && (opt.bgColor || opt.hasVisual || opt.needsCapture)) ? 'icon' : ((opt && opt.sourceKind) === 'select' || (opt && opt.optionType) === 'text' ? 'text' : 'item'))
         };
       });
       return {
@@ -345,7 +348,8 @@
         warnings: warnings,
         perTitle: perTitleTrace,
         settleWaitMs: waitMs,
-        collectorOwner: 'scanner-auto.collectManualDrivenAutoGroups'
+        collectorOwner: 'scanner-auto.collectManualDrivenAutoGroups',
+        roadmapGoal: 'Auto returns canonical title groups with origin-aware icon/item/text options'
       }
     };
   }
