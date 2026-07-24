@@ -105,6 +105,15 @@
     return { text: inputVal, debug: debug || 'empty' };
   }
 
+  function resolveOriginalOptionKindV2(opt, meta, normalized) {
+    var sourceKind = String((meta && meta.sourceKind) || (opt && opt.sourceKind) || '').toLowerCase();
+    var optionType = String((normalized && normalized.optionType) || (opt && opt.optionType) || '').toLowerCase();
+    var hasVisual = !!(normalized && (normalized.imageUrl || normalized.capturedImage || normalized.bgColor || normalized.hasVisual || normalized.needsCapture));
+    if (sourceKind.indexOf('swatch') >= 0 || optionType === 'image' || optionType === 'color' || optionType === 'visual-text' || hasVisual) return 'icon';
+    if (sourceKind === 'select' || optionType === 'text') return 'text';
+    return 'item';
+  }
+
   function normalizeOptionV2(opt, meta) {
     var o = opt || {};
     var element = o.element || null;
@@ -134,7 +143,10 @@
       candidateRejectReason: o.candidateRejectReason || '',
       captureDecision: o.captureDecision || '',
       captureSkipReason: o.captureSkipReason || '',
-      captureTarget: o.captureTarget || null
+      captureTarget: o.captureTarget || null,
+      originalOptionKind: o.originalOptionKind || '',
+      optionKind: o.optionKind || '',
+      displayKind: o.displayKind || ''
     };
     var visualTextMeta = classifyVisualTextTileV2(normalized, meta);
     if (visualTextMeta) {
@@ -145,6 +157,10 @@
       normalized.classificationReason = visualTextMeta.classificationReason;
       normalized.capturedImage = null;
     }
+    var originalKind = resolveOriginalOptionKindV2(o, meta, normalized);
+    normalized.originalOptionKind = normalized.originalOptionKind || originalKind;
+    normalized.optionKind = normalized.optionKind || originalKind;
+    normalized.displayKind = normalized.displayKind || originalKind;
     return normalized;
   }
 
@@ -339,7 +355,8 @@
       groupsAfterDedup: 0,
       fallbackUsed: false,
       targetGroups: [],
-      entrypointId: o.entrypointId || null
+      entrypointId: o.entrypointId || null,
+      roadmapGoal: 'Auto returns canonical title groups with origin-aware icon/item/text options'
     };
     var root = o.root || (o.rootSelector && doc.querySelector ? doc.querySelector(o.rootSelector) : doc);
     if (!root) {
@@ -356,7 +373,7 @@
         groupName: g.label,
         optionCount: (g.options || []).length,
         options: (g.options || []).slice(0, 5).map(function(op) {
-          return { imageUrl: op.imageUrl || null, capturedImage: op.capturedImage || null, sourceKind: op.sourceKind || '', optionType: op.optionType || '', visualKind: op.visualKind || '', hasVisual: !!op.hasVisual, needsCapture: !!op.needsCapture, classificationReason: op.classificationReason || '', textContent: op.textContent || '', value: op.value || '', hasImage: !!(op.imageUrl || op.capturedImage) };
+          return { imageUrl: op.imageUrl || null, capturedImage: op.capturedImage || null, sourceKind: op.sourceKind || '', optionType: op.optionType || '', optionKind: op.optionKind || '', originalOptionKind: op.originalOptionKind || '', displayKind: op.displayKind || '', visualKind: op.visualKind || '', hasVisual: !!op.hasVisual, needsCapture: !!op.needsCapture, classificationReason: op.classificationReason || '', textContent: op.textContent || '', value: op.value || '', hasImage: !!(op.imageUrl || op.capturedImage) };
         })
       };
     });
@@ -373,6 +390,7 @@
     snapshotNowV2: snapshotNowV2,
     dedupeGroupsV2: dedupeGroupsV2,
     normalizeOptionV2: normalizeOptionV2,
-    resolveImageUrlV2: resolveImageUrlV2
+    resolveImageUrlV2: resolveImageUrlV2,
+    resolveOriginalOptionKindV2: resolveOriginalOptionKindV2
   };
 })();

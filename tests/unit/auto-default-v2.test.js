@@ -55,12 +55,17 @@ function buildFixture(){
   assert.ok(!names.includes('Upload Photo'));
   const kids = res.groups.find(g=>g.label==='Number Of Kids');
   assert.equal(kids.options[0].optionType, 'image');
+  assert.equal(kids.options[0].optionKind, 'icon');
+  assert.equal(kids.options[0].originalOptionKind, 'icon');
+  assert.equal(kids.options[0].displayKind, 'icon');
   assert.ok(kids.options[0].imageUrl);
   assert.equal(kids.options[0].capturedImage, null);
   const title = res.groups.find(g=>g.label==='Choose The Title');
   assert.equal(title.options[0].optionType, 'text');
+  assert.equal(title.options[0].optionKind, 'text');
   const tile = res.groups.find(g=>g.label==="Man's Body Type Tile");
   assert.equal(tile.options[0].optionType, 'visual-text');
+  assert.equal(tile.options[0].optionKind, 'icon');
   assert.equal(tile.options[0].visualKind, 'tile');
   assert.equal(tile.options[0].hasVisual, true);
   assert.equal(tile.options[0].needsCapture, true);
@@ -82,6 +87,8 @@ function buildFixture(){
   assert.equal(glasses.options.find(o => o.textContent === 'NO').needsCapture, true);
   assert.equal(glasses.options.find(o => o.imageUrl).optionType, 'image');
   assert.ok(res.trace && res.trace.engine==='default-v2');
+  assert.equal(res.trace.roadmapGoal, 'Auto returns canonical title groups with origin-aware icon/item/text options');
+  assert.equal(res.trace.targetGroups.find(g => g.groupName === 'Number Of Kids').options[0].optionKind, 'icon');
   assert.ok(Array.isArray(res.trace.clickedTriggers));
   console.log('auto default v2 test passed');
 })();
