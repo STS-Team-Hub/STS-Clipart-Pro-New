@@ -54,6 +54,7 @@ const expectedContentFiles = [
   'content_modules/clipart/scanner-profile-macorner-customily.js',
   'content_modules/clipart/scanner-profile-geckocustom.js',
   'content_modules/clipart/scanner-profile-pawfecthouse-teeinblue.js',
+  'content_modules/clipart/scanner-profile-native-adapter.js',
   'content_modules/clipart/scanner-profile-suzitee.js',
   'content_modules/clipart/scanner-profile-trendingcustom.js',
   'content_modules/clipart/scanner-profile-wanderprints.js',

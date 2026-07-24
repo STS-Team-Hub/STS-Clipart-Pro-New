@@ -83,6 +83,14 @@ Deliverables:
 4. For each duplicate owner, record the exact canonical scanner profile method that must absorb it: `scanPage(ctx)`, `scanVisibleState(ctx)`, `scanManualGroupFromTitle(titleEl, ctx)`, `collectOptionsInContainer(containerEl, ctx)`, `collectOptionsInRegion(region, ctx)`, `detectNearestGroupTitleFromOption(optionEl, ctx)`, `normalizeGroup(rawGroup, ctx)`, or `normalizeOption(rawOption, ctx)`.
 5. Freeze V2/manual/legacy files: compatibility fixes only, no feature expansion.
 
+
+Phase 2 progress recorded on 2026-07-24:
+
+- Completed execution-order step 1 for PersonalFury, InterestPod, and Gossby by moving their legacy V2 profile logic directly into `content_modules/clipart/scanner-profile-personalfury.js`, `content_modules/clipart/scanner-profile-interestpod.js`, and `content_modules/clipart/scanner-profile-gossby.js`.
+- Added `content_modules/clipart/scanner-profile-native-adapter.js` as scanner-profile-native mapping glue for canonical profiles; it normalizes legacy-shaped in-file groups/options without reading `window.STSSiteProfiles`, `window.STSSiteProfilesV2`, `window.STSManualProfiles`, or `ns.siteV2Bridge`.
+- Added `tests/unit/phase2-native-debridging.test.js` to prove those three canonical files have no V2/manual/legacy registry references, expose scanner-profile contract methods, and resolve directly from `STSClipartScanner.profiles`.
+- Remaining Phase 2 work: Suzitee, TrendingCustom, Wanderprints, Etsy, and the final audit of Pawesomehouse, Macorner, GeckoCustom, Pawfecthouse, scanner-list/adapters, and default-only behavior.
+
 Exit criteria:
 
 - The supported-site target matrix and inventory agree.
@@ -120,7 +128,7 @@ Phase 1 duplicate-owner gap audit:
 
 ## Phase 2 — Site-by-site de-bridging into canonical scanner profiles
 
-Status: **Planned**.
+Status: **In progress — Step 1 complete on 2026-07-24**.
 
 Purpose:
 
@@ -142,6 +150,14 @@ Deliverables per site:
 4. Expected output validates normalized group/option shape.
 5. Unit tests prove scanner registry resolution and route behavior without V2/manual adapters.
 6. Chrome manual verification notes are added or refreshed.
+
+
+Phase 2 progress recorded on 2026-07-24:
+
+- Completed execution-order step 1 for PersonalFury, InterestPod, and Gossby by moving their legacy V2 profile logic directly into `content_modules/clipart/scanner-profile-personalfury.js`, `content_modules/clipart/scanner-profile-interestpod.js`, and `content_modules/clipart/scanner-profile-gossby.js`.
+- Added `content_modules/clipart/scanner-profile-native-adapter.js` as scanner-profile-native mapping glue for canonical profiles; it normalizes legacy-shaped in-file groups/options without reading `window.STSSiteProfiles`, `window.STSSiteProfilesV2`, `window.STSManualProfiles`, or `ns.siteV2Bridge`.
+- Added `tests/unit/phase2-native-debridging.test.js` to prove those three canonical files have no V2/manual/legacy registry references, expose scanner-profile contract methods, and resolve directly from `STSClipartScanner.profiles`.
+- Remaining Phase 2 work: Suzitee, TrendingCustom, Wanderprints, Etsy, and the final audit of Pawesomehouse, Macorner, GeckoCustom, Pawfecthouse, scanner-list/adapters, and default-only behavior.
 
 Exit criteria:
 

@@ -44,6 +44,7 @@ ctx.window = ctx;
   'content_modules/site_profiles/gossby.js',
   'content_modules/clipart/scanner-profile-registry.js',
   'content_modules/clipart/scanner-profile-default.js',
+  'content_modules/clipart/scanner-profile-native-adapter.js',
   'content_modules/clipart/scanner-profile-site-v2-bridge.js',
   'content_modules/clipart/scanner-profile-personalfury.js',
   'content_modules/clipart/scanner-profile-interestpod.js',
@@ -55,7 +56,7 @@ canonicalSites.forEach(({ id, host }) => {
   const profile = ctx.window.STSClipartScanner.profiles.get(id);
   assert.ok(profile, `${id} registered as dedicated scanner profile`);
   assert.equal(profile.id, id, `${id} profile id is canonical`);
-  assert.ok(profile.scanHints && profile.scanHints.phase7CanonicalBridge, `${id} scanner profile records Phase 7 canonical bridge ownership`);
+  assert.ok(profile.scanHints && profile.scanHints.phase2NativeDebridged, `${id} scanner profile records Phase 2 native de-bridged ownership`);
   const resolved = ctx.window.STSClipartScanner.profiles.resolve({ document: {}, location: { hostname: host, href: `https://${host}/products/example` }, window: ctx.window });
   assert.equal(resolved.id, id, `${id} resolves directly before V2 adapters`);
 });
