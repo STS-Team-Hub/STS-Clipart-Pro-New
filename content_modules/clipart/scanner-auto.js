@@ -308,7 +308,7 @@
       }
       await waitForDomSettle(waitMs);
 
-      var picked = core.collectManualGroupViaResolverLegacy(titleEl);
+      var picked = core.collectManualGroupViaResolverLegacy(titleEl, { includeFormInputs: true, manualDrivenAuto: true });
       var group = picked && !picked.fallback ? picked.group : null;
       if (picked && picked.resolverId) traceEntry.resolverUsed = picked.resolverId;
       if ((!group || !Array.isArray(group.options) || !group.options.length) && typeof core.collectManualGroupViaLegacyContainerLegacy === 'function') {
@@ -375,12 +375,10 @@
     if (typeof core.hasManualDrivenAutoCandidatesLegacy === 'function' && core.hasManualDrivenAutoCandidatesLegacy()) {
       return runManualDrivenAuto(c).then(function(result) {
         if (result) return result;
-        if (isPawesomehouseCustomilyV2Target(c)) return runPawesomehouseAutoV2(c);
         if (!core || typeof core.scanClipartsLegacy !== 'function') return null;
         return core.scanClipartsLegacy();
       });
     }
-    if (isPawesomehouseCustomilyV2Target(c)) return runPawesomehouseAutoV2(c);
     if (!core || typeof core.scanClipartsLegacy !== 'function') return null;
     return core.scanClipartsLegacy();
   }
