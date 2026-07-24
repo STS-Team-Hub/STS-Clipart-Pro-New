@@ -4998,6 +4998,56 @@ function scanQuoteLikeFieldsSync() {
     return !!(candidates && ((candidates.titles && candidates.titles.length) || (candidates.candidates && candidates.candidates.length)));
   }
 
+  function isUnsafeAutoManualTitleText(value) {
+    return /\b(add to cart|buy now|checkout|upload|delete|remove|quantity|qty|cart|payment|pay now|submit order)\b/i.test(String(value || ''));
+  }
+
+  async function collectAutoScanGroupsViaManualTitles() {
+    var candidateResult = getManualTitleCandidates();
+    var candidates = candidateResult && Array.isArray(candidateResult.candidates) ? candidateResult.candidates : [];
+    if (!candidates.length && candidateResult && Array.isArray(candidateResult.titles)) {
+      candidates = candidateResult.titles.map(function(titleEl) { return { titleEl: titleEl, label: titleEl && titleEl.textContent || '', source: 'legacy-title' }; });
+    }
+    if (!candidates.length) return null;
+
+    var profile = candidateResult && candidateResult.profile || getManualProfileForHost();
+    var groups = [];
+    var seen = new Set();
+    var waitMs = profile && typeof profile.manualDrivenAutoWaitMs === 'number' ? profile.manualDrivenAutoWaitMs : 120;
+
+    for (var i = 0; i < candidates.length; i++) {
+      var rec = candidates[i] || {};
+      var titleEl = rec.titleEl || rec;
+      if (!titleEl) continue;
+      var label = String(rec.label || titleEl.textContent || '').replace(/\s+/g, ' ').trim();
+      if (!label || isUnsafeAutoManualTitleText(label)) continue;
+      if (titleEl.scrollIntoView) {
+        try { titleEl.scrollIntoView({ block: 'center', inline: 'nearest' }); } catch (e) { titleEl.scrollIntoView(); }
+      }
+      var expandEl = rec.expandEl || titleEl;
+      if (profile && typeof profile.getAutoExpandTarget === 'function') {
+        try { expandEl = profile.getAutoExpandTarget(titleEl, { document: document, location: location, window: window }) || expandEl; } catch (e) {}
+      }
+      if (expandEl && expandEl.click && !isUnsafeAutoManualTitleText(expandEl.textContent || label)) {
+        try { expandEl.click(); } catch (e) {}
+      }
+      await new Promise(function(resolve) { setTimeout(resolve, waitMs); });
+
+      var picked = collectManualGroupViaResolver(titleEl, { includeFormInputs: true, manualDrivenAuto: true });
+      var group = picked && !picked.fallback ? picked.group : null;
+      if ((!group || !Array.isArray(group.options) || !group.options.length)) {
+        group = collectManualGroupViaLegacyContainer(titleEl);
+      }
+      if (!group || !Array.isArray(group.options) || !group.options.length) continue;
+      var name = String(group.label || group.name || label).trim();
+      var key = name.toLowerCase() + '::' + group.options.map(function(o) { return String(o.imageUrl || o.capturedImage || o.bgColor || o.textContent || o.value || o.name || '').trim().toLowerCase(); }).join('|');
+      if (seen.has(key)) continue;
+      seen.add(key);
+      groups.push({ label: name, options: group.options, rect: group.rect || null });
+    }
+    return groups.length ? groups : null;
+  }
+
   function collectManualGroupViaLegacyContainer(titleEl) {
     if (!titleEl) return null;
     var formItem = titleEl.closest && titleEl.closest('.by-customization-form__element, .by-customization-form_element, [class*="customization-form__element"], [class*="customization-form_element"], .ant-form-item, .product-form__input, fieldset, .tib-field, [class*="tib-option"], [class*="option-group"], [class*="option-wrap"], [class*="personalization-option"], .form-group, .product-option, [class*="product-option"]');
@@ -5020,7 +5070,7 @@ function scanQuoteLikeFieldsSync() {
     return { label: label, options: opts, rect: formItem.getBoundingClientRect ? formItem.getBoundingClientRect() : null };
   }
 
-  function collectManualGroupViaResolver(titleEl) {
+  function collectManualGroupViaResolver(titleEl, extraCtx) {
     var ns = window.STSClipartScanner;
     var profileContextApi = ns && ns.profileContext;
     var profilesApi = ns && ns.profiles;
@@ -5032,7 +5082,7 @@ function scanQuoteLikeFieldsSync() {
       console.warn('[STS Clipart Pro 8.3 Clipart] Manual Pick fallback: profiles.resolve unavailable');
       return { fallback: true, reason: 'no-profiles-resolve' };
     }
-    var ctx = profileContextApi.create({ document: document, location: location, window: window });
+    var ctx = profileContextApi.create(Object.assign({ document: document, location: location, window: window }, extraCtx || {}));
     var profile = profilesApi.resolve(ctx);
     if (typeof isAutoDebugEnabled === 'function' && typeof document !== 'undefined' && isAutoDebugEnabled(document)) {
       var host = String((ctx && ctx.location && ctx.location.hostname) || (location && location.hostname) || '');
@@ -5102,10 +5152,16 @@ function scanQuoteLikeFieldsSync() {
       if (typeof isAutoDebugEnabled === 'function' && typeof document !== 'undefined' && isAutoDebugEnabled(document)) {
         console.log('[STS AUTO DEBUG] core Auto entered');
       }
-      // Resolve scan path through profile resolver, fallback to legacy expansion if unavailable
-      var resolverResult = await collectAutoScanGroupsViaResolver();
-      var groups = resolverResult && resolverResult.groups ? resolverResult.groups : null;
-      var autoTrace = resolverResult && resolverResult.trace ? resolverResult.trace : { build: STS_CLIPART_BUILD, groups: [] };
+      // V1 Auto now reuses the same Manual title path that users click by hand:
+      // click each Personalized title, then collect through the Manual resolver.
+      var groups = await collectAutoScanGroupsViaManualTitles();
+      var resolverResult = null;
+      var autoTrace = { build: STS_CLIPART_BUILD, groups: [], manualDrivenV1: !!groups };
+      if (!groups) {
+        resolverResult = await collectAutoScanGroupsViaResolver();
+        groups = resolverResult && resolverResult.groups ? resolverResult.groups : null;
+        autoTrace = resolverResult && resolverResult.trace ? resolverResult.trace : autoTrace;
+      }
       if (!groups) {
         autoTrace.fallbackToExpandAndSnapshot = true;
         groups = await expandAndSnapshot();

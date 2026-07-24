@@ -2,7 +2,7 @@ const assert = require('assert');
 const fs = require('fs');
 
 const supportedSites = [
-  { id: 'pawesomehouse-customily', legacy: 'pawesomehouse', tests: ['tests/unit/manual-pawesomehouse-customily-profile.test.js', 'tests/unit/auto-pawesomehouse-v2-routing.test.js'] },
+  { id: 'pawesomehouse-customily', legacy: 'pawesomehouse', tests: ['tests/unit/manual-pawesomehouse-customily-profile.test.js', 'tests/unit/auto-pawesomehouse-v1-routing.test.js'] },
   { id: 'macorner-customily', legacy: 'macorner', tests: ['tests/unit/manual-macorner-customily-profile.test.js', 'tests/unit/auto-macorner-customily-profile.test.js'] },
   { id: 'geckocustom', legacy: 'geckocustom', tests: ['tests/unit/geckocustom-profile-contract.test.js'] },
   { id: 'pawfecthouse-teeinblue', legacy: 'pawfecthouse', tests: ['tests/unit/phase3-final-one-profile-runtime.test.js'] },
