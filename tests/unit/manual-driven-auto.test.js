@@ -55,6 +55,9 @@ async function runWith({ titles, resolver, legacy, hasCandidates = true, profile
     resolver: (title) => ({ fallback: false, group: { label: title.textContent, options: [{ textContent: title.textContent + ' 1', rect: { w: 1, h: 1 } }] } })
   });
   assert.equal(multi.result.trace.engine, 'manual-driven-auto');
+  assert.equal(multi.result.trace.roadmapGoal, 'Auto returns canonical title groups with origin-aware icon/item/text options');
+  assert.equal(multi.result.trace.roadmapPhase, 'Phase 2 — Implementation phrases');
+  assert.deepEqual(multi.result.trace.roadmapImplementationPhrases, ['Find Title', 'Open Group', 'Collect Options', 'Preserve Origin Kind', 'Normalize Output', 'Record Result']);
   assert.deepEqual(multi.result.categories.map((c) => c.name), ['Size', 'Color']);
   assert.equal(multi.calls.legacyAuto, 0);
   assert.equal(multi.calls.panel, 1);
