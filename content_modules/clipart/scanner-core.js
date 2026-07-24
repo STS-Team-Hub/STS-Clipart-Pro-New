@@ -4998,53 +4998,20 @@ function scanQuoteLikeFieldsSync() {
     return !!(candidates && ((candidates.titles && candidates.titles.length) || (candidates.candidates && candidates.candidates.length)));
   }
 
-  function isUnsafeAutoManualTitleText(value) {
-    return /\b(add to cart|buy now|checkout|upload|delete|remove|quantity|qty|cart|payment|pay now|submit order)\b/i.test(String(value || ''));
-  }
-
   async function collectAutoScanGroupsViaManualTitles() {
-    var candidateResult = getManualTitleCandidates();
-    var candidates = candidateResult && Array.isArray(candidateResult.candidates) ? candidateResult.candidates : [];
-    if (!candidates.length && candidateResult && Array.isArray(candidateResult.titles)) {
-      candidates = candidateResult.titles.map(function(titleEl) { return { titleEl: titleEl, label: titleEl && titleEl.textContent || '', source: 'legacy-title' }; });
+    var autoApi = window.STSClipartScanner && window.STSClipartScanner.auto;
+    if (!autoApi || typeof autoApi.collectManualDrivenAutoGroups !== 'function') {
+      return null;
     }
-    if (!candidates.length) return null;
-
-    var profile = candidateResult && candidateResult.profile || getManualProfileForHost();
-    var groups = [];
-    var seen = new Set();
-    var waitMs = profile && typeof profile.manualDrivenAutoWaitMs === 'number' ? profile.manualDrivenAutoWaitMs : 120;
-
-    for (var i = 0; i < candidates.length; i++) {
-      var rec = candidates[i] || {};
-      var titleEl = rec.titleEl || rec;
-      if (!titleEl) continue;
-      var label = String(rec.label || titleEl.textContent || '').replace(/\s+/g, ' ').trim();
-      if (!label || isUnsafeAutoManualTitleText(label)) continue;
-      if (titleEl.scrollIntoView) {
-        try { titleEl.scrollIntoView({ block: 'center', inline: 'nearest' }); } catch (e) { titleEl.scrollIntoView(); }
+    var collected = await autoApi.collectManualDrivenAutoGroups(buildScannerContext('core-manual-driven-auto'));
+    var groups = collected && Array.isArray(collected.groups) ? collected.groups : [];
+    var trace = collected && collected.trace ? collected.trace : null;
+    try {
+      if (trace && document && document.documentElement) {
+        document.documentElement.setAttribute('data-sts-last-manual-driven-auto-trace', JSON.stringify(trace));
       }
-      var expandEl = rec.expandEl || titleEl;
-      if (profile && typeof profile.getAutoExpandTarget === 'function') {
-        try { expandEl = profile.getAutoExpandTarget(titleEl, { document: document, location: location, window: window }) || expandEl; } catch (e) {}
-      }
-      if (expandEl && expandEl.click && !isUnsafeAutoManualTitleText(expandEl.textContent || label)) {
-        try { expandEl.click(); } catch (e) {}
-      }
-      await new Promise(function(resolve) { setTimeout(resolve, waitMs); });
-
-      var picked = collectManualGroupViaResolver(titleEl, { includeFormInputs: true, manualDrivenAuto: true });
-      var group = picked && !picked.fallback ? picked.group : null;
-      if ((!group || !Array.isArray(group.options) || !group.options.length)) {
-        group = collectManualGroupViaLegacyContainer(titleEl);
-      }
-      if (!group || !Array.isArray(group.options) || !group.options.length) continue;
-      var name = String(group.label || group.name || label).trim();
-      var key = name.toLowerCase() + '::' + group.options.map(function(o) { return String(o.imageUrl || o.capturedImage || o.bgColor || o.textContent || o.value || o.name || '').trim().toLowerCase(); }).join('|');
-      if (seen.has(key)) continue;
-      seen.add(key);
-      groups.push({ label: name, options: group.options, rect: group.rect || null });
-    }
+      if (trace) window.__STS_LAST_MANUAL_DRIVEN_AUTO_TRACE = trace;
+    } catch (e) {}
     return groups.length ? groups : null;
   }
 

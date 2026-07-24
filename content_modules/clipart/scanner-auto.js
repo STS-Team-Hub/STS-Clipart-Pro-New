@@ -265,7 +265,7 @@
     return { label: label, options: opts, rect: group.rect || null };
   }
 
-  async function runManualDrivenAuto(ctx) {
+  async function collectManualDrivenAutoGroups(ctx) {
     var c = ctx || {};
     var core = c.coreFns || {};
     if (typeof core.getManualTitleCandidatesLegacy !== 'function' || typeof core.collectManualGroupViaResolverLegacy !== 'function') return null;
@@ -333,8 +333,28 @@
       if (typeof c.showProgress === 'function') c.showProgress(8 + Math.round(((i + 1) / candidates.length) * 20), 'Manual-driven Auto: ' + groups.length + ' groups');
     }
 
-    if (!groups.length) return null;
-    var categories = mapV2GroupsToCategories(groups);
+    return {
+      groups: groups,
+      trace: {
+        engine: 'manual-driven-auto',
+        source: source,
+        resolvedProfileId: profile && profile.id || null,
+        matchedProfileId: profile && profile.matchedProfileId || null,
+        titleCandidates: candidates.length,
+        groupsAfterDedup: groups.length,
+        warnings: warnings,
+        perTitle: perTitleTrace,
+        settleWaitMs: waitMs,
+        collectorOwner: 'scanner-auto.collectManualDrivenAutoGroups'
+      }
+    };
+  }
+
+  async function runManualDrivenAuto(ctx) {
+    var c = ctx || {};
+    var collected = await collectManualDrivenAutoGroups(c);
+    if (!collected || !collected.groups || !collected.groups.length) return null;
+    var categories = mapV2GroupsToCategories(collected.groups);
     var doc = c.document || document;
     var win = c.window || window;
     var result = {
@@ -343,17 +363,7 @@
       platform: (win.Shopify || (doc && doc.querySelector && doc.querySelector('[data-shopify]'))) ? 'shopify' : ((win.location && win.location.hostname && String(win.location.hostname).includes('etsy')) ? 'etsy' : 'custom'),
       scannedAt: new Date().toISOString(),
       categories: categories,
-      trace: {
-        engine: 'manual-driven-auto',
-        source: source,
-        resolvedProfileId: profile && profile.id || null,
-        matchedProfileId: profile && profile.matchedProfileId || null,
-        titleCandidates: candidates.length,
-        groupsAfterDedup: categories.length,
-        warnings: warnings,
-        perTitle: perTitleTrace,
-        settleWaitMs: waitMs
-      }
+      trace: Object.assign({}, collected.trace || {}, { groupsAfterDedup: categories.length })
     };
     if (c.CLIPART) {
       c.CLIPART.categories = categories;
@@ -394,15 +404,18 @@
   }
 
   ns.auto = ns.auto || {};
+  ns.auto.collectManualDrivenAutoGroups = collectManualDrivenAutoGroups;
   ns.auto.scanCliparts = scanCliparts;
   ns.auto.scanDOM = scanDOM;
   ns.auto.appendCurrentVisibleState = appendCurrentVisibleState;
 
   ns.modules.auto = {
     name: 'auto',
+    collectManualDrivenAutoGroups: collectManualDrivenAutoGroups,
     scanCliparts: scanCliparts,
     scanDOM: scanDOM,
     appendCurrentVisibleState: appendCurrentVisibleState,
+    __collectManualDrivenAutoGroupsForTest: collectManualDrivenAutoGroups,
     __runManualDrivenAutoForTest: runManualDrivenAuto,
     __mapV2GroupsToCategoriesForTest: mapV2GroupsToCategories,
     __isPawesomehouseCustomilyV2TargetForTest: isPawesomehouseCustomilyV2Target
