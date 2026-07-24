@@ -82,7 +82,7 @@
     getManualTitleElements:function(doc){ var root=getRoot(doc||document); return getGroups(root).filter(isValidGroup).map(getTitleElement).filter(Boolean); },
     scanManualGroupFromTitle:function(titleEl){ var group=titleEl&&titleEl.closest('.customily_option'); return mapGroup(group, false); },
     selectors:{ root: '#cl_optionsapp, #customily-options', group: '.customily_option', title: '.option_name', item: '.swatch-container .customily-swatch, .customily-swatch, select option, input[type="text"], input[type="file"], textarea' },
-    scanHints:{ source: 'customily', preferVisualSwatches: true, supportsTextInputs: true, supportsSelects: true, supportsFileInputs: true },
+    scanHints:{ source: 'customily', phase4CustomilyRollout: true, preferVisualSwatches: true, supportsTextInputs: true, supportsSelects: true, supportsFileInputs: true },
     cleanupRules:{ trim: true, collapseWhitespace: true },
     fallback:{ useLegacyGeneric: false }
   }));

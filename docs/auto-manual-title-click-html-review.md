@@ -230,6 +230,18 @@ Acceptance criteria:
 - Gossby/Pawfecthouse can produce groups from their saved/native HTML fixtures or are explicitly marked as needing fresh complete HTML.
 - GeckoCustom chooses the dedicated profile route when Customily markers are absent.
 
+Implementation record — 2026-07-24:
+
+- Completed the Phase 4 Customily profile rollout checkpoint by marking all currently scanner-owned Customily families with `phase4CustomilyRollout`: Macorner, Pawesomehouse, PersonalFury, InterestPod, Wanderprints, and Suzitee.
+- Promoted Suzitee into the Customily rollout guard so it is verified alongside the earlier Customily-heavy families rather than only by the later native-profile registry test.
+- Added `tests/unit/phase4-customily-profile-rollout.test.js` to prove each Phase 4 Customily profile file exists, declares the Customily source, exposes root/group/title scoping helpers, records the Phase 4 marker, and resolves by host through the scanner registry.
+- Existing Phase 4 Native/Ant acceptance criteria remain tracked separately for TrendingCustom, Gossby, Pawfecthouse, and GeckoCustom non-Customily structures.
+
+Verification:
+
+- `npm run check` passed on 2026-07-24.
+- `npm run test:unit` passed on 2026-07-24, including the new Phase 4 Customily rollout regression.
+
 ### Phase 5: Panel payload and UX validation
 
 Files:
