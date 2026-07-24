@@ -22,6 +22,7 @@
 
   profiles.register(bridge.createScannerProfile(legacyProfile, {
     id: 'personalfury',
-    sourceKind: 'scanner-profile-personalfury'
+    sourceKind: 'scanner-profile-personalfury',
+    scanHints: { phase3CustomilyRollout: true }
   }));
 })();

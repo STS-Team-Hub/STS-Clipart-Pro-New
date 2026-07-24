@@ -179,6 +179,20 @@ Acceptance criteria:
 - Auto does not collect Shopify/product variant style options outside the Customily root.
 - Text-only groups are preserved, not dropped.
 
+
+
+Implementation record — 2026-07-23:
+
+- Rolled out scanner-profile Phase 3 ownership markers for the Customily-heavy families: Macorner, Pawesomehouse, InterestPod, PersonalFury, and Wanderprints.
+- Added registry-level regression coverage in `tests/unit/phase3-customily-profile-rollout.test.js` to prove every Phase 3 family registers as a Customily scanner profile, resolves by host, and exposes root/group/title scoping functions.
+- Hardened the V2 bridge used by InterestPod and PersonalFury so bridge-created scanner profiles expose Manual-driven Auto title candidate records scoped to the Customily root/group and carry the Phase 3 rollout marker.
+- Preserved the existing fixture coverage for Macorner, Pawesomehouse, InterestPod, and PersonalFury; the Phase 3 registry test now ties those fixture suites to the rollout contract.
+
+Verification:
+
+- `npm run check` passed on 2026-07-23.
+- `npm run test:unit` passed on 2026-07-23, including the new Phase 3 rollout regression.
+
 ### Phase 4: Native/Ant profile rollout
 
 Primary site families:

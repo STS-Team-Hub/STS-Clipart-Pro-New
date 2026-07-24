@@ -104,9 +104,19 @@
       isValidGroup: legacyProfile.isValidGroup,
       isVisibleElement: legacyProfile.isVisibleElement,
       isJunkElement: legacyProfile.isJunkElement,
-      getManualDrivenAutoTitleCandidates: legacyProfile.getManualDrivenAutoTitleCandidates,
+      getManualDrivenAutoTitleCandidates: legacyProfile.getManualDrivenAutoTitleCandidates || function(ctx) {
+        var doc = (ctx && ctx.document) || document;
+        var root = typeof legacyProfile.getRoot === 'function' ? legacyProfile.getRoot(doc) : null;
+        var groups = root && typeof legacyProfile.getGroups === 'function' ? legacyProfile.getGroups(root) : [];
+        return (groups || []).map(function(group) {
+          var titleEl = typeof legacyProfile.getTitleElement === 'function' ? legacyProfile.getTitleElement(group) : null;
+          if (!titleEl) return null;
+          var expandTarget = titleEl.closest && titleEl.closest('label[aria-controls], label[role="tab"], label[role="button"], [aria-controls][role="tab"], [aria-controls][role="button"]');
+          return { titleEl: titleEl, groupEl: group, rootEl: root, expandTarget: expandTarget || titleEl, sourceKind: sourceKind };
+        }).filter(Boolean);
+      },
       selectors: legacyProfile.selectors,
-      scanHints: Object.assign({ phase7CanonicalBridge: true }, legacyProfile.scanHints || {})
+      scanHints: Object.assign({ phase7CanonicalBridge: true, phase3CustomilyRollout: legacyProfile.scanHints && legacyProfile.scanHints.source === 'customily' }, legacyProfile.scanHints || {}, options.scanHints || {})
     };
   }
 

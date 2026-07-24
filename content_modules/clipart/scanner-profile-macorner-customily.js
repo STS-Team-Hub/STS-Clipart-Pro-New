@@ -223,6 +223,7 @@
     cleanupTitle: function(text) {
       return cleanText(text || '');
     },
+    scanHints: { source: 'customily', phase3CustomilyRollout: true, preferVisualSwatches: true, supportsTextInputs: true, supportsSelects: true, supportsFileInputs: true },
     isValidGroup: function(groupEl) {
       if (!groupEl || !groupEl.querySelector || !groupEl.closest) return false;
       var root = groupEl.closest('#customily-options');
