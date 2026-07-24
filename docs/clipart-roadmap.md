@@ -90,7 +90,10 @@ Phase 2 progress recorded on 2026-07-24:
 - Added `content_modules/clipart/scanner-profile-native-adapter.js` as scanner-profile-native mapping glue for canonical profiles; it normalizes legacy-shaped in-file groups/options without reading `window.STSSiteProfiles`, `window.STSSiteProfilesV2`, `window.STSManualProfiles`, or `ns.siteV2Bridge`.
 - Added `tests/unit/phase2-native-debridging.test.js` to prove those three canonical files have no V2/manual/legacy registry references, expose scanner-profile contract methods, and resolve directly from `STSClipartScanner.profiles`.
 - Completed execution-order step 2 for Suzitee, TrendingCustom, Wanderprints, and Etsy by moving their scanner registration onto `content_modules/clipart/scanner-profile-native-adapter.js` and proving the canonical files do not reference V2/manual/legacy registries. Etsy remains default/generic-scope only while resolving as its canonical named scanner profile on Etsy hosts.
-- Remaining Phase 2 work: final audit of Pawesomehouse, Macorner, GeckoCustom, Pawfecthouse, scanner-list/adapters, and default-only behavior.
+- Completed execution-order step 3 by auditing Pawesomehouse, Macorner, GeckoCustom, and Pawfecthouse canonical scanner profiles for V2/manual/legacy registry references and direct scanner-registry resolution.
+- Completed execution-order step 4 by confirming GeckoCustom manual collection, nearest-title detection, and container option collection are owned by `content_modules/clipart/scanner-profile-geckocustom.js`.
+- Completed execution-order step 5 by confirming Etsy remains named-host resolution only while unknown/generic pages continue to resolve through `content_modules/clipart/scanner-profile-default.js`; no site-specific generic profile was added.
+- Added canonical scanner contract coverage for Pawesomehouse and Macorner `scanVisibleState(ctx)`, `collectOptionsInContainer(containerEl, ctx)`, nearest-title detection, and normalization helpers so hidden manual leftovers are owned by their canonical files.
 
 Exit criteria:
 
@@ -129,7 +132,7 @@ Phase 1 duplicate-owner gap audit:
 
 ## Phase 2 — Site-by-site de-bridging into canonical scanner profiles
 
-Status: **In progress — Steps 1-2 complete on 2026-07-24**.
+Status: **Complete on 2026-07-24**.
 
 Purpose:
 
@@ -159,7 +162,10 @@ Phase 2 progress recorded on 2026-07-24:
 - Added `content_modules/clipart/scanner-profile-native-adapter.js` as scanner-profile-native mapping glue for canonical profiles; it normalizes legacy-shaped in-file groups/options without reading `window.STSSiteProfiles`, `window.STSSiteProfilesV2`, `window.STSManualProfiles`, or `ns.siteV2Bridge`.
 - Added `tests/unit/phase2-native-debridging.test.js` to prove those three canonical files have no V2/manual/legacy registry references, expose scanner-profile contract methods, and resolve directly from `STSClipartScanner.profiles`.
 - Completed execution-order step 2 for Suzitee, TrendingCustom, Wanderprints, and Etsy by moving their scanner registration onto `content_modules/clipart/scanner-profile-native-adapter.js` and proving the canonical files do not reference V2/manual/legacy registries. Etsy remains default/generic-scope only while resolving as its canonical named scanner profile on Etsy hosts.
-- Remaining Phase 2 work: final audit of Pawesomehouse, Macorner, GeckoCustom, Pawfecthouse, scanner-list/adapters, and default-only behavior.
+- Completed execution-order step 3 by auditing Pawesomehouse, Macorner, GeckoCustom, and Pawfecthouse canonical scanner profiles for V2/manual/legacy registry references and direct scanner-registry resolution.
+- Completed execution-order step 4 by confirming GeckoCustom manual collection, nearest-title detection, and container option collection are owned by `content_modules/clipart/scanner-profile-geckocustom.js`.
+- Completed execution-order step 5 by confirming Etsy remains named-host resolution only while unknown/generic pages continue to resolve through `content_modules/clipart/scanner-profile-default.js`; no site-specific generic profile was added.
+- Added canonical scanner contract coverage for Pawesomehouse and Macorner `scanVisibleState(ctx)`, `collectOptionsInContainer(containerEl, ctx)`, nearest-title detection, and normalization helpers so hidden manual leftovers are owned by their canonical files.
 
 Exit criteria:
 
@@ -170,7 +176,7 @@ Exit criteria:
 
 ## Phase 3 — Remove legacy profile runtime and enforce one site = one profile
 
-Status: **Planned**.
+Status: **In progress — Phase 2 parity audit complete on 2026-07-24**.
 
 Purpose:
 
