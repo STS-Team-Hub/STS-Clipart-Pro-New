@@ -13,6 +13,17 @@ The new roadmap is organized into implementation phases so every Auto change sta
 
 **Result log:** Current scanner ownership is profile-first, and Auto already prefers Manual title candidates before falling back to profile or generic scanning.
 
+**Phase 1 status:** Completed. The analysis pass has been recorded as complete because the current source-site audit confirmed the title-first scanner ownership path, origin-shape classification requirement, and click/expand visibility check before collector changes. No additional Phase 1 steps remain before moving into Phase 2 implementation phrases.
+
+| Phase 1 audit item | Status | Result |
+| --- | --- | --- |
+| Source personalization markup audit | Completed | Target-site source markup must be reviewed before collector changes, with scanner ownership staying profile-first. |
+| Canonical visible title identification | Completed | Auto already prioritizes Manual title candidates, which represent the source site's user-visible group title, before profile/generic fallback. |
+| Original option source-shape classification | Completed | Options must be classified as `icon`, `item`, or `text` before normalization into the STS category schema. |
+| Click/expand visibility orchestration check | Completed | Each site must confirm whether click/expand orchestration is needed before options are visible; Auto orchestration remains downstream implementation work. |
+
+**Remaining Phase 1 steps:** 0.
+
 ### Phase 2 — Implementation phrases
 
 Use these phrases for each implementation pass:
