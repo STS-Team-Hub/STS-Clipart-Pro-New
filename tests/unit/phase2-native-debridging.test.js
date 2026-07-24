@@ -38,9 +38,6 @@ const ctx = vm.createContext({ window: windowMock, document: documentMock, locat
 ctx.window = windowMock;
 
 [
-  'content_modules/site_profiles/shared/cleanup.js',
-  'content_modules/site_profiles/shared/dom.js',
-  'content_modules/site_profiles/shared/values.js',
   'content_modules/clipart/scanner-profile-registry.js',
   'content_modules/clipart/scanner-profile-default.js',
   'content_modules/clipart/scanner-profile-native-adapter.js',

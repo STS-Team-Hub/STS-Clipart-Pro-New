@@ -3,7 +3,6 @@ const fs = require('fs');
 const vm = require('vm');
 
 const ns = {};
-const legacyProfiles = [];
 
 const doc = {
   querySelector: (sel) => ({
@@ -27,9 +26,6 @@ const doc = {
 
 const windowMock = {
   STSClipartScanner: ns,
-  STSSiteProfilesV2: {
-    list: () => legacyProfiles
-  },
   location: { hostname: 'pawesomehouse.com', href: 'https://pawesomehouse.com/p' },
   document: doc,
   getComputedStyle: () => ({ backgroundColor: 'transparent' })
@@ -39,20 +35,12 @@ const ctx = vm.createContext({ window: windowMock, document: doc, location: wind
 vm.runInContext(fs.readFileSync('content_modules/clipart/scanner-profile-registry.js', 'utf8'), ctx);
 vm.runInContext(fs.readFileSync('content_modules/clipart/scanner-profile-default.js', 'utf8'), ctx);
 
-legacyProfiles.push({
-  id: 'pawesomehouse',
-  name: 'legacy pawesomehouse',
-  domains: ['pawesomehouse.com'],
-  match: (host) => host === 'pawesomehouse.com',
-  scanManualGroupFromTitle: () => ({ title: 'legacy', items: [] })
-});
 
 vm.runInContext(fs.readFileSync('content_modules/clipart/scanner-profile-pawesomehouse-customily.js', 'utf8'), ctx);
-vm.runInContext(fs.readFileSync('content_modules/clipart/scanner-profile-adapters.js', 'utf8'), ctx);
 
 const profiles = windowMock.STSClipartScanner.profiles.list();
-assert.ok(profiles.some((p) => p.id === 'pawesomehouse'), 'legacy adapter registered');
 assert.ok(profiles.some((p) => p.id === 'pawesomehouse-customily-manual'), 'dedicated profile registered');
+assert.ok(!profiles.some((p) => p.id === 'pawesomehouse'), 'legacy adapter profile is not registered after Phase 3 cleanup');
 
 const resolved = windowMock.STSClipartScanner.profiles.resolve({ document: doc, location: windowMock.location, window: windowMock });
 assert.equal(resolved.id, 'pawesomehouse-customily-manual', 'dedicated profile must win on customily pages');

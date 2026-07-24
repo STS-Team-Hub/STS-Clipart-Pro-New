@@ -30,16 +30,9 @@ const ctx = vm.createContext({ window: windowMock, document: documentMock, locat
 ctx.window = windowMock;
 
 [
-  'content_modules/site_profiles/index.js',
-  'content_modules/site_profiles/shared/cleanup.js',
-  'content_modules/site_profiles/shared/dom.js',
-  'content_modules/site_profiles/shared/values.js',
-  'content_modules/site_profiles/personalfury.js',
-  'content_modules/site_profiles/interestpod.js',
   'content_modules/clipart/scanner-profile-registry.js',
   'content_modules/clipart/scanner-profile-default.js',
   'content_modules/clipart/scanner-profile-native-adapter.js',
-  'content_modules/clipart/scanner-profile-site-v2-bridge.js',
   'content_modules/clipart/scanner-profile-macorner-customily.js',
   'content_modules/clipart/scanner-profile-pawesomehouse-customily.js',
   'content_modules/clipart/scanner-profile-personalfury.js',
