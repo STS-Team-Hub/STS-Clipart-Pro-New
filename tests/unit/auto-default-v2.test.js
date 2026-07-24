@@ -88,6 +88,8 @@ function buildFixture(){
   assert.equal(glasses.options.find(o => o.imageUrl).optionType, 'image');
   assert.ok(res.trace && res.trace.engine==='default-v2');
   assert.equal(res.trace.roadmapGoal, 'Auto returns canonical title groups with origin-aware icon/item/text options');
+  assert.equal(res.trace.roadmapPhase, 'Phase 2 — Implementation phrases');
+  assert.deepEqual(res.trace.roadmapImplementationPhrases, ['Find Title', 'Open Group', 'Collect Options', 'Preserve Origin Kind', 'Normalize Output', 'Record Result']);
   assert.equal(res.trace.targetGroups.find(g => g.groupName === 'Number Of Kids').options[0].optionKind, 'icon');
   assert.ok(Array.isArray(res.trace.clickedTriggers));
   console.log('auto default v2 test passed');

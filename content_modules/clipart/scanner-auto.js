@@ -1,4 +1,13 @@
 (function(){
+  var PHASE2_IMPLEMENTATION_PHRASES = [
+    'Find Title',
+    'Open Group',
+    'Collect Options',
+    'Preserve Origin Kind',
+    'Normalize Output',
+    'Record Result'
+  ];
+
   window.STSClipartScanner = window.STSClipartScanner || {};
   var ns = window.STSClipartScanner;
   ns.modules = ns.modules || {};
@@ -349,7 +358,9 @@
         perTitle: perTitleTrace,
         settleWaitMs: waitMs,
         collectorOwner: 'scanner-auto.collectManualDrivenAutoGroups',
-        roadmapGoal: 'Auto returns canonical title groups with origin-aware icon/item/text options'
+        roadmapGoal: 'Auto returns canonical title groups with origin-aware icon/item/text options',
+        roadmapPhase: 'Phase 2 — Implementation phrases',
+        roadmapImplementationPhrases: PHASE2_IMPLEMENTATION_PHRASES.slice()
       }
     };
   }

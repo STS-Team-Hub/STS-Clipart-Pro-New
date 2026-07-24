@@ -2,6 +2,15 @@
   'use strict';
   var ns = window.STSClipartScanner = window.STSClipartScanner || {};
 
+  var PHASE2_IMPLEMENTATION_PHRASES = [
+    'Find Title',
+    'Open Group',
+    'Collect Options',
+    'Preserve Origin Kind',
+    'Normalize Output',
+    'Record Result'
+  ];
+
   function norm(v) { return String(v == null ? '' : v).replace(/\s+/g, ' ').trim(); }
   function normKey(v) { return norm(v).toLowerCase(); }
   function isVisible(el) {
@@ -356,7 +365,9 @@
       fallbackUsed: false,
       targetGroups: [],
       entrypointId: o.entrypointId || null,
-      roadmapGoal: 'Auto returns canonical title groups with origin-aware icon/item/text options'
+      roadmapGoal: 'Auto returns canonical title groups with origin-aware icon/item/text options',
+      roadmapPhase: 'Phase 2 — Implementation phrases',
+      roadmapImplementationPhrases: PHASE2_IMPLEMENTATION_PHRASES.slice()
     };
     var root = o.root || (o.rootSelector && doc.querySelector ? doc.querySelector(o.rootSelector) : doc);
     if (!root) {

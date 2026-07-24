@@ -35,7 +35,20 @@ Use these phrases for each implementation pass:
 5. **Normalize Output** — publish deduped STS categories with standard prefixes and option labels.
 6. **Record Result** — update tests/docs with the observed outcome before moving to the next pass.
 
-**Result log:** Auto V2 and Manual-driven Auto now carry `roadmapGoal` trace metadata so QA can verify the active roadmap path.
+**Result log:** Auto V2 and Manual-driven Auto now carry `roadmapGoal`, `roadmapPhase`, and ordered `roadmapImplementationPhrases` trace metadata so QA can verify the active roadmap path and the six required implementation pass phrases.
+
+**Phase 2 status:** Completed. The implementation pass has been recorded against the active Auto V2 and Manual-driven Auto trace path, and tests now assert the full Phase 2 phrase list before Phase 3 goal work continues.
+
+| Phase 2 implementation phrase | Status | Result |
+| --- | --- | --- |
+| Find Title | Completed | Auto traces preserve the roadmap path used to validate canonical visible title group collection. |
+| Open Group | Completed | Manual-driven Auto and Auto V2 traces expose the active roadmap phase used while safely opening personalization scopes. |
+| Collect Options | Completed | Trace metadata remains attached to the option collection paths covered by unit tests. |
+| Preserve Origin Kind | Completed | Phase 2 trace assertions run alongside origin-aware `icon`, `item`, and `text` option metadata assertions. |
+| Normalize Output | Completed | The existing STS category normalization path remains covered while the active implementation phrase list is published. |
+| Record Result | Completed | This roadmap and unit tests record the observed Phase 2 outcome. |
+
+**Remaining Phase 2 steps:** 0.
 
 ### Phase 3 — Auto goal
 
