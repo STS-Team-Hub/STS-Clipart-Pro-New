@@ -6,12 +6,12 @@ This document is the source-of-truth architecture snapshot for the current STS C
 
 It describes two states:
 
-1. **Current state:** Phase 7 complete, scanner-profile-first routing is integrated, consolidated site registrations are split into canonical scanner profile files, and V2 adapter-backed plus legacy compatibility layers still coexist.
+1. **Current state:** Phase 8 in progress, scanner-profile-first routing is integrated, supported named sites have dedicated scanner profile files, and V2/manual/legacy compatibility layers still coexist until removal cleanup is complete.
 2. **Final target:** one canonical scanner profile package per supported named site, with shared behavior kept in shared scanner modules and generic/unknown pages handled by the default scanner profile.
 
 ## Current phase status
 
-The current implementation is **Phase 7 complete**.
+The current implementation is **Phase 8 in progress**.
 
 Completed or mostly completed:
 
@@ -27,8 +27,8 @@ Still transitional:
 
 - Some picker/panel internals still bridge through legacy core where tests prove runtime dependency.
 - V2 site profiles still coexist with scanner profiles.
-- PersonalFury, InterestPod, and Gossby now own dedicated Phase 7 scanner profile files backed by the shared V2 bridge helper.
-- Suzitee, TrendingCustom, Wanderprints, and Etsy remain intentionally adapter-backed V2 profiles until migration is scheduled.
+- PersonalFury, InterestPod, Gossby, Suzitee, TrendingCustom, Wanderprints, and Etsy now own dedicated scanner profile files; some still reuse the shared V2 bridge/helper path until de-bridging is complete.
+- V2 and manual profile files remain loaded as compatibility/source layers until Phase 8 de-bridging and manifest cleanup are complete.
 - Legacy scanner-list routing and manual profile assets remain warning-backed compatibility contracts.
 - Real-browser Chrome domain verification remains external to this container.
 

@@ -575,10 +575,10 @@ const phaseOneDocs = {
   if (!phaseOneDocs.onboarding.includes(pattern)) fail(`Phase 1 onboarding workflow missing: ${pattern}`);
 });
 if (!phaseOneDocs.architecture.includes('Current phase status')) fail('Phase 1 architecture status section missing');
-if (!phaseOneDocs.architecture.includes('Phase 7 complete')) fail('architecture docs must reflect Phase 7 completion');
-if (!phaseOneDocs.contract.includes('Phase 7 complete')) fail('profile contract docs must reflect Phase 7 completion');
-if (!phaseOneDocs.rules.includes('Phase 7 complete')) fail('development rules docs must reflect Phase 7 completion');
-if (!phaseOneDocs.onboarding.includes('Phase 7 complete')) fail('onboarding docs must reflect Phase 7 completion');
+if (!phaseOneDocs.architecture.includes('Phase 8 in progress')) fail('architecture docs must reflect Phase 8 in-progress status');
+if (!phaseOneDocs.contract.includes('Phase 8 in progress')) fail('profile contract docs must reflect Phase 8 in-progress status');
+if (!phaseOneDocs.rules.includes('Phase 8 in progress')) fail('development rules docs must reflect Phase 8 in-progress status');
+if (!phaseOneDocs.onboarding.includes('Phase 8 in progress')) fail('onboarding docs must reflect Phase 8 in-progress status');
 [
   'one operational scanner flow',
   'What will be removed',
